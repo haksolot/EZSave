@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\seanl\\Documents\\Code\\C#\\EZSave\\src\\src.csproj": {}
+    "C:\\Users\\Utilisateur\\EZSave\\src\\src.csproj": {}
   },
   "projects": {
-    "C:\\Users\\seanl\\Documents\\Code\\C#\\EZSave\\src\\src.csproj": {
+    "C:\\Users\\Utilisateur\\EZSave\\src\\src.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\seanl\\Documents\\Code\\C#\\EZSave\\src\\src.csproj",
+        "projectUniqueName": "C:\\Users\\Utilisateur\\EZSave\\src\\src.csproj",
         "projectName": "src",
-        "projectPath": "C:\\Users\\seanl\\Documents\\Code\\C#\\EZSave\\src\\src.csproj",
-        "packagesPath": "C:\\Users\\seanl\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\seanl\\Documents\\Code\\C#\\EZSave\\src\\obj\\",
+        "projectPath": "C:\\Users\\Utilisateur\\EZSave\\src\\src.csproj",
+        "packagesPath": "C:\\Users\\Utilisateur\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Utilisateur\\EZSave\\src\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\seanl\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Utilisateur\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,6 +26,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {

@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Text.Json;
 
 
@@ -15,18 +16,27 @@ public class Log
     {
         var save = new Log
         {
-            Jobname = name,
-            Date = datetime,
-            Source = source,
-            Destination = destination,
-            Size = size,
-            TT = tt
+            name = name,
+            datetime = datetime,
+            source = source,
+            destination = destination,
+            size = size,
+            tt = tt
         };
-        string logfilename = name + "_" + datetime.ToString() + "_log";
-        string jsonString = JsonSerializer.Serialize(save);
-        File.WriteAllText(fileName, jsonString);
 
-        Console.WriteLine(File.ReadAllText(fileName));
+        string logDirectory = "logs";
+        if (!Directory.Exists(logDirectory))
+        {
+            Directory.CreateDirectory(logDirectory);
+        }
+
+        string logfilename = $"{logDirectory}/{name}_{datetime:yyyyMMdd}_log.json";
+        string jsonString = JsonSerializer.Serialize(this);
+
+
+        File.AppendAllText(logfilename, jsonString + Environment.NewLine);
+
+        Console.WriteLine($"Log ajouté : {logfilename}");
     }
 
     public void show()
