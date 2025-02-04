@@ -23,7 +23,7 @@ public class Job
     }
     else
     {
-      throw new ArgumentException("Le type de sauvegarde doit être 'full' ou 'differential'.");
+      throw new ArgumentException("The backup type should be 'full' or 'differential'.");
     }
   }
 
@@ -42,22 +42,43 @@ public class Job
   public void save(string ConfigFile)
   {
     List<Job> jobs = new List<Job>();
-
     if (File.Exists(ConfigFile))
     {
       string json = File.ReadAllText(ConfigFile);
       jobs = JsonSerializer.Deserialize<List<Job>>(json) ?? new List<Job>();
     }
-
-    if (jobs.Any(j => j.Name == Name))
+    Job? existingJob = jobs.FirstOrDefault(j => j.Name == Name);
+    if (existingJob != null)
     {
-      /*Console.WriteLine($"⚠️ Job '{Name}' existe déjà. Sauvegarde annulée.");*/
-      return;
+      jobs.Remove(existingJob);
     }
 
     jobs.Add(this);
+
     string newJson = JsonSerializer.Serialize(jobs, new JsonSerializerOptions { WriteIndented = true });
     File.WriteAllText(ConfigFile, newJson);
+  }
+
+  public void delete(string ConfigFile)
+  {
+    if (!File.Exists(ConfigFile))
+    {
+      throw new FileNotFoundException("The config file does not seem to be here");
+    }
+    string json = File.ReadAllText(ConfigFile);
+    List<Job> jobs = JsonSerializer.Deserialize<List<Job>>(json) ?? new List<Job>();
+    int initialCount = jobs.Count;
+    jobs.RemoveAll(j => j.Name == Name);
+    if (jobs.Count == initialCount)
+    {
+      throw new InvalidOperationException($"The Job does not exist");
+    }
+
+    // Réécriture du fichier après suppression du job
+    string updatedJson = JsonSerializer.Serialize(jobs, new JsonSerializerOptions { WriteIndented = true });
+    File.WriteAllText(ConfigFile, updatedJson);
+
+    Console.WriteLine($"🗑️ Job '{Name}' supprimé avec succès.");
   }
 
   private void PerformFullBackup()
