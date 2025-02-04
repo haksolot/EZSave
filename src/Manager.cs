@@ -6,16 +6,19 @@ namespace EZSave.Managers {
         private List<Job> jobs { get; set; } = new List<Job>();
         private int limit { get; set; } = 5;
         private string logDestination { get; set; }
+        private string confDestination { get; set; }
+
         private static Manager instance;
         private static readonly object lockObj = new object();
 
-        private Manager(int limitNew, string destination)
+        private Manager(int limitNew, string destination, string configDestination)
         {
             limit = limitNew;
             logDestination = destination;
+            confDestination = configDestination;
         }
 
-        public static Manager GetInstance(int limitNew, string Destination)
+        public static Manager GetInstance(int limitNew, string Destination, string ConfigDestination)
         {
             if (instance == null)
             {
@@ -23,7 +26,7 @@ namespace EZSave.Managers {
                 {
                     if (instance == null)
                     {
-                        instance = new Manager(limitNew, Destination);
+                        instance = new Manager(limitNew, Destination, ConfigDestination);
                     }
                 }
             }
@@ -42,7 +45,7 @@ namespace EZSave.Managers {
             }
         }
 
-        public void delete(Job job)
+        public void remove(Job job)
         {
             if (jobs.Contains(job))
             {
@@ -78,6 +81,24 @@ namespace EZSave.Managers {
             {
                 Console.WriteLine(job);
             }
+        }
+
+        //function that create a job and add it to the list
+        public void create(string name, string source, string destination, string type)
+        {
+            Job nouveauJob = new Job(name, source, destination, type);
+            add(nouveauJob);
+        }
+
+        //function that delete a job config
+        public void delete(Job job)
+        {
+            job.delete(confDestination);
+        }
+
+        public void edit(Job job)
+        {
+            job.save(confDestination);
         }
     }
 }
