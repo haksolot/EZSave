@@ -11,20 +11,12 @@ public class Log
     public string destination { get; set; }
     public float size { get; set; }
     public float tt { get; set; }
+    public string message {get; set; }
 
     public void write()
     {
-        var save = new Log
-        {
-            name = name,
-            datetime = datetime,
-            source = source,
-            destination = destination,
-            size = size,
-            tt = tt
-        };
+        string logDirectory = $"logs/{name}";
 
-        string logDirectory = "logs";
         if (!Directory.Exists(logDirectory))
         {
             Directory.CreateDirectory(logDirectory);
@@ -41,6 +33,7 @@ public class Log
 
     public void show()
     {
-
+        string logDirectory = $"logs/{name}";
+        Console.WriteLine(File.ReadAllText($"{logDirectory}/{name}_{datetime:yyyyMMdd}_log.json"));
     }
 }
