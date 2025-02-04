@@ -1,7 +1,3 @@
-
-
-Console.WriteLine("Hello, World!");
-
 ﻿using EZSave.Managers;
 using EZSave.Jobs;
 
@@ -23,10 +19,10 @@ class Program
         //string confPath = @"C:\Users\estel\Desktop\";
         /*fullBackup.save(confPath);*/
         //diffBackup.save(confPath);
-        Manager manager = new Manager(5, "e");
+        Manager manager = Manager.GetInstance(5, "e");
         manager.add(diffBackup);
             manager.show();
-        manager.execute();
+        manager.delete(diffBackup);
 
     }
 }
