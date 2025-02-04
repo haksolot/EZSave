@@ -29,9 +29,16 @@ public class Manager
         }
     }
 
-    public execute();
+    public execute()
+    {
+        foreach (Jobs job in jobs)
+        {
+            start(job);
+            Console.WriteLine("The job " + job + " has been started !");
+        }
+    }
 
-    public void show(List<Jobs> jobs)
+    public void show()
     {
         foreach (Jobs job in jobs)
         {
