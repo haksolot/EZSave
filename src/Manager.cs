@@ -15,6 +15,21 @@ namespace EZSave.Managers {
             logDestination = destination;
         }
 
+        public static Manager GetInstance(int limitNew, string Destination)
+        {
+            if (instance == null)
+            {
+                lock (lockObj)
+                {
+                    if (instance == null)
+                    {
+                        instance = new Manager(limitNew, Destination);
+                    }
+                }
+            }
+            return instance;
+        }
+
         public void add(Job job) {
             if (jobs.Count >= limit)
             {
