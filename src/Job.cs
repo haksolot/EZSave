@@ -77,8 +77,6 @@ public class Job
     // Réécriture du fichier après suppression du job
     string updatedJson = JsonSerializer.Serialize(jobs, new JsonSerializerOptions { WriteIndented = true });
     File.WriteAllText(ConfigFile, updatedJson);
-
-    Console.WriteLine($"🗑️ Job '{Name}' supprimé avec succès.");
   }
 
   private void PerformFullBackup()
