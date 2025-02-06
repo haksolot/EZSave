@@ -1,14 +1,14 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\matte\\source\\repos\\EZSave\\",
+  "WorkspaceRootPath": "C:\\VS\\EZSave\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\matte\\Source\\Repos\\EZSave\\src\\test\\Program_progress.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\test\\Program_progress.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\VS\\EZSave\\src\\Services\\ProgressViewModel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\Services\\ProgressViewModel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\matte\\Source\\Repos\\EZSave\\src\\progress.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\progress.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\VS\\EZSave\\src\\Models\\ProgressModel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\Models\\ProgressModel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,7 +18,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -26,28 +26,28 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "progress.cs",
-              "DocumentMoniker": "C:\\Users\\matte\\Source\\Repos\\EZSave\\src\\progress.cs",
-              "RelativeDocumentMoniker": "src\\progress.cs",
-              "ToolTip": "C:\\Users\\matte\\Source\\Repos\\EZSave\\src\\progress.cs",
-              "RelativeToolTip": "src\\progress.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACAAAAABAAAAAAAAAA==",
+              "DocumentIndex": 0,
+              "Title": "ProgressViewModel.cs",
+              "DocumentMoniker": "C:\\VS\\EZSave\\src\\Services\\ProgressViewModel.cs",
+              "RelativeDocumentMoniker": "src\\Services\\ProgressViewModel.cs",
+              "ToolTip": "C:\\VS\\EZSave\\src\\Services\\ProgressViewModel.cs",
+              "RelativeToolTip": "src\\Services\\ProgressViewModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB8AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-04T08:25:54.771Z",
+              "WhenOpened": "2025-02-06T11:39:38.127Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Program_progress.cs",
-              "DocumentMoniker": "C:\\Users\\matte\\Source\\Repos\\EZSave\\src\\test\\Program_progress.cs",
-              "RelativeDocumentMoniker": "src\\test\\Program_progress.cs",
-              "ToolTip": "C:\\Users\\matte\\Source\\Repos\\EZSave\\src\\test\\Program_progress.cs",
-              "RelativeToolTip": "src\\test\\Program_progress.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
+              "DocumentIndex": 1,
+              "Title": "ProgressModel.cs",
+              "DocumentMoniker": "C:\\VS\\EZSave\\src\\Models\\ProgressModel.cs",
+              "RelativeDocumentMoniker": "src\\Models\\ProgressModel.cs",
+              "ToolTip": "C:\\VS\\EZSave\\src\\Models\\ProgressModel.cs",
+              "RelativeToolTip": "src\\Models\\ProgressModel.cs",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAAACgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-04T08:25:51.748Z",
+              "WhenOpened": "2025-02-06T11:38:38.118Z",
               "EditorCaption": ""
             }
           ]

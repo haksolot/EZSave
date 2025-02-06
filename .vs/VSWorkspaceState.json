@@ -2,8 +2,9 @@
   "ExpandedNodes": [
     "",
     "\\src",
-    "\\src\\test"
+    "\\src\\Models",
+    "\\src\\Services"
   ],
-  "SelectedNode": "\\src\\program.cs",
+  "SelectedNode": "\\src\\src.csproj",
   "PreviewInSolutionExplorer": false
 }
