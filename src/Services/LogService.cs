@@ -17,7 +17,7 @@ public class LogService
             Directory.CreateDirectory(logDirectory);
         }
 
-        string logfilename = $"{logDirectory}/{model.Name}_{model.Datetime:yyyyMMdd}_log.json";
+        string logfilename = $"{logDirectory}/{model.Name}_{model.Timestamp:yyyyMMdd}_log.json";
         string jsonString = JsonSerializer.Serialize(model);
 
 
@@ -29,6 +29,6 @@ public class LogService
     public void Show(LogModel model)
     {
         string logDirectory = $"logs/{model.Name}";
-        Console.WriteLine(File.ReadAllText($"{logDirectory}/{model.Name}_{model.Datetime:yyyyMMdd}_log.json"));
+        Console.WriteLine(File.ReadAllText($"{logDirectory}/{model.Name}_{model.Timestamp:yyyyMMdd}_log.json"));
     }
 }
