@@ -3,12 +3,21 @@
   "WorkspaceRootPath": "C:\\Users\\estel\\source\\repos\\EZSave\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\estel\\source\\repos\\EZSave\\src\\Models\\ManagerModel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\Models\\ManagerModel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\estel\\source\\repos\\EZSave\\src\\Services\\ManagerService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\Services\\ManagerService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\estel\\source\\repos\\EZSave\\src\\Models\\ManagerModel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\Models\\ManagerModel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\estel\\AppData\\Local\\Temp\\f43af70d-e60b-45a5-bc34-20ce04646db4_App.zip.db4\\App\\App.Console\\ViewModels\\MainViewModel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\estel\\AppData\\Local\\Temp\\af959d3a-8e59-4d0b-8736-61cc26771c05_App.zip.c05\\App\\App.Console\\Views\\MainView.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\estel\\AppData\\Local\\Temp\\53ed8ffb-ec8c-4811-90e1-248e2e4daddb_App.zip.ddb\\App\\App.Core\\Services\\ConvertService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\estel\\source\\repos\\EZSave\\src\\Program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -22,37 +31,76 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 4,
+              "Title": "ConvertService.cs",
+              "DocumentMoniker": "C:\\Users\\estel\\AppData\\Local\\Temp\\53ed8ffb-ec8c-4811-90e1-248e2e4daddb_App.zip.ddb\\App\\App.Core\\Services\\ConvertService.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\AppData\\Local\\Temp\\53ed8ffb-ec8c-4811-90e1-248e2e4daddb_App.zip.ddb\\App\\App.Core\\Services\\ConvertService.cs",
+              "ToolTip": "C:\\Users\\estel\\AppData\\Local\\Temp\\53ed8ffb-ec8c-4811-90e1-248e2e4daddb_App.zip.ddb\\App\\App.Core\\Services\\ConvertService.cs [Lecture seule]",
+              "RelativeToolTip": "..\\..\\..\\AppData\\Local\\Temp\\53ed8ffb-ec8c-4811-90e1-248e2e4daddb_App.zip.ddb\\App\\App.Core\\Services\\ConvertService.cs [Lecture seule]",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-06T10:06:08.16Z",
+              "EditorCaption": " [Lecture seule]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "MainView.cs",
+              "DocumentMoniker": "C:\\Users\\estel\\AppData\\Local\\Temp\\af959d3a-8e59-4d0b-8736-61cc26771c05_App.zip.c05\\App\\App.Console\\Views\\MainView.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\AppData\\Local\\Temp\\af959d3a-8e59-4d0b-8736-61cc26771c05_App.zip.c05\\App\\App.Console\\Views\\MainView.cs",
+              "ToolTip": "C:\\Users\\estel\\AppData\\Local\\Temp\\af959d3a-8e59-4d0b-8736-61cc26771c05_App.zip.c05\\App\\App.Console\\Views\\MainView.cs [Lecture seule]",
+              "RelativeToolTip": "..\\..\\..\\AppData\\Local\\Temp\\af959d3a-8e59-4d0b-8736-61cc26771c05_App.zip.c05\\App\\App.Console\\Views\\MainView.cs [Lecture seule]",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-06T09:44:58.952Z",
+              "EditorCaption": " [Lecture seule]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "MainViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\estel\\AppData\\Local\\Temp\\f43af70d-e60b-45a5-bc34-20ce04646db4_App.zip.db4\\App\\App.Console\\ViewModels\\MainViewModel.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\AppData\\Local\\Temp\\f43af70d-e60b-45a5-bc34-20ce04646db4_App.zip.db4\\App\\App.Console\\ViewModels\\MainViewModel.cs",
+              "ToolTip": "C:\\Users\\estel\\AppData\\Local\\Temp\\f43af70d-e60b-45a5-bc34-20ce04646db4_App.zip.db4\\App\\App.Console\\ViewModels\\MainViewModel.cs [Lecture seule]",
+              "RelativeToolTip": "..\\..\\..\\AppData\\Local\\Temp\\f43af70d-e60b-45a5-bc34-20ce04646db4_App.zip.db4\\App\\App.Console\\ViewModels\\MainViewModel.cs [Lecture seule]",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAACAAAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-06T09:37:57.724Z",
+              "EditorCaption": " [Lecture seule]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "ManagerService.cs",
               "DocumentMoniker": "C:\\Users\\estel\\source\\repos\\EZSave\\src\\Services\\ManagerService.cs",
               "RelativeDocumentMoniker": "src\\Services\\ManagerService.cs",
               "ToolTip": "C:\\Users\\estel\\source\\repos\\EZSave\\src\\Services\\ManagerService.cs",
               "RelativeToolTip": "src\\Services\\ManagerService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAABMAAAAAAAAAAAAiwDIAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-06T08:20:09.758Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "ManagerModel.cs",
               "DocumentMoniker": "C:\\Users\\estel\\source\\repos\\EZSave\\src\\Models\\ManagerModel.cs",
               "RelativeDocumentMoniker": "src\\Models\\ManagerModel.cs",
               "ToolTip": "C:\\Users\\estel\\source\\repos\\EZSave\\src\\Models\\ManagerModel.cs",
               "RelativeToolTip": "src\\Models\\ManagerModel.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAmAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAA/AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-06T08:19:15.274Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 5,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\estel\\source\\repos\\EZSave\\src\\Program.cs",
               "RelativeDocumentMoniker": "src\\Program.cs",
@@ -60,8 +108,7 @@
               "RelativeToolTip": "src\\Program.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-04T08:21:22.473Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-04T08:21:22.473Z"
             }
           ]
         }

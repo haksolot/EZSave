@@ -4,31 +4,25 @@ namespace EZSave.Core.Services
 {
     public class ManagerService
     {
-        private readonly ManagerModel _managerModel;
-
-        public ManagerService()
-        {
-            _managerModel = ManagerModel.Instance;
-        }
-
+        
         public void Add(Job job)
         {
-            if (_managerModel.jobs.Count >= _managerModel.limit)
+            if (ManagerModel.Instance.Jobs.Count >= ManagerModel.Instance.limit)
             {
                 Console.WriteLine("You have exceeded the maximum number of allowed backups (max 5 jobs) !");
             }
             else
             {
-                _managerModel.jobs.Add(job);
+                ManagerModel.Instance.Jobs.Add(job);
                 Console.WriteLine("The job " + job + " has been successfully added to the list !");
             }
         }
 
         public void Remove(Job job)
         {
-            if (_managerModel.jobs.Contains(job))
+            if (ManagerModel.Instance.Jobs.Contains(job))
             {
-                _managerModel.jobs.Remove(job);
+                ManagerModel.Instance.Jobs.Remove(job);
                 Console.WriteLine("The job " + job + " has been deleted from the list !");
             }
             else
@@ -39,11 +33,11 @@ namespace EZSave.Core.Services
 
         public void Execute()
         {
-            if (_managerModel.jobs.Count > 0)
+            if (ManagerModel.Instance.Jobs.Count > 0)
             {
-                foreach (Job job in _managerModel.jobs)
+                foreach (Job job in ManagerModel.Instance.Jobs)
                 {
-                    job.start();
+                    job.Start();
                     Console.WriteLine("The job " + job + " has been started !");
                 }
             }

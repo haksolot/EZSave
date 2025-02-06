@@ -1,8 +1,10 @@
 {
   "ExpandedNodes": [
     "",
-    "\\src"
+    "\\src",
+    "\\src\\Models",
+    "\\src\\Services"
   ],
-  "SelectedNode": "\\src\\Program.cs",
+  "SelectedNode": "\\src\\Services\\ManagerService.cs",
   "PreviewInSolutionExplorer": false
 }

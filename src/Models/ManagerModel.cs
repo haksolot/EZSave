@@ -5,8 +5,8 @@ namespace EZSave.Core.Models
         private static ManagerModel _instance;
         private static readonly object _lockObj = new object();
 
-        public List<Job> jobs { get; set; } = new List<Job>();
-        public int limit { get; set; } = 5;
+        public List<Job> Jobs { get; set; } = new List<Job>();
+        public int Limit { get; set; } = 5;
 
         private ManagerModel() { }
 
@@ -14,9 +14,13 @@ namespace EZSave.Core.Models
         {
             get
             {
-                lock (_lockObj)
+                lock (_lockObj) 
                 {
-                    return _instance ??= new ManagerModel();
+                    if (_instance == null)
+                    {
+                        _instance = new ManagerModel();
+                    }
+                    return _instance;
                 }
             }
         }
