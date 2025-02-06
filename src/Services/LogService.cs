@@ -10,14 +10,14 @@ public class LogService
 
     public void Write(LogModel model)
     {
-        string logDirectory = $"logs/{model.name}";
+        string logDirectory = $"logs/{model.Name}";
 
         if (!Directory.Exists(logDirectory))
         {
             Directory.CreateDirectory(logDirectory);
         }
 
-        string logfilename = $"{logDirectory}/{model.name}_{model.datetime:yyyyMMdd}_log.json";
+        string logfilename = $"{logDirectory}/{model.Name}_{model.Datetime:yyyyMMdd}_log.json";
         string jsonString = JsonSerializer.Serialize(model);
 
 
@@ -28,7 +28,7 @@ public class LogService
 
     public void Show(LogModel model)
     {
-        string logDirectory = $"logs/{model.name}";
-        Console.WriteLine(File.ReadAllText($"{logDirectory}/{model.name}_{model.datetime:yyyyMMdd}_log.json"));
+        string logDirectory = $"logs/{model.Name}";
+        Console.WriteLine(File.ReadAllText($"{logDirectory}/{model.Name}_{model.Datetime:yyyyMMdd}_log.json"));
     }
 }

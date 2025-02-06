@@ -4,12 +4,12 @@ using System;
 
 public class LogModel
 {
-    public string name { get; set; } = "";
+    public string Name { get; set; } = "";
     public DateTime datetime { get; set; }
-    public string source { get; set; } = "";
-    public string destination { get; set; } = "";
-    public float size { get; set; }
-    public float tt { get; set; }
-    public string message { get; set; } = "";
+    public string Source { get; set; } = "";
+    public string Destination { get; set; } = "";
+    public float Size { get; set; }
+    public float TT { get; set; }
+    public string Message { get; set; } = "";
 
 }
