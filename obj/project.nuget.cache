@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "dgSpecHash": "mkdqTUcqsMQ=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\estel\\source\\repos\\EZSave\\EZSave.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\estel\\.nuget\\packages\\colorhelper\\1.8.1\\colorhelper.1.8.1.nupkg.sha512",
+    "C:\\Users\\estel\\.nuget\\packages\\system.io.abstractions\\21.0.22\\system.io.abstractions.21.0.22.nupkg.sha512",
+    "C:\\Users\\estel\\.nuget\\packages\\system.text.encodings.web\\8.0.0\\system.text.encodings.web.8.0.0.nupkg.sha512",
+    "C:\\Users\\estel\\.nuget\\packages\\system.text.json\\8.0.4\\system.text.json.8.0.4.nupkg.sha512",
+    "C:\\Users\\estel\\.nuget\\packages\\terminal.gui\\2.0.0-v2-develop.2203\\terminal.gui.2.0.0-v2-develop.2203.nupkg.sha512",
+    "C:\\Users\\estel\\.nuget\\packages\\testableio.system.io.abstractions\\21.0.22\\testableio.system.io.abstractions.21.0.22.nupkg.sha512",
+    "C:\\Users\\estel\\.nuget\\packages\\testableio.system.io.abstractions.wrappers\\21.0.22\\testableio.system.io.abstractions.wrappers.21.0.22.nupkg.sha512",
+    "C:\\Users\\estel\\.nuget\\packages\\wcwidth\\2.0.0\\wcwidth.2.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

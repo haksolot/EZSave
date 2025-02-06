@@ -3,20 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\estel\\source\\repos\\EZSave\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\estel\\source\\repos\\EZSave\\src\\Job.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\Job.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\estel\\source\\repos\\EZSave\\src\\Services\\ManagerService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\Services\\ManagerService.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\estel\\source\\repos\\EZSave\\src\\Models\\ManagerModel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\Models\\ManagerModel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\estel\\source\\repos\\EZSave\\src\\Program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\Program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\estel\\Source\\Repos\\EZSave\\src\\manager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\manager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\estel\\source\\repos\\EZSave\\README.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:README.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
     }
   ],
   "DocumentGroupContainers": [
@@ -31,53 +27,41 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "Job.cs",
-              "DocumentMoniker": "C:\\Users\\estel\\source\\repos\\EZSave\\src\\Job.cs",
-              "RelativeDocumentMoniker": "src\\Job.cs",
-              "ToolTip": "C:\\Users\\estel\\source\\repos\\EZSave\\src\\Job.cs",
-              "RelativeToolTip": "src\\Job.cs",
-              "ViewState": "AgIAAE4AAAAAAAAAAAAAABsAAABkAAAAAAAAAA==",
+              "Title": "ManagerService.cs",
+              "DocumentMoniker": "C:\\Users\\estel\\source\\repos\\EZSave\\src\\Services\\ManagerService.cs",
+              "RelativeDocumentMoniker": "src\\Services\\ManagerService.cs",
+              "ToolTip": "C:\\Users\\estel\\source\\repos\\EZSave\\src\\Services\\ManagerService.cs",
+              "RelativeToolTip": "src\\Services\\ManagerService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-04T08:21:35.502Z",
+              "WhenOpened": "2025-02-06T08:20:09.758Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\estel\\source\\repos\\EZSave\\src\\Program.cs",
-              "RelativeDocumentMoniker": "src\\Program.cs",
-              "ToolTip": "C:\\Users\\estel\\source\\repos\\EZSave\\src\\Program.cs",
-              "RelativeToolTip": "src\\Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAbAAAAAAAAAA==",
+              "Title": "ManagerModel.cs",
+              "DocumentMoniker": "C:\\Users\\estel\\source\\repos\\EZSave\\src\\Models\\ManagerModel.cs",
+              "RelativeDocumentMoniker": "src\\Models\\ManagerModel.cs",
+              "ToolTip": "C:\\Users\\estel\\source\\repos\\EZSave\\src\\Models\\ManagerModel.cs",
+              "RelativeToolTip": "src\\Models\\ManagerModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAmAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-04T08:21:22.473Z",
+              "WhenOpened": "2025-02-06T08:19:15.274Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "Manager.cs",
-              "DocumentMoniker": "C:\\Users\\estel\\Source\\Repos\\EZSave\\src\\Manager.cs",
-              "RelativeDocumentMoniker": "src\\Manager.cs",
-              "ToolTip": "C:\\Users\\estel\\Source\\Repos\\EZSave\\src\\Manager.cs",
-              "RelativeToolTip": "src\\Manager.cs",
-              "ViewState": "AgIAABgAAAAAAAAAAAAAAAgAAAAhAAAAAAAAAA==",
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\estel\\source\\repos\\EZSave\\src\\Program.cs",
+              "RelativeDocumentMoniker": "src\\Program.cs",
+              "ToolTip": "C:\\Users\\estel\\source\\repos\\EZSave\\src\\Program.cs",
+              "RelativeToolTip": "src\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-02-03T11:04:37.285Z",
+              "WhenOpened": "2025-02-04T08:21:22.473Z",
               "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "README.md",
-              "DocumentMoniker": "C:\\Users\\estel\\source\\repos\\EZSave\\README.md",
-              "RelativeDocumentMoniker": "README.md",
-              "ToolTip": "C:\\Users\\estel\\source\\repos\\EZSave\\README.md",
-              "RelativeToolTip": "README.md",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
-              "WhenOpened": "2025-01-29T09:58:40.581Z"
             }
           ]
         }

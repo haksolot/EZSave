@@ -1,8 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "x+49i+RFbHA=",
+  "dgSpecHash": "p5BkRjtj44E=",
   "success": true,
-  "projectFilePath": "C:\\Users\\seanl\\Documents\\Code\\C#\\EZSave\\src\\src.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "C:\\Users\\estel\\source\\repos\\EZSave\\src\\src.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\estel\\.nuget\\packages\\nstack.core\\1.1.1\\nstack.core.1.1.1.nupkg.sha512",
+    "C:\\Users\\estel\\.nuget\\packages\\system.codedom\\8.0.0\\system.codedom.8.0.0.nupkg.sha512",
+    "C:\\Users\\estel\\.nuget\\packages\\system.management\\8.0.0\\system.management.8.0.0.nupkg.sha512",
+    "C:\\Users\\estel\\.nuget\\packages\\system.valuetuple\\4.5.0\\system.valuetuple.4.5.0.nupkg.sha512",
+    "C:\\Users\\estel\\.nuget\\packages\\terminal.gui\\1.17.1\\terminal.gui.1.17.1.nupkg.sha512"
+  ],
   "logs": []
 }

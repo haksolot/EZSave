@@ -1,0 +1,6 @@
+C:\Users\estel\source\repos\EZSave\obj\Debug\net8.0\EZSave.csproj.AssemblyReference.cache
+C:\Users\estel\source\repos\EZSave\obj\Debug\net8.0\EZSave.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\estel\source\repos\EZSave\obj\Debug\net8.0\EZSave.AssemblyInfoInputs.cache
+C:\Users\estel\source\repos\EZSave\obj\Debug\net8.0\EZSave.AssemblyInfo.cs
+C:\Users\estel\source\repos\EZSave\obj\Debug\net8.0\EZSave.csproj.CoreCompileInputs.cache
+C:\Users\estel\source\repos\EZSave\obj\Debug\net8.0\EZSave.sourcelink.json

@@ -28,3 +28,13 @@ C:\Users\estel\Source\Repos\EZSave\src\obj\Debug\net9.0\refint\src.dll
 C:\Users\estel\Source\Repos\EZSave\src\obj\Debug\net9.0\src.pdb
 C:\Users\estel\source\repos\EZSave\src\obj\Debug\net9.0\src.genruntimeconfig.cache
 C:\Users\estel\source\repos\EZSave\src\obj\Debug\net9.0\ref\src.dll
+C:\Users\estel\Source\Repos\EZSave\src\bin\Debug\net9.0\NStack.dll
+C:\Users\estel\Source\Repos\EZSave\src\bin\Debug\net9.0\System.CodeDom.dll
+C:\Users\estel\Source\Repos\EZSave\src\bin\Debug\net9.0\System.Management.dll
+C:\Users\estel\Source\Repos\EZSave\src\bin\Debug\net9.0\Terminal.Gui.dll
+C:\Users\estel\Source\Repos\EZSave\src\bin\Debug\net9.0\fr-FR\Terminal.Gui.resources.dll
+C:\Users\estel\Source\Repos\EZSave\src\bin\Debug\net9.0\ja-JP\Terminal.Gui.resources.dll
+C:\Users\estel\Source\Repos\EZSave\src\bin\Debug\net9.0\pt-PT\Terminal.Gui.resources.dll
+C:\Users\estel\Source\Repos\EZSave\src\bin\Debug\net9.0\runtimes\win\lib\net8.0\System.Management.dll
+C:\Users\estel\Source\Repos\EZSave\src\obj\Debug\net9.0\src.csproj.AssemblyReference.cache
+C:\Users\estel\Source\Repos\EZSave\src\obj\Debug\net9.0\src.csproj.Up2Date

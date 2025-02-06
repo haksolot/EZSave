@@ -1,10 +1,8 @@
 {
   "ExpandedNodes": [
     "",
-    "\\src",
-    "\\src\\obj\\Debug",
-    "\\src\\obj\\Debug\\net9.0"
+    "\\src"
   ],
-  "SelectedNode": "\\src\\Job.cs",
+  "SelectedNode": "\\src\\Program.cs",
   "PreviewInSolutionExplorer": false
 }
