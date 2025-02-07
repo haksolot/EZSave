@@ -34,3 +34,5 @@ EZSave.GUI/bin/
 EZSave.GUI/obj/
 EZSave.TUI/bin/
 EZSave.TUI/obj/
+EZSave.Tests/bin/
+EZSave.Tests/obj/
