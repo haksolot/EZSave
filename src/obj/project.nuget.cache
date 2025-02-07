@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "dgSpecHash": "umkWx/9q6dk=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\seanl\\Documents\\Code\\C#\\EZSave\\src\\src.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\seanl\\.nuget\\packages\\nstack.core\\1.1.1\\nstack.core.1.1.1.nupkg.sha512",
+    "C:\\Users\\seanl\\.nuget\\packages\\system.codedom\\8.0.0\\system.codedom.8.0.0.nupkg.sha512",
+    "C:\\Users\\seanl\\.nuget\\packages\\system.management\\8.0.0\\system.management.8.0.0.nupkg.sha512",
+    "C:\\Users\\seanl\\.nuget\\packages\\system.valuetuple\\4.5.0\\system.valuetuple.4.5.0.nupkg.sha512",
+    "C:\\Users\\seanl\\.nuget\\packages\\terminal.gui\\1.17.1\\terminal.gui.1.17.1.nupkg.sha512"
+  ],
+  "logs": []
+}

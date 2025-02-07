@@ -42,7 +42,7 @@ namespace EZSave.Core.Services
         throw new FileNotFoundException("The config file does not seem to be here");
       }
       string json = File.ReadAllText(conf.ConfDestination);
-      List<Job> jobs = JsonSerializer.Deserialize<List<Job>>(json) ?? new List<Job>();
+      List<JobModel> jobs = JsonSerializer.Deserialize<List<JobModel>>(json) ?? new List<JobModel>();
       int initialCount = jobs.Count;
       jobs.RemoveAll(j => j.Name == job.Name);
       if (jobs.Count == initialCount)
