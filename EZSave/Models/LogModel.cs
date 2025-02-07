@@ -1,6 +1,4 @@
-using System;
-
-
+﻿using System;
 
 public class LogModel
 {
@@ -11,5 +9,4 @@ public class LogModel
     public float Size { get; set; }
     public float TT { get; set; }
     public string Message { get; set; } = "";
-
 }

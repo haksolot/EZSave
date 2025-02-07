@@ -1,0 +1,36 @@
+# Fichiers binaires et compilés
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+
+# Fichiers de configuration et logs
+*.user
+*.lock.json
+*.log
+*.suo
+*.cache
+*.csproj.user
+
+# Dossiers spécifiques à Visual Studio
+.vscode/
+.idea/
+.vs/
+
+# Fichiers de build
+out/
+Debug/
+Release/
+
+# Dépendances NuGet
+packages/
+
+# Dossiers spécifiques à EZSave
+doc/
+EZSave/bin/
+EZSave/obj/
+EZSave.GUI/bin/
+EZSave.GUI/obj/
+EZSave.TUI/bin/
+EZSave.TUI/obj/

@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35707.178
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EZSave.Core", "EZSave\EZSave.Core.csproj", "{443483D0-58AC-4516-A214-6871D6A6ACEA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EZSave.TUI", "EZSave.TUI\EZSave.TUI.csproj", "{93503139-DBE5-435C-AF3C-58B51C1B18A5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EZSave.GUI", "EZSave.GUI\EZSave.GUI.csproj", "{BF3ADD32-0DC1-4186-89F1-57E7A3699B89}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{443483D0-58AC-4516-A214-6871D6A6ACEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{443483D0-58AC-4516-A214-6871D6A6ACEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{443483D0-58AC-4516-A214-6871D6A6ACEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{443483D0-58AC-4516-A214-6871D6A6ACEA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93503139-DBE5-435C-AF3C-58B51C1B18A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93503139-DBE5-435C-AF3C-58B51C1B18A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93503139-DBE5-435C-AF3C-58B51C1B18A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93503139-DBE5-435C-AF3C-58B51C1B18A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF3ADD32-0DC1-4186-89F1-57E7A3699B89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF3ADD32-0DC1-4186-89F1-57E7A3699B89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF3ADD32-0DC1-4186-89F1-57E7A3699B89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF3ADD32-0DC1-4186-89F1-57E7A3699B89}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
