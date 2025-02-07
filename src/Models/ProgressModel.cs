@@ -34,8 +34,8 @@ namespace EZSave.Progress.Models
             set { _destination = value; OnPropertyChanged(nameof(Destination)); }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler PropertyChanged;             // c la que on fait l'alerte ca réagis automatiquement
         protected void OnPropertyChanged(string propertyName) =>
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName)); // un blinding un truc relié a l'ui qui réagis automatiquement askip ( chatgpt qui m'a dit ct bien )
     }
 }
