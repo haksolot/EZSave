@@ -15,56 +15,36 @@ namespace EZSave.Core.Services
       conf.LogFileDestination = dest;
     }
 
-    public bool LoadConfigFile(ConfigModel conf)
+    public bool LoadConfigFile(ConfigModel conf, ConfigFileModel config)
     {
-      if (!File.Exists(conf.ConfFileDestination))
-      {
-        return false;
-      }
-      string data = File.ReadAllText(conf.ConfFileDestination);
-      using JsonDocument doc = JsonDocument.Parse(data);
-      JsonElement root = doc.RootElement;
-
-      foreach (JsonProperty property in root.EnumerateObject())
-      {
-        if (property.Name == "ConfFileDestination")
-        {
-          SetConfigDestination(property.Value.GetString()!, conf);
-        }
-        else if (property.Name == "LogFileDestination")
-        {
-          SetLogDestination(property.Value.GetString()!, conf);
-        }
-        else if (property.Name == "Jobs")
-        {
-
-        }
-        else
-        {
-
-        }
-      }
-      return true;
-    }
-
-
-    public void SaveJob(JobModel job, ConfigModel conf)
-    {
-      List<JobModel> jobs = new List<JobModel>();
       if (File.Exists(conf.ConfFileDestination))
       {
         string json = File.ReadAllText(conf.ConfFileDestination);
-        jobs = JsonSerializer.Deserialize<List<JobModel>>(json) ?? new List<JobModel>();
+        config = JsonSerializer.Deserialize<ConfigFileModel>(json) ?? new ConfigFileModel();
+        return true;
       }
-      JobModel? existingJob = jobs.FirstOrDefault(j => j.Name == job.Name);
-      if (existingJob != null)
+      else
       {
-        jobs.Remove(existingJob);
+        return false;
+      }
+    }
+
+    public void SaveJob(JobModel job, ConfigModel conf)
+    {
+      ConfigFileModel config;
+
+      if (File.Exists(conf.ConfFileDestination))
+      {
+        string json = File.ReadAllText(conf.ConfFileDestination);
+        config = JsonSerializer.Deserialize<ConfigFileModel>(json) ?? new ConfigFileModel();
+      }
+      else
+      {
+        config = new ConfigFileModel();
       }
 
-      jobs.Add(job);
-
-      string newJson = JsonSerializer.Serialize(jobs, new JsonSerializerOptions { WriteIndented = true });
+      config.Jobs[job.Name] = job;
+      string newJson = JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true });
       File.WriteAllText(conf.ConfFileDestination, newJson);
     }
 
@@ -72,19 +52,12 @@ namespace EZSave.Core.Services
     {
       if (!File.Exists(conf.ConfFileDestination))
       {
-        throw new FileNotFoundException("The config file does not seem to be here");
+        return;
       }
       string json = File.ReadAllText(conf.ConfFileDestination);
-      List<JobModel> jobs = JsonSerializer.Deserialize<List<JobModel>>(json) ?? new List<JobModel>();
-      int initialCount = jobs.Count;
-      jobs.RemoveAll(j => j.Name == job.Name);
-      if (jobs.Count == initialCount)
-      {
-        throw new InvalidOperationException($"The Job does not exist");
-      }
-
-      // Réécriture du fichier après suppression du job
-      string updatedJson = JsonSerializer.Serialize(jobs, new JsonSerializerOptions { WriteIndented = true });
+      ConfigFileModel config = JsonSerializer.Deserialize<ConfigFileModel>(json) ?? new ConfigFileModel();
+      config.Jobs.Remove(job.Name);
+      string updatedJson = JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true });
       File.WriteAllText(conf.ConfFileDestination, updatedJson);
     }
   }
