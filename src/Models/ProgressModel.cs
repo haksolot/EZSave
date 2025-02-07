@@ -4,15 +4,16 @@ namespace EZSave.Progress.Models
 
     public class ProgressModel : INotifyPropertyChanged
     {
-        private int _filesLeft;
-        private float _totalFileSizeLeft;
+        private int _filesLeft;                         // nombres de fichiers restants
+        private float _totalFileSizeLeft;               // taille des fichiers
         private string _source;
         private string _destination;
 
         public int FilesLeft
         {
             get => _filesLeft;
-            set { _filesLeft = value; OnPropertyChanged(nameof(FilesLeft)); }
+            set { _filesLeft = value; OnPropertyChanged(nameof(FilesLeft)); }     //onpropertychanged --> chaque fois qu'une propriété change c appellé ( c ca qui rends dynamique données et affichage)
+                                                                                  //cela permet à une interface graphique de réagir aux changements et maj l'affichage
         }
 
         public float TotalFileSizeLeft
