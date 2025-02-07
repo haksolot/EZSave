@@ -20,6 +20,7 @@ namespace EZSave.Core.Services
     {
       foreach (string file in Directory.GetFiles(job.Source, "*", SearchOption.AllDirectories))
       {
+                string d = file.Replace(job.Source, job.Destination); //TODO A tester
         string relativePath = file.Substring(job.Source.Length).TrimStart(Path.DirectorySeparatorChar);
         string destinationFile = Path.Combine(job.Destination, relativePath);
 
