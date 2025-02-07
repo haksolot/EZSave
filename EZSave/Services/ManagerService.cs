@@ -5,47 +5,52 @@ namespace EZSave.Core.Services
     public class ManagerService
     {
 
-        public void Add(JobModel job)
+        public bool Add(JobModel job)
         {
-            if (ManagerModel.Instance.Jobs.Count >= ManagerModel.Instance.Limit)
+            if (ManagerModel.Jobs.Count >= ManagerModel.Limit)
             {
-                Console.WriteLine("You have exceeded the maximum number of allowed backups (max 5 jobs) !");
+                return false;
+                //Console.WriteLine("You have exceeded the maximum number of allowed backups (max 5 jobs) !");
             }
             else
             {
-                ManagerModel.Instance.Jobs.Add(job);
-                Console.WriteLine("The job " + job + " has been successfully added to the list !");
+                ManagerModel.Jobs.Add(job);
+                return true;
+                //Console.WriteLine("The job " + job + " has been successfully added to the list !");
             }
         }
 
-        public void Remove(JobModel job)
+        public bool Remove(JobModel job)
         {
-            if (ManagerModel.Instance.Jobs.Contains(job))
+            if (ManagerModel.Jobs.Contains(job))
             {
-                ManagerModel.Instance.Jobs.Remove(job);
-                Console.WriteLine("The job " + job + " has been deleted from the list !");
+                ManagerModel.Jobs.Remove(job);
+                //Console.WriteLine("The job " + job + " has been deleted from the list !");
+                return true;
             }
             else
             {
-                Console.WriteLine("The job " + job + " was not found in the list !");
+                //Console.WriteLine("The job " + job + " was not found in the list !");
+                return false;
             }
         }
 
-        public void Execute()
+        public bool Execute()
         {
-            if (ManagerModel.Instance.Jobs.Count > 0)
+            if (ManagerModel.Jobs.Count > 0)
             {
-                foreach (JobModel job in ManagerModel.Instance.Jobs)
+                foreach (JobModel job in ManagerModel.Jobs)
                 {
                     var service = new JobService();
                     service.Start(job);
-                    Console.WriteLine("The job " + job + " has been started !");
+                    //Console.WriteLine("The job " + job + " has been started !");
+                    return true;
                 }
             }
             else
             {
-                Console.WriteLine("The list is empty !");
-
+                //Console.WriteLine("The list is empty !");
+                return false;
             }
         }
     }
