@@ -25,6 +25,16 @@ namespace EZSave.Core.Services
             }
         }
 
+        public void SetStatusDestination(string dest, ConfigFileModel config)
+        {
+            config.StatusFileDestination = dest;
+            string newJson = JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true });
+            if (!string.IsNullOrEmpty(config.ConfFileDestination))
+            {
+                File.WriteAllText(config.ConfFileDestination, newJson);
+            }
+        }
+
         public bool LoadConfigFile(ConfigFileModel config)
         {
             if (!string.IsNullOrEmpty(config.ConfFileDestination) && File.Exists(config.ConfFileDestination))
