@@ -11,4 +11,8 @@
     <ProjectReference Include="..\EZSave\EZSave.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\EZSave\EZSave.Core.csproj" />
+  </ItemGroup>
+
 </Project>
