@@ -4,7 +4,13 @@ namespace EZSave.Core.Services
 {
     public class ManagerService
     {
-
+        public void Read(ManagerModel manager, ConfigFileModel config)
+        {
+            foreach (JobModel job in config.Jobs.Values)
+            {
+                Add(job, manager);
+            }
+        }
         public bool Add(JobModel job, ManagerModel manager)
         {
             if (manager.Jobs.Count >= manager.Limit)
