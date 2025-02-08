@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace EZSave.Tests
 {
@@ -14,40 +15,58 @@ namespace EZSave.Tests
         private readonly ConfigService configService = new ConfigService();
 
         [Fact]
-        public void SaveJob_ShouldPersistJobAndLoadConfigCorrectly()
+        public void Adding()
         {
-            // Arrange
-            //string tempFilePath = Path.GetTempFileName();
-            //var conf = new ConfigFileModel { ConfFileDestination = tempFilePath };
-            //var job = new JobModel { Name = "TestJob", Source = "C://test", Destination = "C://test2", Type = "differential" };
+            var service = new ConfigService();
+            var tempFilePath = Path.Combine(Path.GetTempPath(), "test_config.json");
+            var model = new ConfigFileModel();
 
-            //var configService = new ConfigService();
-            var config = new ConfigFileModel();
+            service.SetConfigDestination(tempFilePath, model);
 
-            try
-            {
-                // Act
-                //configService.SaveJob(job, conf);
-                //configService.LoadConfigFile(conf);
+            var job = new JobModel { Name = "TestJob", Source = "C://test", Destination = "C://test2", Type = "differential" };
 
-                // Assert - Vérifie que le job a bien été sauvegardé
-                //Assert.True(config.Jobs.Contain   sKey("TestJob"));
+            service.SaveJob(job, model);
+            //string json = File.ReadAllText(tempFilePath);
+            service.LoadConfigFile(model);
+            //var loadedConfig = JsonSerializer.Deserialize<ConfigFileModel>(json);
 
-                var manager = new ManagerService();
-                var managerModel = new ManagerModel();
-                manager.Read(managerModel, config);
 
-                // Vérifie que le manager a bien récupéré les jobs du fichier de configuration
-                Assert.NotEmpty(managerModel.Jobs);
-            }
-            finally
-            {
-                // Cleanup
-                if (File.Exists(tempFilePath))
-                {
-                    File.Delete(tempFilePath);
-                }
-            }
+            var manager = new ManagerService();
+                
+            var managerModel = new ManagerModel();
+                
+            manager.Read(managerModel, model);
+            
+            Assert.NotEmpty(managerModel.Jobs);
+            Assert.Contains(managerModel.Jobs, job2 => job2.Name == "TestJob");
+        }
+
+        [Fact]
+        public void Removing()
+        {
+            var service = new ConfigService();
+            var tempFilePath = Path.Combine(Path.GetTempPath(), "test_config.json");
+            var model = new ConfigFileModel();
+
+            service.SetConfigDestination(tempFilePath, model);
+
+            var job = new JobModel { Name = "TestJob", Source = "C://test", Destination = "C://test2", Type = "differential" };
+
+            service.SaveJob(job, model);
+            service.LoadConfigFile(model);
+
+
+            var manager = new ManagerService();
+
+            var managerModel = new ManagerModel();
+
+            manager.Read(managerModel, model);
+           
+
+            var result = manager.RemoveJob(job, managerModel); 
+
+            Assert.True(result); 
+            Assert.Empty(managerModel.Jobs); 
         }
 
     }
