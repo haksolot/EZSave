@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EZSave.GUI", "EZSave.GUI\EZ
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EZSave.Tests", "EZSave.Tests\EZSave.Tests.csproj", "{2E8AAE0C-62A1-478A-8E0B-116A18B46B9E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EZSave.Language", "EZSave.Language\EZSave.Language.csproj", "{E8A6CF19-AA20-415E-95E8-8FBF87D7C887}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{2E8AAE0C-62A1-478A-8E0B-116A18B46B9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E8AAE0C-62A1-478A-8E0B-116A18B46B9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E8AAE0C-62A1-478A-8E0B-116A18B46B9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8A6CF19-AA20-415E-95E8-8FBF87D7C887}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8A6CF19-AA20-415E-95E8-8FBF87D7C887}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8A6CF19-AA20-415E-95E8-8FBF87D7C887}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8A6CF19-AA20-415E-95E8-8FBF87D7C887}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
