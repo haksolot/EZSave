@@ -2,36 +2,41 @@
 using System.IO;
 using System.Text.Json;
 using EZSave.Core.Models;
+using System.Collections.Generic;
 
-
-public class LogService
+namespace EZSave.Core.Services
 {
-
-
-    public void Write(LogModel logModel,ConfigFileModel configModel)
+    public class LogService
     {
-        string logDirectory = configModel.LogFileDestination;
-        string logFilePath = Path.Combine(logDirectory, "_log.json");
-
-        if (!Directory.Exists(logDirectory))
+        public void Write(LogModel logModel, ConfigFileModel configModel)
         {
-            Directory.CreateDirectory(logDirectory);
+
+            string logDirectory = configModel.LogFileDestination;
+
+            string logFilePath = Path.Combine(logDirectory, DateTime.Now.ToString("yyyyMMdd")+"_log.json");
+
+            // Verif si dossier existe
+            if (!Directory.Exists(logDirectory))
+            {
+                Directory.CreateDirectory(logDirectory);
+            }
+            if (!File.Exists(logFilePath))
+            {
+                using (File.Create(logFilePath)) { } // Ferme immédiatement le fichier
+            }
+            string existingJson = File.ReadAllText(logFilePath).Trim();
+            List<LogModel> logModels = new List<LogModel>();
+            if (!string.IsNullOrWhiteSpace(existingJson))
+            {
+                logModels = JsonSerializer.Deserialize<List<LogModel>>(existingJson) ?? new List<LogModel>();
+            }
+
+            logModels.Add(logModel);
+
+            string jsonString = JsonSerializer.Serialize(logModels, new JsonSerializerOptions { WriteIndented = true });
+
+            File.WriteAllText(logFilePath, jsonString);
+                 
         }
-
-
-        string jsonString = JsonSerializer.Serialize(logModel);
-        if (!File.Exists(logFilePath))
-        {
-            File.WriteAllText(logFilePath, "[" + jsonString);
-        }
-        else
-        {
-            File.AppendAllText(logFilePath, "," + jsonString);
-        }
-
-        File.AppendAllText(logFilePath, "]");
-
-        Console.WriteLine($"Log ajouté : {Path.GetFullPath(logDirectory)}");
     }
-
 }

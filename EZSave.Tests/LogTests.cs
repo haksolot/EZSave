@@ -11,7 +11,7 @@ namespace EZSave.Tests
 		{
 			var testlog = new LogModel
 			{
-				Name = "test",
+				Name = "test1",
 				Timestamp = DateTime.Now,
 				FileSource = "C:\\Users\\Utilisateur",
 				FileDestination = "C:\\Users\\Utilisateur\\source\\repos\\haksolot\\EZSave",
@@ -21,7 +21,7 @@ namespace EZSave.Tests
             var testlog2 = new LogModel
             {
                 Name = "test2",
-                Timestamp = DateTime.Now.AddHours(1),
+                Timestamp = DateTime.Now,
                 FileSource = "C:\\Users\\Utilisateur",
                 FileDestination = "C:\\Users\\Utilisateur\\source\\repos\\haksolot\\EZSave",
                 FileSize = 1024,
@@ -29,23 +29,21 @@ namespace EZSave.Tests
             };
             var testconfigfile = new ConfigFileModel
 			{
-				ConfFileDestination = testlog2.FileDestination,
+				ConfFileDestination = "config",
 				LogFileDestination = "logs"
 			};
 
+			
             var logService = new LogService();
 			logService.Write(testlog, testconfigfile);
             logService.Write(testlog2, testconfigfile);
 
-            string logDirectory = Path.Combine(testconfigfile.LogFileDestination, DateTime.Now.ToString("yyyyMMdd"));
-            string logFilePath = Path.Combine(logDirectory, "_log.json");
-			
+            string logDirectory = Path.Combine(testconfigfile.LogFileDestination);
+            string expectedFilePath = Path.Combine(logDirectory, DateTime.Now.ToString("yyyyMMdd") + "_log.json");
+            
 
-            // Chemin fichiers attendu
-            string expectedFilePath = Path.Combine(testconfigfile.LogFileDestination, testlog2.Timestamp.ToString("yyyyMMdd"), "_log.json");
-
-			// Vérification fichier créé
-			Assert.True(File.Exists(expectedFilePath), $"Le fichier de log n'a pas été créé : {expectedFilePath}");
+            // Vérification fichier créé
+            Assert.True(File.Exists(expectedFilePath), $"Le fichier de log n'a pas été créé : {expectedFilePath}");
 			
 			// Vérification du contenu du fichier
 			string fileContent = File.ReadAllText(expectedFilePath);
