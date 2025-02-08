@@ -1,108 +1,72 @@
 //using EZSave.Core.Models;
 //using EZSave.Core.Services;
 //using System.Text.Json;
-
-<<<<<<< HEAD
-//namespace EZSave.Tests
-//{
-//    public class ConfigTests
-//    {
-//        [Fact]
-//        public void LoadConfigFile()
-//        {
-//            var conf = new ConfigModel { ConfFileDestination = "test_config.json" };
-//            File.WriteAllText(conf.ConfFileDestination, "{\"Jobs\":{\"job1\":\"Task1\"}}");
-//            var config = new ConfigFileModel();
-//            new ConfigService().LoadConfigFile(conf, config);
-//            Assert.True(config.Jobs.ContainsKey("job1"));
-//        }
-=======
 namespace EZSave.Tests
 {
     public class ConfigTests
     {
         [Fact]
-        public void LoadConfigFile()
+        public void LoadConfigFileTest()
         {
             var conf = new ConfigFileModel { ConfFileDestination = "test_config.json" };
-            File.WriteAllText(conf.ConfFileDestination, "{\"Jobs\":{\"job1\":\"Task1\"}}");
-            var config = new ConfigFileModel();
+            var expectedJob = new JobModel { Name = "job1", Source = "/src", Destination = "/dest", Type = "full" };
+
+            var jsonContent = JsonSerializer.Serialize(new ConfigFileModel
+            {
+                Jobs = new Dictionary<string, JobModel> { { "job1", expectedJob } }
+            }, new JsonSerializerOptions { WriteIndented = true });
+
+            File.WriteAllText(conf.ConfFileDestination, jsonContent);
+
             new ConfigService().LoadConfigFile(conf);
-            Assert.True(config.Jobs.ContainsKey("job1"));
+
+            Assert.NotNull(conf.Jobs); 
+            Assert.True(conf.Jobs.ContainsKey("job1"));
+            Assert.Equal(expectedJob.Source, conf.Jobs["job1"].Source);
+            Assert.Equal(expectedJob.Destination, conf.Jobs["job1"].Destination);
+            Assert.Equal(expectedJob.Type, conf.Jobs["job1"].Type);
         }
->>>>>>> c17f8291484e173b36bc85c0e4e92908a36f71a0
 
-//        private readonly string tempFilePath = Path.Combine(Path.GetTempPath(), "test_config.json");
-//        private readonly ConfigService configService = new ConfigService();
-
-<<<<<<< HEAD
-//        [Fact]
-//        public void SaveJob_Should_Add_Job_To_Config()
-//        {
-//            // Arrange
-//            var conf = new ConfigModel { ConfFileDestination = tempFilePath };
-//            var config = new ConfigFileModel { Jobs = new Dictionary<string, JobModel>() };
-//            var job = new JobModel { Name = "TestJob", Source = "C://test", Destination = "C://test2", Type = "differential"};
-
-//            // Act
-//            configService.SaveJob(job, conf);
-//            string json = File.ReadAllText(tempFilePath);
-//            var loadedConfig = JsonSerializer.Deserialize<ConfigFileModel>(json);
-=======
         [Fact]
         public void SaveJob_Should_Add_Job_To_Config()
         {
-            // Arrange
-            //var conf = new ConfigFileModel { ConfFileDestination = tempFilePath };
-            //var config = new ConfigFileModel { Jobs = new Dictionary<string, JobModel>() };
-            var config = new ConfigFileModel { ConfFileDestination = tempFilePath, Jobs = new Dictionary<string, JobModel>() };
+            var service = new ConfigService();
+            var tempFilePath = Path.Combine(Path.GetTempPath(), "test_config.json");
+            var model = new ConfigFileModel();
+
+            service.SetConfigDestination(tempFilePath, model);
+
             var job = new JobModel { Name = "TestJob", Source = "C://test", Destination = "C://test2", Type = "differential" };
 
-            // Act
-            configService.SaveJob(job, config);
+            service.SaveJob(job, model);
             string json = File.ReadAllText(tempFilePath);
             var loadedConfig = JsonSerializer.Deserialize<ConfigFileModel>(json);
->>>>>>> c17f8291484e173b36bc85c0e4e92908a36f71a0
 
-//            // Assert
-//            Assert.NotNull(loadedConfig);
-//            Assert.True(loadedConfig.Jobs.ContainsKey("TestJob"));
-//            Assert.Equal("C://test", loadedConfig.Jobs["TestJob"].Source);
-//        }
+            Assert.NotNull(loadedConfig);
+            Assert.NotNull(loadedConfig.Jobs);
+            Assert.True(loadedConfig.Jobs.ContainsKey("TestJob"));
+            Assert.Equal("C://test", loadedConfig.Jobs["TestJob"].Source);
+        }
 
-<<<<<<< HEAD
-//        [Fact]
-//        public void DeleteJob_Should_Remove_Job_From_Config()
-//        {
-//            // Arrange
-//            var conf = new ConfigModel { ConfFileDestination = tempFilePath };
-//            var config = new ConfigFileModel { Jobs = new Dictionary<string, JobModel> { { "TestJob", new JobModel { Name = "TestJob", Source = "C://test", Destination = "C://test2", Type = "differential" } } } };
-//            File.WriteAllText(tempFilePath, JsonSerializer.Serialize(config));
-
-//            // Act
-//            configService.DeleteJob(new JobModel { Name = "TestJob" }, conf);
-//            string json = File.ReadAllText(tempFilePath);
-//            var loadedConfig = JsonSerializer.Deserialize<ConfigFileModel>(json);
-=======
         [Fact]
         public void DeleteJob_Should_Remove_Job_From_Config()
         {
-            // Arrange
-            //var conf = new ConfigFileModel { ConfFileDestination = tempFilePath };
-            //var config = new ConfigFileModel { Jobs = new Dictionary<string, JobModel> { { "TestJob", new JobModel { Name = "TestJob", Source = "C://test", Destination = "C://test2", Type = "differential" } } } };
-            var config = new ConfigFileModel { ConfFileDestination = tempFilePath, Jobs = new Dictionary<string, JobModel> { { "TestJob", new JobModel { Name = "TestJob", Source = "C://test", Destination = "C://test2", Type = "differential" } } } };
+            var tempFilePath = Path.Combine(Path.GetTempPath(), "test_config.json");
+            var service = new ConfigService();
+            var model = new ConfigFileModel();
+            var job = new JobModel { Name = "TestJob", Source = "C://test", Destination = "C://test2", Type = "differential" };
 
-            File.WriteAllText(tempFilePath, JsonSerializer.Serialize(config));
+            service.SetConfigDestination(tempFilePath, model);
+            service.SaveJob(job, model);
 
-            // Act
-            configService.DeleteJob(new JobModel { Name = "TestJob" }, config);
+            service.DeleteJob(new JobModel { Name = "TestJob" }, model);
             string json = File.ReadAllText(tempFilePath);
             var loadedConfig = JsonSerializer.Deserialize<ConfigFileModel>(json);
->>>>>>> c17f8291484e173b36bc85c0e4e92908a36f71a0
 
-//            // Assert
-//            Assert.NotNull(loadedConfig);
-//            Assert.False(loadedConfig.Jobs.ContainsKey("TestJob"));
-//        }
-//    }
-//}
+            Assert.NotNull(loadedConfig);
+            Assert.NotNull(loadedConfig.Jobs);
+            Assert.False(loadedConfig.Jobs.ContainsKey("TestJob"));
+        }
+    }
+}
+
