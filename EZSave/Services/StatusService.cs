@@ -9,8 +9,10 @@ namespace EZSave.Core.Services
         public void SaveStatus(StatusModel statusmodel, ConfigFileModel configmodel)
         {
             var liststatus = new Dictionary<string,StatusModel>();
+
             string statusDirectory = configmodel.StatusFileDestination;
             string statusFilePath = Path.Combine(statusDirectory, "_status.json");
+            
             //Verif dossier existe
             if (!Directory.Exists(statusDirectory))
             {
@@ -18,7 +20,7 @@ namespace EZSave.Core.Services
             }
 
             // Changer seulement les status existants  
-            if(File.Exists(statusFilePath))
+            if (File.Exists(statusFilePath))
             {
                 string json = File.ReadAllText(statusFilePath);
                 if (!string.IsNullOrWhiteSpace(json))
@@ -26,12 +28,18 @@ namespace EZSave.Core.Services
                     liststatus = JsonSerializer.Deserialize<Dictionary<string, StatusModel>>(json) ?? new Dictionary<string, StatusModel>();
                 }
             }
-
+            //else
+            //{
+            //    using (File.Create(statusFilePath)) { }
+            //}
             // Verif si le statuc existe dans le fichier 
             if (liststatus.ContainsKey(statusmodel.Name))
             {
                 // upadte les valeurs du status
-                liststatus[statusmodel.Name] = statusmodel;
+                liststatus[statusmodel.Name].State = statusmodel.State;
+                liststatus[statusmodel.Name].Size = statusmodel.Size;
+                liststatus[statusmodel.Name].Progress = statusmodel.Progress;
+                liststatus[statusmodel.Name].TotalTransferTime = statusmodel.TotalTransferTime;
             }
             else
             {
