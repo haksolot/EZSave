@@ -1,26 +1,42 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.IO;
+using System.Text.Json;
+using EZSave.Core.Models;
+using System.Collections.Generic;
 
-public class LogService
+namespace EZSave.Core.Services
 {
-  public void Write(LogModel model)
-  {
-    string logDirectory = $"logs/{model.Name}";
-    if (!Directory.Exists(logDirectory))
+    public class LogService
     {
-      Directory.CreateDirectory(logDirectory);
+        public void Write(LogModel logModel, ConfigFileModel configModel)
+        {
+
+            string logDirectory = configModel.LogFileDestination;
+
+            string logFilePath = Path.Combine(logDirectory, DateTime.Now.ToString("yyyyMMdd")+"_log.json");
+
+            // Verif si dossier existe
+            if (!Directory.Exists(logDirectory))
+            {
+                Directory.CreateDirectory(logDirectory);
+            }
+            if (!File.Exists(logFilePath))
+            {
+                using (File.Create(logFilePath)) { } // Ferme immédiatement le fichier
+            }
+            string existingJson = File.ReadAllText(logFilePath).Trim();
+            List<LogModel> logModels = new List<LogModel>();
+            if (!string.IsNullOrWhiteSpace(existingJson))
+            {
+                logModels = JsonSerializer.Deserialize<List<LogModel>>(existingJson) ?? new List<LogModel>();
+            }
+
+            logModels.Add(logModel);
+
+            string jsonString = JsonSerializer.Serialize(logModels, new JsonSerializerOptions { WriteIndented = true });
+
+            File.WriteAllText(logFilePath, jsonString);
+                 
+        }
     }
-
-    string logfilename = $"{logDirectory}/{model.Name}_{model.Timestamp:yyyyMMdd}_log.json";
-    string jsonString = JsonSerializer.Serialize(model);
-
-
-    File.AppendAllText(logfilename, jsonString + Environment.NewLine);
-    Console.WriteLine($"Log ajouté : {logfilename}");
-  }
-
-  public void Show(LogModel model)
-  {
-    string logDirectory = $"logs/{model.Name}";
-    Console.WriteLine(File.ReadAllText($"{logDirectory}/{model.Name}_{model.Timestamp:yyyyMMdd}_log.json"));
-  }
 }
