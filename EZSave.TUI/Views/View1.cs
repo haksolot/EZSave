@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using EZSave.Core.Services;
 using EZSave.TUI.ViewModels;
 
 namespace EZSave.TUI.Views
@@ -10,10 +11,12 @@ namespace EZSave.TUI.Views
     public class View1
     {
         private readonly ViewModel1 _viewModel;
+        private readonly ResourcesService _resourcesService;
 
-        public View1(ViewModel1 viewModel)
+        public View1(ViewModel1 viewModel, ResourcesService resourcesService)
         {
             _viewModel = viewModel;
+            _resourcesService = resourcesService;
         }
 
         public void Display()
@@ -25,13 +28,13 @@ namespace EZSave.TUI.Views
                 Console.Clear();
                 if (inConfigMode)
                 {
-                    Console.WriteLine(" Mode Configuration :");
+                    Console.WriteLine(_viewModel.ConfModeTitle);
                     for (int i = 0; i < _viewModel.ConfigOptions.Count; i++)
                     {
                         Console.WriteLine($"{i + 1}. {_viewModel.ConfigOptions[i]}");
                     }
 
-                    Console.Write(" Votre choix : ");
+                    Console.Write(_viewModel.ChoiceTitle);
                     if (int.TryParse(Console.ReadLine(), out int configChoice))
                     {
                         _viewModel.ExecuteConfigOption(configChoice);
@@ -42,7 +45,7 @@ namespace EZSave.TUI.Views
                     }
                     else
                     {
-                        Console.WriteLine("Choix invalide. Veuillez réessayer.");
+                        Console.WriteLine(_viewModel.InvalidChoiceTitle);
                     }
                 }
                 else
@@ -60,30 +63,65 @@ namespace EZSave.TUI.Views
                                     
  
 ");
-                    Console.WriteLine(" Menu Principal :");
+                    Console.WriteLine(_viewModel.MainMenuTitle);
                     for (int i = 0; i < _viewModel.MainOptions.Count; i++)
                     {
                         Console.WriteLine($"{i + 1}. {_viewModel.MainOptions[i]}");
                     }
 
-                    Console.Write(" Votre choix : ");
+                    Console.Write(_viewModel.ChoiceTitle);
                     if (int.TryParse(Console.ReadLine(), out int mainChoice))
                     {
-                        _viewModel.ExecuteMainOption(mainChoice);
-                        if (mainChoice == 2)
+                        if (mainChoice == 1)
                         {
+                            _viewModel.ExecuteMainOption(mainChoice);
+                        }
+                        else if (mainChoice == 2)
+                        {
+                            _viewModel.ExecuteMainOption(mainChoice);
                             inConfigMode = true;
+                        }
+                        else if (mainChoice == 3)
+                        {
+                            for (int i = 0; i < _viewModel.LanguageOptions.Count; i++)
+                            {
+                                Console.WriteLine($"{i + 1}. {_viewModel.LanguageOptions[i]}");
+                            }
+                            Console.Write(_viewModel.ChoiceTitle);
+                            if (int.TryParse(Console.ReadLine(), out int languageChoice))
+                            {
+                                if (languageChoice == 1)
+                                {
+                                    _viewModel.ChangeLanguage("fr");
+                                }
+                                else if (languageChoice == 2)
+                                {
+                                    _viewModel.ChangeLanguage("en"); 
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine(_viewModel.InvalidChoiceTitle);
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine(_viewModel.InvalidChoiceTitle);
                         }
                     }
                     else
                     {
-                        Console.WriteLine("Choix invalide. Veuillez réessayer.");
+                        Console.WriteLine(_viewModel.InvalidChoiceTitle);
                     }
+                   
                 }
 
-                Console.WriteLine("Appuyez sur une touche pour continuer...");
+                Console.WriteLine(_viewModel.ChooseChoiceTitle);
                 Console.ReadKey();
             }
         }
+        
+           
+        
     }
 }
