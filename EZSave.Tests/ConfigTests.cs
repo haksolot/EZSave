@@ -9,10 +9,10 @@ namespace EZSave.Tests
         [Fact]
         public void LoadConfigFile()
         {
-            var conf = new ConfigModel { ConfFileDestination = "test_config.json" };
+            var conf = new ConfigFileModel { ConfFileDestination = "test_config.json" };
             File.WriteAllText(conf.ConfFileDestination, "{\"Jobs\":{\"job1\":\"Task1\"}}");
             var config = new ConfigFileModel();
-            new ConfigService().LoadConfigFile(conf, config);
+            new ConfigService().LoadConfigFile(conf);
             Assert.True(config.Jobs.ContainsKey("job1"));
         }
 
@@ -23,12 +23,13 @@ namespace EZSave.Tests
         public void SaveJob_Should_Add_Job_To_Config()
         {
             // Arrange
-            var conf = new ConfigModel { ConfFileDestination = tempFilePath };
-            var config = new ConfigFileModel { Jobs = new Dictionary<string, JobModel>() };
-            var job = new JobModel { Name = "TestJob", Source = "C://test", Destination = "C://test2", Type = "differential"};
+            //var conf = new ConfigFileModel { ConfFileDestination = tempFilePath };
+            //var config = new ConfigFileModel { Jobs = new Dictionary<string, JobModel>() };
+            var config = new ConfigFileModel { ConfFileDestination = tempFilePath, Jobs = new Dictionary<string, JobModel>() };
+            var job = new JobModel { Name = "TestJob", Source = "C://test", Destination = "C://test2", Type = "differential" };
 
             // Act
-            configService.SaveJob(job, conf);
+            configService.SaveJob(job, config);
             string json = File.ReadAllText(tempFilePath);
             var loadedConfig = JsonSerializer.Deserialize<ConfigFileModel>(json);
 
@@ -42,12 +43,14 @@ namespace EZSave.Tests
         public void DeleteJob_Should_Remove_Job_From_Config()
         {
             // Arrange
-            var conf = new ConfigModel { ConfFileDestination = tempFilePath };
-            var config = new ConfigFileModel { Jobs = new Dictionary<string, JobModel> { { "TestJob", new JobModel { Name = "TestJob", Source = "C://test", Destination = "C://test2", Type = "differential" } } } };
+            //var conf = new ConfigFileModel { ConfFileDestination = tempFilePath };
+            //var config = new ConfigFileModel { Jobs = new Dictionary<string, JobModel> { { "TestJob", new JobModel { Name = "TestJob", Source = "C://test", Destination = "C://test2", Type = "differential" } } } };
+            var config = new ConfigFileModel { ConfFileDestination = tempFilePath, Jobs = new Dictionary<string, JobModel> { { "TestJob", new JobModel { Name = "TestJob", Source = "C://test", Destination = "C://test2", Type = "differential" } } } };
+
             File.WriteAllText(tempFilePath, JsonSerializer.Serialize(config));
 
             // Act
-            configService.DeleteJob(new JobModel { Name = "TestJob" }, conf);
+            configService.DeleteJob(new JobModel { Name = "TestJob" }, config);
             string json = File.ReadAllText(tempFilePath);
             var loadedConfig = JsonSerializer.Deserialize<ConfigFileModel>(json);
 
