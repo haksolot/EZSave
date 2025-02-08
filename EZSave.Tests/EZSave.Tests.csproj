@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\EZSave.TUI\EZSave.TUI.csproj" />
     <ProjectReference Include="..\EZSave\EZSave.Core.csproj" />
   </ItemGroup>
 

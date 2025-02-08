@@ -1,4 +1,5 @@
 ﻿using EZSave.Core.Models;
+using System.Runtime.InteropServices;
 
 namespace EZSave.Core.Services
 {
@@ -26,20 +27,20 @@ namespace EZSave.Core.Services
             }
         }
 
-        public bool Remove(JobModel job, ManagerModel manager)
+        public bool RemoveJob(JobModel job, ManagerModel manager)
         {
-            if (manager.Jobs.Contains(job))
+            for (int i = 0; i < manager.Jobs.Count; i++)
             {
-                manager.Jobs.Remove(job);
-                //Console.WriteLine("The job " + job + " has been deleted from the list !");
-                return true;
+                var jobList = manager.Jobs[i];
+                if (jobList.Name == job.Name)
+                {
+                    manager.Jobs.RemoveAt(i);
+                    return true;
+                }
             }
-            else
-            {
-                //Console.WriteLine("The job " + job + " was not found in the list !");
-                return false;
-            }
+            return false;
         }
+
 
         public bool Execute(ManagerModel manager)
         {

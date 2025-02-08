@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="ViewModels\" />
+    <ProjectReference Include="..\EZSave\EZSave.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
