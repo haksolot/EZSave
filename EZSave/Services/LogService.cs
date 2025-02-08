@@ -8,27 +8,30 @@ public class LogService
 {
 
 
-    public void Write(LogModel model)
+    public void Write(LogModel logModel,ConfigFileModel configModel)
     {
-        string logDirectory = $"logs/{model.Name}";
+        string logDirectory = configModel.LogFileDestination;
+        string logFilePath = Path.Combine(logDirectory, "_log.json");
 
         if (!Directory.Exists(logDirectory))
         {
             Directory.CreateDirectory(logDirectory);
         }
 
-        string logfilename = $"{logDirectory}/{model.Name}_{model.Timestamp:yyyyMMdd}_log.json";
-        string jsonString = JsonSerializer.Serialize(model);
 
+        string jsonString = JsonSerializer.Serialize(logModel);
+        if (!File.Exists(logFilePath))
+        {
+            File.WriteAllText(logFilePath, "[" + jsonString);
+        }
+        else
+        {
+            File.AppendAllText(logFilePath, "," + jsonString);
+        }
 
-        File.AppendAllText(logfilename, jsonString + Environment.NewLine);
+        File.AppendAllText(logFilePath, "]");
 
-        Console.WriteLine($"Log ajouté : {logfilename}");
+        Console.WriteLine($"Log ajouté : {Path.GetFullPath(logDirectory)}");
     }
 
-    public void Show(LogModel model)
-    {
-        string logDirectory = $"logs/{model.Name}";
-        Console.WriteLine(File.ReadAllText($"{logDirectory}/{model.Name}_{model.Timestamp:yyyyMMdd}_log.json"));
-    }
 }
