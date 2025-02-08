@@ -18,7 +18,7 @@ namespace EZSave.Tests
         {
             // Arrange
             string tempFilePath = Path.GetTempFileName();
-            var conf = new ConfigModel { ConfFileDestination = tempFilePath };
+            var conf = new ConfigFileModel { ConfFileDestination = tempFilePath };
             var job = new JobModel { Name = "TestJob", Source = "C://test", Destination = "C://test2", Type = "differential" };
 
             var configService = new ConfigService();
