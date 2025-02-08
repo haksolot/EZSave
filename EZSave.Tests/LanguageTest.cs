@@ -5,38 +5,74 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using EZSave.TUI.ViewModels;
+using System.Globalization;
 
 
 namespace EZSave.Tests
 {
     public class LanguageTest
     {
-        [Fact]
-        public void ChangeLanguage_ShouldUpdateTranslatedText_WhenLanguageChanged()
+        private readonly ResourcesService _resourcesService;
+
+        public LanguageTest()
         {
-            // Arrange
-            var viewModel = new LanguageViewModel();
-
-            // Act
-            viewModel.ChangeLanguage("en"); // Change to English
-            var translatedText = viewModel.TranslatedText;
-
-            // Assert
-            Assert.Equal("Hello World", translatedText); // Check if the translated text is updated correctly
+            _resourcesService = new ResourcesService();
         }
 
         [Fact]
-        public void CurrentLanguage_ShouldChange_WhenNewLanguageIsSet()
+        public void GetString_ReturnExpectedValue()
+        {
+            
+            string key = "WelcomeMessage"; 
+            string expectedValue = "Bonjour";
+            
+            string result = _resourcesService.GetString(key);
+
+            
+            Assert.Equal(expectedValue, result); 
+        }
+
+        [Fact]
+        public void GetString_ShouldReturnKey_WhenKeyNotFound()
         {
             // Arrange
-            var viewModel = new LanguageViewModel();
+            string key = "NonExistingKey"; // Une clé qui n'existe pas
+            string expectedValue = "[NonExistingKey]"; // Si la clé n'existe pas, la méthode doit retourner la clé entre crochets
 
             // Act
-            viewModel.CurrentLanguage = "fr"; // Set language to French
-            var currentLanguage = viewModel.CurrentLanguage;
+            string result = _resourcesService.GetString(key);
 
             // Assert
-            Assert.Equal("fr", currentLanguage); // Check if the current language is correctly set
+            Assert.Equal(expectedValue, result); // Vérifie que la valeur retournée est bien la clé entre crochets
         }
-    }
+
+        [Fact]
+        public void SetLanguage_ShouldChangeCulture()
+        {
+            // Arrange
+            string languageCode = "fr-FR"; // Code de langue pour la culture française
+            string expectedLanguage = "fr"; // Culture courante attendue après la définition
+
+            // Act
+            _resourcesService.SetLanguage(languageCode);
+
+            // Assert
+            Assert.Equal(expectedLanguage, CultureInfo.CurrentCulture.TwoLetterISOLanguageName); // Vérifie que la culture actuelle est bien le français
+        }
+
+        [Fact]
+        public void SetLanguage_ShouldNotChangeCulture_WhenInvalidCode()
+        {
+            // Arrange
+            string invalidLanguageCode = "invalid"; // Un code de langue invalide
+            string originalLanguage = CultureInfo.CurrentCulture.TwoLetterISOLanguageName; // Récupérer la langue originale
+
+            // Act
+            _resourcesService.SetLanguage(invalidLanguageCode);
+
+            // Assert
+            Assert.Equal(originalLanguage, CultureInfo.CurrentCulture.TwoLetterISOLanguageName); // Vérifie que la culture n'a pas changé avec un code de langue invalide
+        }
+    
+}
 }

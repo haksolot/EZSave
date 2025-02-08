@@ -15,7 +15,7 @@ namespace EZSave.Core.Services
 
         public string GetString(string key)
         {
-            return _resourceManager.GetString(key) ?? $"[{key}]"; // Retourne la clé si non trouvée
+            return _resourceManager.GetString(key) ?? $"[{key}]"; 
         }
 
         public void SetLanguage(string languageCode)
