@@ -1,78 +1,66 @@
-﻿using EZSave.Core.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using EZSave.TUI.ViewModels;
+﻿using Xunit;
+using EZSave.Core.Services;
+using System.Reflection;
+using System.Resources;
 using System.Globalization;
-
 
 namespace EZSave.Tests
 {
     public class LanguageTest
     {
-        private readonly ResourcesService _resourcesService;
+        private readonly ResourceManager _resourcesManager;
 
         public LanguageTest()
         {
-            _resourcesService = new ResourcesService();
+            _resourcesManager = new ResourceManager("EZSave.Language.Resources.AppResources", typeof(EZSave.Language.Resources.AppResources).Assembly);
         }
 
         [Fact]
-        public void GetString_ReturnExpectedValue()
-        {
-            
-            string key = "WelcomeMessage"; 
-            string expectedValue = "Bonjour";
-            
-            string result = _resourcesService.GetString(key);
-
-            
-            Assert.Equal(expectedValue, result); 
-        }
-
-        [Fact]
-        public void GetString_ShouldReturnKey_WhenKeyNotFound()
+        public void GetString_ShouldReturnEnglishValue_WhenCultureIsEnglish()
         {
             // Arrange
-            string key = "NonExistingKey"; // Une clé qui n'existe pas
-            string expectedValue = "[NonExistingKey]"; // Si la clé n'existe pas, la méthode doit retourner la clé entre crochets
+            CultureInfo.CurrentUICulture = new CultureInfo("en");
 
             // Act
-            string result = _resourcesService.GetString(key);
+            string result = _resourcesManager.GetString("WelcomeMessage");
 
             // Assert
-            Assert.Equal(expectedValue, result); // Vérifie que la valeur retournée est bien la clé entre crochets
+            Assert.Equal("Hello !", result);
         }
 
         [Fact]
-        public void SetLanguage_ShouldChangeCulture()
+        public void GetString_ShouldReturnFrenchValue_WhenCultureIsFrench()
         {
-            // Arrange
-            string languageCode = "fr-FR"; // Code de langue pour la culture française
-            string expectedLanguage = "fr"; // Culture courante attendue après la définition
+            CultureInfo.CurrentUICulture = new CultureInfo("fr");
 
-            // Act
-            _resourcesService.SetLanguage(languageCode);
+            string result = _resourcesManager.GetString("WelcomeMessage");
 
-            // Assert
-            Assert.Equal(expectedLanguage, CultureInfo.CurrentCulture.TwoLetterISOLanguageName); // Vérifie que la culture actuelle est bien le français
+            Assert.Equal("Bonjour !", result);
         }
 
         [Fact]
-        public void SetLanguage_ShouldNotChangeCulture_WhenInvalidCode()
+        public void GetString_ShouldReturnNull_WhenResourceDoesNotExist()
         {
-            // Arrange
-            string invalidLanguageCode = "invalid"; // Un code de langue invalide
-            string originalLanguage = CultureInfo.CurrentCulture.TwoLetterISOLanguageName; // Récupérer la langue originale
+            CultureInfo.CurrentUICulture = new CultureInfo("en");
 
-            // Act
-            _resourcesService.SetLanguage(invalidLanguageCode);
+            string result = _resourcesManager.GetString("NonExistingKey");
 
-            // Assert
-            Assert.Equal(originalLanguage, CultureInfo.CurrentCulture.TwoLetterISOLanguageName); // Vérifie que la culture n'a pas changé avec un code de langue invalide
+            Assert.Null(result);
         }
-    
+        [Fact]
+        public void GetString_ShouldFallbackToDefaultCulture_WhenSpecificCultureIsMissing()
+        {
+            CultureInfo.CurrentUICulture = new CultureInfo("es"); 
+
+            string result = _resourcesManager.GetString("WelcomeMessage");
+
+            Assert.Equal("Welcome to EasySave version: ", result); 
+        }
+    }
 }
-}
+
+
+
+
+   
+

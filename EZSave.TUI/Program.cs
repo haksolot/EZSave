@@ -1,10 +1,17 @@
-﻿namespace EZSave.TUI
+﻿using EZSave.Core.Services;
+using EZSave.TUI.ViewModels;
+using EZSave.TUI.Views;
+
+namespace EZSave.TUI
 {
-    internal class Program
+    public class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            ResourcesService resourcesService = new ResourcesService();
+            ViewModel1 viewModel = new ViewModel1(resourcesService);
+            View1 view = new View1(viewModel, resourcesService);
+            view.Display();
         }
     }
 }

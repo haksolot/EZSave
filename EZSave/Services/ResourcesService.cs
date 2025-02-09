@@ -1,28 +1,45 @@
-﻿using System.Resources;
+﻿using System;
+using System.Collections;
 using System.Globalization;
+using System.Resources;
+using System.Threading;
+    using EZSave.Language.Resources;
 
 namespace EZSave.Core.Services
 {
     public class ResourcesService
     {
-        private readonly ResourceManager _resourceManager;
 
+        private readonly ResourceManager _resourceManager;
+        private readonly Dictionary<string, string> _resourcesCache;
         public ResourcesService()
         {
-            _resourceManager = new ResourceManager("EZSave.Language.Resources.Resources",
-                typeof(ResourcesService).Assembly);
+            _resourcesCache = new Dictionary<string, string>();
+            _resourceManager = new ResourceManager(typeof(AppResources));
+            LoadResources("fr");
         }
 
         public string GetString(string key)
         {
-            return _resourceManager.GetString(key) ?? $"[{key}]"; 
+            return _resourceManager.GetString(key) ?? $"[{key}]";
         }
 
-        public void SetLanguage(string languageCode)
+        public void LoadResources(string cultureCode)
         {
-            CultureInfo culture = new CultureInfo(languageCode);
-            CultureInfo.CurrentCulture = culture;
-            CultureInfo.CurrentUICulture = culture;
+
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo(cultureCode);
+
+            _resourcesCache.Clear();
+
+            foreach (DictionaryEntry entry in _resourceManager.GetResourceSet(Thread.CurrentThread.CurrentUICulture, true, true))
+            {
+                _resourcesCache.Add(entry.Key.ToString(), entry.Value.ToString());
+            }
+        }
+
+        public void ChangeLanguage(string cultureCode)
+        {
+            LoadResources(cultureCode);
         }
     }
 }

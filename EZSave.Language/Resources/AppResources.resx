@@ -117,7 +117,58 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ChoiceTitle" xml:space="preserve">
+    <value>Your choice :</value>
+  </data>
+  <data name="ChooseChoiceTitle" xml:space="preserve">
+    <value>Press any key to continue ...</value>
+  </data>
+  <data name="ConfigOption1" xml:space="preserve">
+    <value>Add a job</value>
+  </data>
+  <data name="ConfigOption2" xml:space="preserve">
+    <value>Update a job</value>
+  </data>
+  <data name="ConfigOption3" xml:space="preserve">
+    <value>Delete a job</value>
+  </data>
+  <data name="ConfigOption4" xml:space="preserve">
+    <value>Change log destination path</value>
+  </data>
+  <data name="ConfigOption5" xml:space="preserve">
+    <value>Change config destination path</value>
+  </data>
+  <data name="ConfigOption6" xml:space="preserve">
+    <value>Change status destination path</value>
+  </data>
+  <data name="ConfigOption7" xml:space="preserve">
+    <value>Go back to main menu</value>
+  </data>
+  <data name="ConfModeTitle" xml:space="preserve">
+    <value>Configuration mode :</value>
+  </data>
+  <data name="InvalidChoiceTitle" xml:space="preserve">
+    <value>Invalid choice. Try again.</value>
+  </data>
+  <data name="LanguageOption1" xml:space="preserve">
+    <value>French</value>
+  </data>
+  <data name="LanguageOption2" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="MainMenuTitle" xml:space="preserve">
+    <value>Main menu :</value>
+  </data>
+  <data name="MainOption1" xml:space="preserve">
+    <value>Execute jobs</value>
+  </data>
+  <data name="MainOption2" xml:space="preserve">
+    <value>Enter in config mode</value>
+  </data>
+  <data name="MainOption3" xml:space="preserve">
+    <value>Change language</value>
+  </data>
   <data name="WelcomeMessage" xml:space="preserve">
-    <value>Welcome to our app !</value>
+    <value>Hello !</value>
   </data>
 </root>
