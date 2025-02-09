@@ -40,7 +40,13 @@ namespace EZSave.Tests
             var job = new JobModel { Name = "TestJob", Source = "C://test", Destination = "C://test2", Type = "differential" };
 
             service.SaveJob(job, model);
-            string json = File.ReadAllText(tempFilePath);
+
+            //string json = File.ReadAllText(tempFilePath);
+            string json = "";
+            using (StreamReader reader = new StreamReader(tempFilePath))
+            {
+                json = reader.ReadToEnd();
+            }
             var loadedConfig = JsonSerializer.Deserialize<ConfigFileModel>(json);
 
             Assert.NotNull(loadedConfig);
@@ -61,7 +67,12 @@ namespace EZSave.Tests
             service.SaveJob(job, model);
 
             service.DeleteJob(new JobModel { Name = "TestJob" }, model);
-            string json = File.ReadAllText(tempFilePath);
+            string json = "";
+            using (StreamReader reader = new StreamReader(tempFilePath))
+            {
+                json = reader.ReadToEnd();
+            }
+                //string json = File.ReadAllText(tempFilePath);
             var loadedConfig = JsonSerializer.Deserialize<ConfigFileModel>(json);
 
             Assert.NotNull(loadedConfig);
