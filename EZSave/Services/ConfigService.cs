@@ -58,16 +58,6 @@ namespace EZSave.Core.Services
 
         public void SaveJob(JobModel job, ConfigFileModel config)
         {
-            if (!string.IsNullOrEmpty(config.ConfFileDestination))
-            {
-                // Vérifier si le répertoire existe, sinon le créer
-                var directory = Path.GetDirectoryName(config.ConfFileDestination);
-                if (directory != null && !Directory.Exists(directory))
-                {
-                    Directory.CreateDirectory(directory);
-                }
-            }
-
             if (File.Exists(config.ConfFileDestination))
             {
                 string json = File.ReadAllText(config.ConfFileDestination);
