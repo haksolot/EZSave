@@ -16,11 +16,15 @@ namespace EZSave.Tests
         {
             var teststatus = new StatusModel
             {
-                Name = "Save",
-                State = "",
-                Progress = 0,
+                Name = "Save2",
+                SourceFilePath = "",
+                TargetFilePath = "",
+                State = "Activate",
                 TotalFilesSize =  1400050,
                 TotalFilesToCopy = 1450000,
+                Progression = 0,
+                FilesLeftToCopy = 1450000,
+                FilesSizeLeftToCopy= 1400050
             };
             var testconfigfile = new ConfigFileModel
             {
@@ -49,14 +53,16 @@ namespace EZSave.Tests
 
             // Vérifier que les valeurs sont bien enregistrées
             Assert.Equal(teststatus.Name, savedStatus.Name);
-            Assert.Equal(teststatus.Progress, savedStatus.Progress);
+            Assert.Equal(teststatus.State, savedStatus.State);
             Assert.Equal(teststatus.TotalFilesSize, savedStatus.TotalFilesSize);
             Assert.Equal(teststatus.TotalFilesToCopy, savedStatus.TotalFilesToCopy);
             
-            teststatus.Progress = 50;
+            teststatus.FilesLeftToCopy = 50;
+            teststatus.FilesSizeLeftToCopy = 250;
 
             status.SaveStatus(teststatus, testconfigfile);
-            Assert.Equal(teststatus.Progress, 50);
+            Assert.Equal(teststatus.FilesLeftToCopy, 50);
+            Assert.Equal(teststatus.FilesSizeLeftToCopy, 250);
 
         }
     }
