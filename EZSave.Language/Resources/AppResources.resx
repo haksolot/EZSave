@@ -147,6 +147,24 @@
   <data name="ConfModeTitle" xml:space="preserve">
     <value>Configuration mode :</value>
   </data>
+  <data name="EnterDeletedJob" xml:space="preserve">
+    <value>Enter the job to delete : </value>
+  </data>
+  <data name="EnterDestination" xml:space="preserve">
+    <value>Enter the job destination : </value>
+  </data>
+  <data name="EnterJobName" xml:space="preserve">
+    <value>Enter the job name : </value>
+  </data>
+  <data name="EnterModifiedJob" xml:space="preserve">
+    <value>Enter the job to modify : </value>
+  </data>
+  <data name="EnterSource" xml:space="preserve">
+    <value>Enter the job source : </value>
+  </data>
+  <data name="EnterType" xml:space="preserve">
+    <value>Enter the job backup type : </value>
+  </data>
   <data name="InvalidChoiceTitle" xml:space="preserve">
     <value>Invalid choice. Try again.</value>
   </data>
@@ -155,6 +173,12 @@
   </data>
   <data name="LanguageOption2" xml:space="preserve">
     <value>English</value>
+  </data>
+  <data name="ListJobsPossibleDelete" xml:space="preserve">
+    <value>Jobs that can be deleted : </value>
+  </data>
+  <data name="ListJobsPossibleModify" xml:space="preserve">
+    <value>Jobs thtat can be modified : </value>
   </data>
   <data name="MainMenuTitle" xml:space="preserve">
     <value>Main menu :</value>
