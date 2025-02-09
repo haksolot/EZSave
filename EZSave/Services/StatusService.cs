@@ -36,13 +36,21 @@ namespace EZSave.Core.Services
             if (liststatus.ContainsKey(statusmodel.Name))
             {
                 // upadte les valeurs du status
+                liststatus[statusmodel.Name].SourceFilePath = statusmodel.SourceFilePath;
+                liststatus[statusmodel.Name].TargetFilePath = statusmodel.TargetFilePath;
                 liststatus[statusmodel.Name].State = statusmodel.State;
-                liststatus[statusmodel.Name].Size = statusmodel.Size;
-                liststatus[statusmodel.Name].Progress = statusmodel.Progress;
-                liststatus[statusmodel.Name].TotalTransferTime = statusmodel.TotalTransferTime;
+                liststatus[statusmodel.Name].TotalFilesSize = statusmodel.TotalFilesSize;
+                liststatus[statusmodel.Name].TotalFilesToCopy = statusmodel.TotalFilesToCopy;
+                liststatus[statusmodel.Name].FilesLeftToCopy = statusmodel.FilesSizeLeftToCopy;
+                liststatus[statusmodel.Name].FilesSizeLeftToCopy = statusmodel.FilesSizeLeftToCopy;
+                decimal progress = (decimal)(statusmodel.TotalFilesToCopy - statusmodel.FilesLeftToCopy) / statusmodel.TotalFilesSize * 100;
+                liststatus[statusmodel.Name].Progression = (int)Math.Round(progress, MidpointRounding.AwayFromZero);
             }
             else
             {
+                decimal progress = (decimal)(statusmodel.TotalFilesSize - statusmodel.FilesSizeLeftToCopy) / statusmodel.TotalFilesSize * 100;
+                statusmodel.Progression = (int)Math.Round(progress, MidpointRounding.AwayFromZero);
+
                 // sinon ajoute le statut
                 liststatus.Add(statusmodel.Name, statusmodel);
             }
