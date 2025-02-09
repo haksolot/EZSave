@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Xml.Linq;
 using EZSave.Core.Services;
 using EZSave.TUI.ViewModels;
 
@@ -17,8 +15,13 @@ namespace EZSave.TUI.Views
         {
             _viewModel = viewModel;
             _resourcesService = resourcesService;
+            viewModel.Initialize();
         }
 
+        public void ShowJobs()
+        {
+            Console.Write(_viewModel.GetJobs());
+        }
         public void Display()
         {
             bool inConfigMode = false;
@@ -37,10 +40,59 @@ namespace EZSave.TUI.Views
                     Console.Write(_viewModel.ChoiceTitle);
                     if (int.TryParse(Console.ReadLine(), out int configChoice))
                     {
-                        _viewModel.ExecuteConfigOption(configChoice);
-                        if (configChoice == 7)
+                        if (configChoice == 1)
                         {
-                            inConfigMode = false;
+                            // Collecter les détails du job
+                            Console.Write("Entrez le nom du job : ");
+                            string name = Console.ReadLine();
+
+                            Console.Write("Entrez la source du job : ");
+                            string source = Console.ReadLine();
+
+                            Console.Write("Entrez la destination du job : ");
+                            string destination = Console.ReadLine();
+
+                            Console.Write("Entrez le type du job : ");
+                            string type = Console.ReadLine();
+
+                            // Appeler la méthode AddJob du ViewModel
+                            _viewModel.AddJob(name, source, destination, type);
+                        }
+                        if (configChoice == 2)
+                        {
+                            Console.WriteLine("Jobs pouvants être modifiés :");
+                            ShowJobs();
+                            Console.Write("Entrez le job à modifier : ");
+                            string jobName = Console.ReadLine();
+
+                            Console.Write("Source : ");
+                            string source = Console.ReadLine();
+
+                            Console.Write("Destination : ");
+                            string destination = Console.ReadLine();
+
+                            Console.Write("Type de backup : ");
+                            string type = Console.ReadLine();
+
+                            _viewModel.EditJob(jobName, source, destination, type);
+                        }
+                        if (configChoice == 3)
+                        {
+                            Console.WriteLine("Jobs pouvants être supprimés :");
+                            ShowJobs();
+
+                            Console.Write("Entrez le job à supprimer : ");
+                            string jobName = Console.ReadLine();
+
+                            _viewModel.DeleteJob(jobName);
+                        }
+                        else
+                        {
+                            _viewModel.ExecuteConfigOption(configChoice);
+                            if (configChoice == 7)
+                            {
+                                inConfigMode = false;
+                            }
                         }
                     }
                     else
@@ -52,16 +104,13 @@ namespace EZSave.TUI.Views
                 {
                     Console.Write(@"
 
-
- _____ ______ _____                 
-|  ___|___  //  ___|                
-| |__    / / \ `--.  __ ___   _____ 
+ _____ ______ _____
+|  ___|___  //  ___|
+| |__    / / \ `--.  __ ___   _____
 |  __|  / /   `--. \/ _` \ \ / / _ \
 | |___./ /___/\__/ / (_| |\ V /  __/
 \____/\_____/\____/ \__,_| \_/ \___|
-                                    
-                                    
- 
+
 ");
                     Console.WriteLine(_viewModel.MainMenuTitle);
                     for (int i = 0; i < _viewModel.MainOptions.Count; i++)
@@ -96,7 +145,7 @@ namespace EZSave.TUI.Views
                                 }
                                 else if (languageChoice == 2)
                                 {
-                                    _viewModel.ChangeLanguage("en"); 
+                                    _viewModel.ChangeLanguage("en");
                                 }
                             }
                             else
@@ -113,15 +162,11 @@ namespace EZSave.TUI.Views
                     {
                         Console.WriteLine(_viewModel.InvalidChoiceTitle);
                     }
-                   
                 }
 
                 Console.WriteLine(_viewModel.ChooseChoiceTitle);
                 Console.ReadKey();
             }
         }
-        
-           
-        
     }
 }
