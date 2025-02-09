@@ -37,9 +37,9 @@ namespace EZSave.Core.Services
             {
                 // upadte les valeurs du status
                 liststatus[statusmodel.Name].State = statusmodel.State;
-                liststatus[statusmodel.Name].Size = statusmodel.Size;
+                liststatus[statusmodel.Name].TotalFilesSize = statusmodel.TotalFilesSize;
                 liststatus[statusmodel.Name].Progress = statusmodel.Progress;
-                liststatus[statusmodel.Name].TotalTransferTime = statusmodel.TotalTransferTime;
+                liststatus[statusmodel.Name].TotalFilesToCopy = statusmodel.TotalFilesToCopy;
             }
             else
             {
