@@ -31,6 +31,9 @@ namespace EZSave.TUI.ViewModels
     public string EnterDeletedJob { get; set; }
     public string ListJobsPossibleDelete { get; set; }
     public string ListJobsPossibleModify {  get; set; }
+    public string LogPathChanging {  get; set; }
+    public string ConfigFilePathChanging { get; set; }
+    public string StatusFilePathChanging { get; set; }
     public string Message { get; set; }
 
     public ManagerModel managerModel { get; set; }
@@ -80,6 +83,9 @@ namespace EZSave.TUI.ViewModels
       EnterDeletedJob = _resourcesService.GetString("EnterDeletedJob");
       ListJobsPossibleDelete = _resourcesService.GetString("ListJobsPossibleDelete");
       ListJobsPossibleModify = _resourcesService.GetString("ListJobsPossibleModify");
+      LogPathChanging = _resourcesService.GetString("LogPathChanging");
+      ConfigFilePathChanging = _resourcesService.GetString("ConfigFilePathChanging");
+      StatusFilePathChanging = _resourcesService.GetString("StatusFilePathChanging");
       ConfigOptions.Clear();
       ConfigOptions.Add(_resourcesService.GetString("ConfigOption1"));
       ConfigOptions.Add(_resourcesService.GetString("ConfigOption2"));
@@ -147,7 +153,9 @@ namespace EZSave.TUI.ViewModels
             var managerService = new ManagerService();
             var configModel = new ConfigFileModel();
             configModel.LogFileDestination = "Log";
+            configModel.StatusFileDestination = "Status";
             bool isExecuted = managerService.Execute(managerModel, configModel);
+
             //Console.WriteLine("Exécution des jobs...");
             if (isExecuted)
             {

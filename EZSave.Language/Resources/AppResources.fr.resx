@@ -123,6 +123,9 @@
   <data name="ChooseChoiceTitle" xml:space="preserve">
     <value>Appuyer sur une touche pour continuer ...</value>
   </data>
+  <data name="ConfigFilePathChanging" xml:space="preserve">
+    <value>Chemin du fichier de config : </value>
+  </data>
   <data name="ConfigOption1" xml:space="preserve">
     <value>Ajouter un job</value>
   </data>
@@ -180,6 +183,9 @@
   <data name="ListJobsPossibleModify" xml:space="preserve">
     <value>Jobs pouvant être modifiés : </value>
   </data>
+  <data name="LogPathChanging" xml:space="preserve">
+    <value>Chemin du fichier des logs : </value>
+  </data>
   <data name="MainMenuTitle" xml:space="preserve">
     <value>Menu Principal : </value>
   </data>
@@ -192,7 +198,7 @@
   <data name="MainOption3" xml:space="preserve">
     <value>Changer la langue</value>
   </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Bonjour !</value>
+  <data name="StatusFilePathChanging" xml:space="preserve">
+    <value>Chemin du fichier de status :  </value>
   </data>
 </root>

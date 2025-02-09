@@ -88,19 +88,19 @@ namespace EZSave.TUI.Views
                         }
                         if (configChoice == 4)
                         {
-                            Console.WriteLine("Chemin des logs : ");
+                            Console.WriteLine(_viewModel.LogPathChanging);
                             string dest = Console.ReadLine();
                             _viewModel.ChangeLogPath(dest);
                         }
                         if (configChoice == 5)
                         {
-                            Console.WriteLine("Chemin du fichier de config : ");
+                            Console.WriteLine(_viewModel.ConfigFilePathChanging);
                             string dest = Console.ReadLine();
                             _viewModel.ChangeConfigPath(dest);
                         }
                         if (configChoice == 6)
                         {
-                            Console.WriteLine("Chemin du fichier de status : ");
+                            Console.WriteLine(_viewModel.StatusFilePathChanging);
                             string dest = Console.ReadLine();
                             _viewModel.ChangeStatusPath(dest);
                         }

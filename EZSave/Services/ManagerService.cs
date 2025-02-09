@@ -50,9 +50,9 @@ namespace EZSave.Core.Services
                 {
                     var service = new JobService();
                     var logService = new LogService();
-                    
+                    var statusService = new StatusService();
 
-                    service.Start(job, logService, configFileModel);
+                    service.Start(job, statusService, logService,  configFileModel);
                     //Console.WriteLine("The job " + job + " has been started !");
                     // Log du début de la sauvegarde
                     
