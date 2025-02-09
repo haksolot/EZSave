@@ -38,7 +38,7 @@ namespace EZSave.Tests
 			logService.Write(testlog, testconfigfile);
             logService.Write(testlog2, testconfigfile);
 
-            string logDirectory = Path.Combine(testconfigfile.LogFileDestination);
+            string logDirectory = testconfigfile.LogFileDestination;
             string expectedFilePath = Path.Combine(logDirectory, DateTime.Now.ToString("yyyyMMdd") + "_log.json");
             
 
