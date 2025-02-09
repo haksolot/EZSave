@@ -125,13 +125,13 @@ namespace EZSave.TUI.ViewModels
           //DeleteJob();
           break;
         case 4:
-          ChangeLogPath();
+          //ChangeLogPath();
           break;
         case 5:
-          ChangeConfigPath();
+          //ChangeConfigPath();
           break;
         case 6:
-          ChangeStatusPath();
+          //ChangeStatusPath();
           break;
         case 7:
           //Console.WriteLine("Retour au menu principal.");
@@ -224,23 +224,23 @@ namespace EZSave.TUI.ViewModels
             configService.DeleteJob(job, configFileModel);
     }
 
-    private void ChangeLogPath()
+    public void ChangeLogPath(string dest)
     {
-      Console.WriteLine("Changement du chemin de destination des logs...");
-      // Logique pour changer le chemin des logs
+            var configService = new ConfigService();
+            configService.SetLogDestination(dest, configFileModel);
     }
 
-    private void ChangeConfigPath()
+    public void ChangeConfigPath(string dest)
     {
-      Console.WriteLine("Changement du chemin de destination de la configuration...");
-      // Logique pour changer le chemin de la configuration
-    }
+            var configService = new ConfigService();
+            configService.SetConfigDestination(dest, configFileModel);
+        }
 
-    private void ChangeStatusPath()
+    public void ChangeStatusPath(string dest)
     {
-      Console.WriteLine("Changement du chemin de destination du statut...");
-      // Logique pour changer le chemin du statut
-    }
+            var configService = new ConfigService();
+            configService.SetStatusDestination(dest, configFileModel);
+        }
 
     public void ChangeLanguage(string languageCode)
     {
