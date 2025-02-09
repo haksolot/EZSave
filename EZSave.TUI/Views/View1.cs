@@ -86,6 +86,24 @@ namespace EZSave.TUI.Views
 
                             _viewModel.DeleteJob(jobName);
                         }
+                        if (configChoice == 4)
+                        {
+                            Console.WriteLine("Chemin des logs : ");
+                            string dest = Console.ReadLine();
+                            _viewModel.ChangeLogPath(dest);
+                        }
+                        if (configChoice == 5)
+                        {
+                            Console.WriteLine("Chemin du fichier de config : ");
+                            string dest = Console.ReadLine();
+                            _viewModel.ChangeConfigPath(dest);
+                        }
+                        if (configChoice == 6)
+                        {
+                            Console.WriteLine("Chemin du fichier de status : ");
+                            string dest = Console.ReadLine();
+                            _viewModel.ChangeStatusPath(dest);
+                        }
                         else
                         {
                             _viewModel.ExecuteConfigOption(configChoice);
