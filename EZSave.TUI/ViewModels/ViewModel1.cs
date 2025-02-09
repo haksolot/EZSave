@@ -97,7 +97,7 @@ namespace EZSave.TUI.ViewModels
       switch (choice)
       {
         case 1:
-          ExecuteJobs();
+          //ExecuteJobs();
           break;
         case 2:
           EnterConfigMode();
@@ -146,6 +146,7 @@ namespace EZSave.TUI.ViewModels
     {
             var managerService = new ManagerService();
             var configModel = new ConfigFileModel();
+            configModel.LogFileDestination = "Log";
             bool isExecuted = managerService.Execute(managerModel, configModel);
             //Console.WriteLine("Exécution des jobs...");
             if (isExecuted)

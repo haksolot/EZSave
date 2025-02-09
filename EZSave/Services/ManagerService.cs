@@ -50,27 +50,12 @@ namespace EZSave.Core.Services
                 {
                     var service = new JobService();
                     var logService = new LogService();
-                    logService.Write(new LogModel
-                    {
-                        Name = job.Name,
-                        Timestamp = DateTime.Now,
-                        FileSource = job.Name,
-                        FileSize = 0,
-                        FileTransferTime = 0
-                    }, configFileModel);
+                    
 
                     service.Start(job, logService, configFileModel);
                     //Console.WriteLine("The job " + job + " has been started !");
                     // Log du début de la sauvegarde
-                    logService.Write(new LogModel
-                    {
-                        Name = job.Name,
-                        Timestamp = DateTime.Now,
-                        FileSource = "",
-                        FileDestination = "",
-                        FileSize = 0,
-                        FileTransferTime = 0
-                    }, configFileModel);
+                    
 
                 }
                 return true;

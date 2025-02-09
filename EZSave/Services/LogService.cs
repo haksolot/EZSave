@@ -12,7 +12,10 @@ namespace EZSave.Core.Services
         {
 
             string logDirectory = configModel.LogFileDestination;
-
+            if (string.IsNullOrWhiteSpace(logDirectory))
+            {
+                throw new ArgumentNullException("Le chemin du répertoire de logs est vide ou non défini dans configFileModel.");
+            }
             string logFilePath = Path.Combine(logDirectory, DateTime.Now.ToString("yyyyMMdd")+"_log.json");
 
             // Verif si dossier existe
