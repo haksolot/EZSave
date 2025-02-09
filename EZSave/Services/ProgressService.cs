@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EZSave.Core.Services
 {
-    internal class ProgressService
+    public class ProgressService
     {
     }
 }
