@@ -118,10 +118,13 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ChoiceTitle" xml:space="preserve">
-    <value>Your choice :</value>
+    <value>Your choice : </value>
   </data>
   <data name="ChooseChoiceTitle" xml:space="preserve">
     <value>Press any key to continue ...</value>
+  </data>
+  <data name="ConfigFilePathChanging" xml:space="preserve">
+    <value>Config file path : </value>
   </data>
   <data name="ConfigOption1" xml:space="preserve">
     <value>Add a job</value>
@@ -145,7 +148,25 @@
     <value>Go back to main menu</value>
   </data>
   <data name="ConfModeTitle" xml:space="preserve">
-    <value>Configuration mode :</value>
+    <value>Configuration mode : </value>
+  </data>
+  <data name="EnterDeletedJob" xml:space="preserve">
+    <value>Enter the job to delete : </value>
+  </data>
+  <data name="EnterDestination" xml:space="preserve">
+    <value>Enter the job destination : </value>
+  </data>
+  <data name="EnterJobName" xml:space="preserve">
+    <value>Enter the job name : </value>
+  </data>
+  <data name="EnterModifiedJob" xml:space="preserve">
+    <value>Enter the job to modify : </value>
+  </data>
+  <data name="EnterSource" xml:space="preserve">
+    <value>Enter the job source : </value>
+  </data>
+  <data name="EnterType" xml:space="preserve">
+    <value>Enter the job backup type : </value>
   </data>
   <data name="InvalidChoiceTitle" xml:space="preserve">
     <value>Invalid choice. Try again.</value>
@@ -156,8 +177,17 @@
   <data name="LanguageOption2" xml:space="preserve">
     <value>English</value>
   </data>
+  <data name="ListJobsPossibleDelete" xml:space="preserve">
+    <value>Jobs that can be deleted : </value>
+  </data>
+  <data name="ListJobsPossibleModify" xml:space="preserve">
+    <value>Jobs that can be modified : </value>
+  </data>
+  <data name="LogPathChanging" xml:space="preserve">
+    <value>Logs path : </value>
+  </data>
   <data name="MainMenuTitle" xml:space="preserve">
-    <value>Main menu :</value>
+    <value>Main menu : </value>
   </data>
   <data name="MainOption1" xml:space="preserve">
     <value>Execute jobs</value>
@@ -168,7 +198,7 @@
   <data name="MainOption3" xml:space="preserve">
     <value>Change language</value>
   </data>
-  <data name="WelcomeMessage" xml:space="preserve">
-    <value>Hello !</value>
+  <data name="StatusFilePathChanging" xml:space="preserve">
+    <value>Status file path : </value>
   </data>
 </root>

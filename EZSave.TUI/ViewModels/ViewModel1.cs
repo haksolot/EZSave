@@ -3,6 +3,7 @@ using EZSave.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -22,7 +23,17 @@ namespace EZSave.TUI.ViewModels
     public string InvalidChoiceTitle { get; set; }
     public string ChooseChoiceTitle { get; set; }
     public string ConfModeTitle { get; set; }
-
+    public string EnterJobName { get; set; }
+    public string EnterSource {  get; set; }
+    public string EnterDestination { get; set; }
+    public string EnterType { get; set; }
+    public string EnterModifiedJob {  get; set; }
+    public string EnterDeletedJob { get; set; }
+    public string ListJobsPossibleDelete { get; set; }
+    public string ListJobsPossibleModify {  get; set; }
+    public string LogPathChanging {  get; set; }
+    public string ConfigFilePathChanging { get; set; }
+    public string StatusFilePathChanging { get; set; }
     public string Message { get; set; }
 
     public ManagerModel managerModel { get; set; }
@@ -64,6 +75,17 @@ namespace EZSave.TUI.ViewModels
       InvalidChoiceTitle = _resourcesService.GetString("InvalidChoiceTitle");
       ChooseChoiceTitle = _resourcesService.GetString("ChooseChoiceTitle");
       ConfModeTitle = _resourcesService.GetString("ConfModeTitle");
+      EnterJobName = _resourcesService.GetString("EnterJobName");
+      EnterSource = _resourcesService.GetString("EnterSource");
+      EnterDestination = _resourcesService.GetString("EnterDestination");
+      EnterType = _resourcesService.GetString("EnterType");
+      EnterModifiedJob = _resourcesService.GetString("EnterModifiedJob");
+      EnterDeletedJob = _resourcesService.GetString("EnterDeletedJob");
+      ListJobsPossibleDelete = _resourcesService.GetString("ListJobsPossibleDelete");
+      ListJobsPossibleModify = _resourcesService.GetString("ListJobsPossibleModify");
+      LogPathChanging = _resourcesService.GetString("LogPathChanging");
+      ConfigFilePathChanging = _resourcesService.GetString("ConfigFilePathChanging");
+      StatusFilePathChanging = _resourcesService.GetString("StatusFilePathChanging");
       ConfigOptions.Clear();
       ConfigOptions.Add(_resourcesService.GetString("ConfigOption1"));
       ConfigOptions.Add(_resourcesService.GetString("ConfigOption2"));
@@ -81,7 +103,7 @@ namespace EZSave.TUI.ViewModels
       switch (choice)
       {
         case 1:
-          ExecuteJobs();
+          //ExecuteJobs();
           break;
         case 2:
           EnterConfigMode();
@@ -118,23 +140,38 @@ namespace EZSave.TUI.ViewModels
           //ChangeStatusPath();
           break;
         case 7:
-          Console.WriteLine("Retour au menu principal.");
+          //Console.WriteLine("Retour au menu principal.");
           break;
         default:
-          Console.WriteLine("Choix invalide. Veuillez réessayer.");
+          //Console.WriteLine("Choix invalide. Veuillez réessayer.");
           break;
       }
     }
 
-    private void ExecuteJobs()
+    public void ExecuteJobs()
     {
-      Console.WriteLine("Exécution des jobs...");
-      // Logique pour exécuter les jobs
-    }
+            var managerService = new ManagerService();
+            var configModel = new ConfigFileModel();
+            configModel.LogFileDestination = "Log";
+            configModel.StatusFileDestination = "Status";
+            bool isExecuted = managerService.Execute(managerModel, configModel);
+
+            //Console.WriteLine("Exécution des jobs...");
+            if (isExecuted)
+            {
+                Message = "Tous les jobs ont été exécutés avec succès!";
+                Console.WriteLine("Tous les jobs ont été exécutés avec succès!");
+            }
+            else
+            {
+                Message = "Aucun job à exécuter, la liste est vide.";
+                Console.WriteLine("Aucun job à exécuter, la liste est vide.");
+            }
+        }
 
     private void EnterConfigMode()
     {
-      Console.WriteLine("Entrée en mode configuration...");
+      //Console.WriteLine("Entrée en mode configuration...");
       // Logique pour entrer en mode configuration
     }
 

@@ -43,16 +43,16 @@ namespace EZSave.TUI.Views
                         if (configChoice == 1)
                         {
                             // Collecter les détails du job
-                            Console.Write("Entrez le nom du job : ");
+                            Console.Write(_viewModel.EnterJobName);
                             string name = Console.ReadLine();
 
-                            Console.Write("Entrez la source du job : ");
+                            Console.Write(_viewModel.EnterSource);
                             string source = Console.ReadLine();
 
-                            Console.Write("Entrez la destination du job : ");
+                            Console.Write(_viewModel.EnterDestination);
                             string destination = Console.ReadLine();
 
-                            Console.Write("Entrez le type du job : ");
+                            Console.Write(_viewModel.EnterType);
                             string type = Console.ReadLine();
 
                             // Appeler la méthode AddJob du ViewModel
@@ -60,47 +60,47 @@ namespace EZSave.TUI.Views
                         }
                         if (configChoice == 2)
                         {
-                            Console.WriteLine("Jobs pouvants être modifiés :");
+                            Console.WriteLine(_viewModel.ListJobsPossibleModify);
                             ShowJobs();
-                            Console.Write("Entrez le job à modifier : ");
+                            Console.Write(_viewModel.EnterModifiedJob);
                             string jobName = Console.ReadLine();
 
-                            Console.Write("Source : ");
+                            Console.Write(_viewModel.EnterSource);
                             string source = Console.ReadLine();
 
-                            Console.Write("Destination : ");
+                            Console.Write(_viewModel.EnterDestination);
                             string destination = Console.ReadLine();
 
-                            Console.Write("Type de backup : ");
+                            Console.Write(_viewModel.EnterType);
                             string type = Console.ReadLine();
 
                             _viewModel.EditJob(jobName, source, destination, type);
                         }
                         if (configChoice == 3)
                         {
-                            Console.WriteLine("Jobs pouvants être supprimés :");
+                            Console.WriteLine(_viewModel.ListJobsPossibleDelete);
                             ShowJobs();
 
-                            Console.Write("Entrez le job à supprimer : ");
+                            Console.Write(_viewModel.EnterDeletedJob);
                             string jobName = Console.ReadLine();
 
                             _viewModel.DeleteJob(jobName);
                         }
                         if (configChoice == 4)
                         {
-                            Console.WriteLine("Chemin des logs : ");
+                            Console.WriteLine(_viewModel.LogPathChanging);
                             string dest = Console.ReadLine();
                             _viewModel.ChangeLogPath(dest);
                         }
                         if (configChoice == 5)
                         {
-                            Console.WriteLine("Chemin du fichier de config : ");
+                            Console.WriteLine(_viewModel.ConfigFilePathChanging);
                             string dest = Console.ReadLine();
                             _viewModel.ChangeConfigPath(dest);
                         }
                         if (configChoice == 6)
                         {
-                            Console.WriteLine("Chemin du fichier de status : ");
+                            Console.WriteLine(_viewModel.StatusFilePathChanging);
                             string dest = Console.ReadLine();
                             _viewModel.ChangeStatusPath(dest);
                         }
@@ -141,6 +141,8 @@ namespace EZSave.TUI.Views
                     {
                         if (mainChoice == 1)
                         {
+                            _viewModel.ExecuteJobs();
+
                             _viewModel.ExecuteMainOption(mainChoice);
                         }
                         else if (mainChoice == 2)

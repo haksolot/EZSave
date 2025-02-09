@@ -42,16 +42,21 @@ namespace EZSave.Core.Services
         }
 
 
-        public bool Execute(ManagerModel manager)
+        public bool Execute(ManagerModel manager, ConfigFileModel configFileModel)
         {
             if (manager.Jobs.Count > 0)
             {
                 foreach (JobModel job in manager.Jobs)
                 {
                     var service = new JobService();
-                    service.Start(job);
+                    var logService = new LogService();
+                    var statusService = new StatusService();
+
+                    service.Start(job, statusService, logService,  configFileModel);
                     //Console.WriteLine("The job " + job + " has been started !");
+                    // Log du début de la sauvegarde
                     
+
                 }
                 return true;
             }
