@@ -1,4 +1,4 @@
-# EZSave app
+# EZSave App
 ## Version 1 - TUI
 
 #  EZSave - File Backup Management
@@ -14,9 +14,9 @@
 
 ---
 
-## 1. Installation & Execution  
+## Installation & Execution  
 
-### Prerequisites  
+### 1. Prerequisites  
 - .NET 8  
 
 
@@ -24,4 +24,9 @@
 ```bash
 git clone https://github.com/haksolot/EZSave
 cd EZSave
+```
 
+### 3. Execute EZSave.TUI
+
+### 4. Find logs, status updates and conf files
+Logs, status information and conf file are stored in the project's temporary files : EZSave\EZSave.TUI\bin\Debug\net8.0
