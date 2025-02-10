@@ -42,7 +42,6 @@ namespace EZSave.TUI.Views
           {
             if (configChoice == 1)
             {
-              // Collecter les détails du job
               Console.Write(_viewModel.EnterJobName);
               string name = Console.ReadLine();
 
@@ -55,8 +54,15 @@ namespace EZSave.TUI.Views
               Console.Write(_viewModel.EnterType);
               string type = Console.ReadLine();
 
-              // Appeler la méthode AddJob du ViewModel
-              _viewModel.AddJob(name, source, destination, type);
+              bool resultAdd = _viewModel.AddJob(name, source, destination, type);
+              if (resultAdd)
+                 {
+                    Console.WriteLine(_viewModel.JobAdded);
+                 }
+              else
+                 {
+                    Console.WriteLine(_viewModel.JobNotAdded);
+                 }
             }
             if (configChoice == 2)
             {
@@ -74,7 +80,15 @@ namespace EZSave.TUI.Views
               Console.Write(_viewModel.EnterType);
               string type = Console.ReadLine();
 
-              _viewModel.EditJob(jobName, source, destination, type);
+              bool resultEdit = _viewModel.EditJob(jobName, source, destination, type);
+              if (resultEdit)
+              {
+                Console.WriteLine(_viewModel.JobEdited);
+              }
+              else
+              {
+                Console.WriteLine(_viewModel.JobNotEdited);
+              }
             }
             if (configChoice == 3)
             {
@@ -84,8 +98,16 @@ namespace EZSave.TUI.Views
               Console.Write(_viewModel.EnterDeletedJob);
               string jobName = Console.ReadLine();
 
-              _viewModel.DeleteJob(jobName);
-            }
+              bool resultDelete = _viewModel.DeleteJob(jobName);
+              if (resultDelete)
+              {
+                  Console.WriteLine(_viewModel.JobDeleted);
+              }
+              else
+              {
+                  Console.WriteLine(_viewModel.JobNotDeleted);
+              }
+                        }
             if (configChoice == 4)
             {
               Console.WriteLine(_viewModel.LogPathChanging);
@@ -106,7 +128,6 @@ namespace EZSave.TUI.Views
             }
             else
             {
-              /*_viewModel.ExecuteConfigOption(configChoice);*/
               if (configChoice == 7)
               {
                 inConfigMode = false;
@@ -144,18 +165,18 @@ namespace EZSave.TUI.Views
               bool value = _viewModel.ExecuteJobs();
               if (value)
               {
-                Console.WriteLine("Tous les jobs ont été exécutés avec succès!");
+                Console.WriteLine(_viewModel.JobsExecutedSuccess);
               }
               else
               {
-                Console.WriteLine("Aucun job à exécuter, la liste est vide.");
+                Console.WriteLine(_viewModel.JobsExecutedFail);
               }
 
-              _viewModel.ExecuteMainOption(mainChoice);
+              //_viewModel.ExecuteMainOption(mainChoice);
             }
             else if (mainChoice == 2)
             {
-              _viewModel.ExecuteMainOption(mainChoice);
+              //_viewModel.ExecuteMainOption(mainChoice);
               inConfigMode = true;
             }
             else if (mainChoice == 3)
