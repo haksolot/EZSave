@@ -56,7 +56,7 @@ namespace EZSave.Core.Services
             }
         }
 
-        public void SaveJob(JobModel job, ConfigFileModel config)
+        public bool SaveJob(JobModel job, ConfigFileModel config)
         {
             if (File.Exists(config.ConfFileDestination))
             {
@@ -75,7 +75,9 @@ namespace EZSave.Core.Services
             if (!string.IsNullOrEmpty(config.ConfFileDestination))
             {
                 File.WriteAllText(config.ConfFileDestination, newJson);
+                return true;
             }
+            return false;
         }
 
 

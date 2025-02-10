@@ -166,10 +166,31 @@
     <value>Enter the job source : </value>
   </data>
   <data name="EnterType" xml:space="preserve">
-    <value>Enter the job backup type : </value>
+    <value>Enter the job backup type (full/diff) : </value>
   </data>
   <data name="InvalidChoiceTitle" xml:space="preserve">
     <value>Invalid choice. Try again.</value>
+  </data>
+  <data name="JobAdded" xml:space="preserve">
+    <value>The job has been added !</value>
+  </data>
+  <data name="JobDeleted" xml:space="preserve">
+    <value>The job has been deleted !</value>
+  </data>
+  <data name="JobEdited" xml:space="preserve">
+    <value>The job has been edited !</value>
+  </data>
+  <data name="JobNotAdded" xml:space="preserve">
+    <value>The job has not been added !</value>
+  </data>
+  <data name="JobNotDeleted" xml:space="preserve">
+    <value>The job has not been deleted !</value>
+  </data>
+  <data name="JobsExecutedFail" xml:space="preserve">
+    <value>Jobs execution failed !</value>
+  </data>
+  <data name="JobsExecutedSuccess" xml:space="preserve">
+    <value>Jobs executed with success !</value>
   </data>
   <data name="LanguageOption1" xml:space="preserve">
     <value>French</value>

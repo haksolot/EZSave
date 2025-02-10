@@ -34,7 +34,19 @@ namespace EZSave.TUI.ViewModels
     public string LogPathChanging { get; set; }
     public string ConfigFilePathChanging { get; set; }
     public string StatusFilePathChanging { get; set; }
-    public string Message { get; set; }
+    public string JobsExecutedSuccess { get; set; }
+    public string JobsExecutedFail { get; set; }
+    public string JobAdded { get; set; }
+    public string JobNotAdded { get; set; }
+    public string JobDeleted {  get; set; }
+    public string JobNotDeleted { get; set; }
+
+        public string JobEdited { get; set; }
+
+
+
+        public string JobNotEdited { get; set; }
+        public string Message { get; set; }
 
     public ManagerModel managerModel { get; set; }
     public ConfigFileModel configFileModel { get; set; }
@@ -84,7 +96,15 @@ namespace EZSave.TUI.ViewModels
       LogPathChanging = _resourcesService.GetString("LogPathChanging");
       ConfigFilePathChanging = _resourcesService.GetString("ConfigFilePathChanging");
       StatusFilePathChanging = _resourcesService.GetString("StatusFilePathChanging");
-      ConfigOptions.Clear();
+      JobsExecutedSuccess = _resourcesService.GetString("JobsExecutedSuccess");
+      JobsExecutedFail = _resourcesService.GetString("JobsExecutedFail");
+      JobAdded = _resourcesService.GetString("JobAdded");
+      JobNotAdded = _resourcesService.GetString("JobNotAdded");
+      JobDeleted = _resourcesService.GetString("JobDeleted");
+      JobNotDeleted = _resourcesService.GetString("JobNotDeleted");
+            JobEdited = _resourcesService.GetString("JobEdited");
+            JobNotEdited = _resourcesService.GetString("JobNotEdited");
+            ConfigOptions.Clear();
       ConfigOptions.Add(_resourcesService.GetString("ConfigOption1"));
       ConfigOptions.Add(_resourcesService.GetString("ConfigOption2"));
       ConfigOptions.Add(_resourcesService.GetString("ConfigOption3"));
@@ -96,24 +116,7 @@ namespace EZSave.TUI.ViewModels
       LanguageOptions.Add(_resourcesService.GetString("LanguageOption1"));
       LanguageOptions.Add(_resourcesService.GetString("LanguageOption2"));
     }
-    public void ExecuteMainOption(int choice)
-    {
-      switch (choice)
-      {
-        case 1:
-          //ExecuteJobs();
-          break;
-        case 2:
-          /*EnterConfigMode();*/
-          break;
-        case 3:
-          /*ChangeLanguage("fr");*/
-          break;
-        default:
-          /*Console.WriteLine("Choix invalide. Veuillez réessayer.");*/
-          break;
-      }
-    }
+    
 
     public bool ExecuteJobs()
     {
@@ -135,7 +138,7 @@ namespace EZSave.TUI.ViewModels
       }
       return Message;
     }
-    public void AddJob(string name, string source, string destination, string type)
+    public bool AddJob(string name, string source, string destination, string type)
     {
       var job = new JobModel();
       job.Name = name;
@@ -145,13 +148,14 @@ namespace EZSave.TUI.ViewModels
 
       var managerService = new ManagerService();
       var configService = new ConfigService();
-      managerService.Add(job, managerModel);
+      bool isAdded = managerService.Add(job, managerModel);
       configService.SaveJob(job, configFileModel);
-
+    
       Message = "Job ajouté et sauvegardé dans config !";
+      return isAdded;
     }
 
-    public void EditJob(string name, string source, string destination, string type)
+    public bool EditJob(string name, string source, string destination, string type)
     {
       var job = new JobModel();
       job.Name = name;
@@ -164,21 +168,23 @@ namespace EZSave.TUI.ViewModels
 
       managerService.RemoveJob(job, managerModel);
       managerService.Add(job, managerModel);
-      configService.SaveJob(job, configFileModel);
+      bool isEDited = configService.SaveJob(job, configFileModel);
 
       Message = "Job ajouté et sauvegardé dans config !";
+      return isEDited;
     }
 
 
-    public void DeleteJob(string name)
+    public bool DeleteJob(string name)
     {
       var job = new JobModel();
       job.Name = name;
       var managerService = new ManagerService();
       var configService = new ConfigService();
 
-      managerService.RemoveJob(job, managerModel);
+      bool isRemoved = managerService.RemoveJob(job, managerModel);
       configService.DeleteJob(job, configFileModel);
+      return isRemoved;
     }
 
     public void ChangeLogPath(string dest)
