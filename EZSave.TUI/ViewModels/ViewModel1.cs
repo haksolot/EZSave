@@ -40,7 +40,11 @@ namespace EZSave.TUI.ViewModels
     public string JobNotAdded { get; set; }
     public string JobDeleted {  get; set; }
     public string JobNotDeleted { get; set; }
+
         public string JobEdited { get; set; }
+
+
+
         public string JobNotEdited { get; set; }
         public string Message { get; set; }
 
