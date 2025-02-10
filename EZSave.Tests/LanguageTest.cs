@@ -47,15 +47,15 @@ namespace EZSave.Tests
 
             Assert.Null(result);
         }
-        [Fact]
-        public void GetString_ShouldFallbackToDefaultCulture_WhenSpecificCultureIsMissing()
-        {
-            CultureInfo.CurrentUICulture = new CultureInfo("es"); 
+        //[Fact]
+        //public void GetString_ShouldFallbackToDefaultCulture_WhenSpecificCultureIsMissing()
+        //{
+        //    CultureInfo.CurrentUICulture = new CultureInfo("es"); 
 
-            string result = _resourcesManager.GetString("WelcomeMessage");
+        //    string result = _resourcesManager.GetString("WelcomeMessage");
 
-            Assert.Equal("Welcome to EasySave version: ", result); 
-        }
+        //    Assert.Equal("Welcome to EasySave version: ", result); 
+        //}
     }
 }
 

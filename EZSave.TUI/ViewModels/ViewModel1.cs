@@ -24,22 +24,20 @@ namespace EZSave.TUI.ViewModels
     public string ChooseChoiceTitle { get; set; }
     public string ConfModeTitle { get; set; }
     public string EnterJobName { get; set; }
-    public string EnterSource {  get; set; }
+    public string EnterSource { get; set; }
     public string EnterDestination { get; set; }
     public string EnterType { get; set; }
-    public string EnterModifiedJob {  get; set; }
+    public string EnterModifiedJob { get; set; }
     public string EnterDeletedJob { get; set; }
     public string ListJobsPossibleDelete { get; set; }
-    public string ListJobsPossibleModify {  get; set; }
-    public string LogPathChanging {  get; set; }
+    public string ListJobsPossibleModify { get; set; }
+    public string LogPathChanging { get; set; }
     public string ConfigFilePathChanging { get; set; }
     public string StatusFilePathChanging { get; set; }
     public string Message { get; set; }
 
     public ManagerModel managerModel { get; set; }
     public ConfigFileModel configFileModel { get; set; }
-
-    //public JobModel JobModel { get; set; } = new JobModel();
 
     public ViewModel1(ResourcesService resourcesService)
     {
@@ -54,15 +52,15 @@ namespace EZSave.TUI.ViewModels
 
     public void Initialize()
     {
-            configFileModel = new ConfigFileModel();
-            managerModel = new ManagerModel();
-            var configService = new ConfigService();
-            var managerService = new ManagerService();
-            configService.SetConfigDestination("conf.json", configFileModel);
-            configService.LoadConfigFile(configFileModel);
+      configFileModel = new ConfigFileModel();
+      managerModel = new ManagerModel();
+      var configService = new ConfigService();
+      var managerService = new ManagerService();
+      configService.SetConfigDestination("conf.json", configFileModel);
+      configService.LoadConfigFile(configFileModel);
 
-            managerService.Read(managerModel, configFileModel);
-            Message = "Fichier de configuration appliqué avec succés !";
+      managerService.Read(managerModel, configFileModel);
+      Message = "Fichier de configuration appliqué avec succés !";
     }
     public void LoadStrings()
     {
@@ -106,150 +104,100 @@ namespace EZSave.TUI.ViewModels
           //ExecuteJobs();
           break;
         case 2:
-          EnterConfigMode();
+          /*EnterConfigMode();*/
           break;
         case 3:
-          ChangeLanguage("fr");
+          /*ChangeLanguage("fr");*/
           break;
         default:
-          Console.WriteLine("Choix invalide. Veuillez réessayer.");
+          /*Console.WriteLine("Choix invalide. Veuillez réessayer.");*/
           break;
       }
     }
 
-    public void ExecuteConfigOption(int choice)
+    public bool ExecuteJobs()
     {
-      switch (choice)
-            {
-        case 1:
-          //AddJob(string name, string source, string destination, string type);
-          break;
-        case 2:
-          //ModifyJob();
-          break;
-        case 3:
-          //DeleteJob();
-          break;
-        case 4:
-          //ChangeLogPath();
-          break;
-        case 5:
-          //ChangeConfigPath();
-          break;
-        case 6:
-          //ChangeStatusPath();
-          break;
-        case 7:
-          //Console.WriteLine("Retour au menu principal.");
-          break;
-        default:
-          //Console.WriteLine("Choix invalide. Veuillez réessayer.");
-          break;
-      }
+      var managerService = new ManagerService();
+      var configModel = new ConfigFileModel();
+      configModel.LogFileDestination = "Log";
+      configModel.StatusFileDestination = "Status";
+      bool isExecuted = managerService.Execute(managerModel, configModel);
+      return isExecuted;
     }
-
-    public void ExecuteJobs()
-    {
-            var managerService = new ManagerService();
-            var configModel = new ConfigFileModel();
-            configModel.LogFileDestination = "Log";
-            configModel.StatusFileDestination = "Status";
-            bool isExecuted = managerService.Execute(managerModel, configModel);
-
-            //Console.WriteLine("Exécution des jobs...");
-            if (isExecuted)
-            {
-                Message = "Tous les jobs ont été exécutés avec succès!";
-                Console.WriteLine("Tous les jobs ont été exécutés avec succès!");
-            }
-            else
-            {
-                Message = "Aucun job à exécuter, la liste est vide.";
-                Console.WriteLine("Aucun job à exécuter, la liste est vide.");
-            }
-        }
-
-    private void EnterConfigMode()
-    {
-      //Console.WriteLine("Entrée en mode configuration...");
-      // Logique pour entrer en mode configuration
-    }
-
-
 
     public string GetJobs()
-        {
-            var Jobs = managerModel.Jobs;
-            Message = "";
-            foreach(JobModel job in Jobs)
-            {
-                Message += "- " + job.Name + "\n"; 
-            }
-            return Message;
-        }
+    {
+      var Jobs = managerModel.Jobs;
+      Message = "";
+      foreach (JobModel job in Jobs)
+      {
+        Message += "- " + job.Name + "\n";
+      }
+      return Message;
+    }
     public void AddJob(string name, string source, string destination, string type)
     {
-            var job = new JobModel();
-            job.Name = name;
-            job.Source = source;
-            job.Destination = destination;
-            job.Type = type;
+      var job = new JobModel();
+      job.Name = name;
+      job.Source = source;
+      job.Destination = destination;
+      job.Type = type;
 
-            var managerService = new ManagerService();
-            var configService = new ConfigService();
-            managerService.Add(job, managerModel);
-            configService.SaveJob(job, configFileModel);
+      var managerService = new ManagerService();
+      var configService = new ConfigService();
+      managerService.Add(job, managerModel);
+      configService.SaveJob(job, configFileModel);
 
-            Message = "Job ajouté et sauvegardé dans config !";
+      Message = "Job ajouté et sauvegardé dans config !";
     }
 
     public void EditJob(string name, string source, string destination, string type)
     {
-        var job = new JobModel();
-        job.Name = name;
-        job.Source = source;
-        job.Destination = destination;
-        job.Type = type;
+      var job = new JobModel();
+      job.Name = name;
+      job.Source = source;
+      job.Destination = destination;
+      job.Type = type;
 
-        var managerService = new ManagerService();
-        var configService = new ConfigService();
-        
-        managerService.RemoveJob(job, managerModel);
-        managerService.Add(job, managerModel);
-        configService.SaveJob(job, configFileModel);
+      var managerService = new ManagerService();
+      var configService = new ConfigService();
 
-        Message = "Job ajouté et sauvegardé dans config !";
+      managerService.RemoveJob(job, managerModel);
+      managerService.Add(job, managerModel);
+      configService.SaveJob(job, configFileModel);
+
+      Message = "Job ajouté et sauvegardé dans config !";
     }
 
 
     public void DeleteJob(string name)
     {
-            var job = new JobModel();
-            job.Name = name;
-            var managerService = new ManagerService();
-            var configService = new ConfigService();
+      var job = new JobModel();
+      job.Name = name;
+      var managerService = new ManagerService();
+      var configService = new ConfigService();
 
-            managerService.RemoveJob(job, managerModel);
-            configService.DeleteJob(job, configFileModel);
+      managerService.RemoveJob(job, managerModel);
+      configService.DeleteJob(job, configFileModel);
     }
 
     public void ChangeLogPath(string dest)
     {
-            var configService = new ConfigService();
-            configService.SetLogDestination(dest, configFileModel);
+      var configService = new ConfigService();
+      configService.SetLogDestination(dest, configFileModel);
     }
 
     public void ChangeConfigPath(string dest)
     {
-            var configService = new ConfigService();
-            configService.SetConfigDestination(dest, configFileModel);
-        }
+      var configService = new ConfigService();
+      configService.SetConfigDestination(dest, configFileModel);
+    }
 
     public void ChangeStatusPath(string dest)
     {
-            var configService = new ConfigService();
-            configService.SetStatusDestination(dest, configFileModel);
-        }
+      var configService = new ConfigService();
+      configService.SetStatusDestination(dest, configFileModel);
+    }
 
     public void ChangeLanguage(string languageCode)
     {
