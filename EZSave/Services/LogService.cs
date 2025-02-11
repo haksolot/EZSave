@@ -64,7 +64,18 @@ namespace EZSave.Core.Services
             {
                 using (File.Create(logFilePath)) { } // Ferme immédiatement le fichier
             }
-            WriteJSON(logModel, configModel, logFilePath);
+            if (configModel.LogType.ToLower() == "json")
+            {
+                WriteJSON(logModel, configModel, logFilePath);
+            }
+            else if (configModel.LogType.ToLower() == "xml")
+            {
+                WriteXML(logModel, configModel, logFilePath);
+            }
+            else
+            {
+                throw new ArgumentException("Type de log non pris en charge : " + configModel.LogType);
+            }
 
         }
     }
