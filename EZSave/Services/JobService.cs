@@ -82,7 +82,7 @@ namespace EZSave.Core.Services
 
         copiedSize += currentFileSize;
 
-        logService.Write(new LogModel
+        logService.WriteJSON(new LogModel
         {
           Name = job.Name,
           Timestamp = DateTime.Now,
@@ -156,7 +156,7 @@ namespace EZSave.Core.Services
 
           copiedSize += currentFileSize;
 
-          logService.Write(new LogModel
+          logService.WriteJSON(new LogModel
           {
             Name = job.Name,
             Timestamp = DateTime.Now,
