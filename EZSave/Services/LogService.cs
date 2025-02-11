@@ -1,30 +1,29 @@
 ﻿using System.Text.Json;
-using EZSave.Core.Models;
-using System.Xml;
 using System.Xml.Serialization;
+using EZSave.Core.Models;
 
 namespace EZSave.Core.Services
 {
-  public class LogService
-  {
-    public void WriteJSON(LogModel logModel, ConfigFileModel configModel,string logFilePath)
+    public class LogService
     {
-      
-      string existingJson = File.ReadAllText(logFilePath).Trim();
-      List<LogModel> logModels = new List<LogModel>();
-      if (!string.IsNullOrWhiteSpace(existingJson))
-      {
-        logModels = JsonSerializer.Deserialize<List<LogModel>>(existingJson) ?? new List<LogModel>();
-      }
+        public void WriteJSON(LogModel logModel, ConfigFileModel configModel, string logFilePath)
+        {
 
-      logModels.Add(logModel);
+            string existingJson = File.ReadAllText(logFilePath).Trim();
+            List<LogModel> logModels = new List<LogModel>();
+            if (!string.IsNullOrWhiteSpace(existingJson))
+            {
+                logModels = JsonSerializer.Deserialize<List<LogModel>>(existingJson) ?? new List<LogModel>();
+            }
 
-      string jsonString = JsonSerializer.Serialize(logModels, new JsonSerializerOptions { WriteIndented = true });
+            logModels.Add(logModel);
 
-      File.WriteAllText(logFilePath, jsonString);
+            string jsonString = JsonSerializer.Serialize(logModels, new JsonSerializerOptions { WriteIndented = true });
 
-    }
-    public void WriteXML(LogModel logModel, ConfigFileModel configModel,string logFilePath)
+            File.WriteAllText(logFilePath, jsonString);
+
+        }
+        public void WriteXML(LogModel logModel, ConfigFileModel configModel, string logFilePath)
         {
             List<LogModel> logModels = new List<LogModel>();
 
@@ -51,11 +50,11 @@ namespace EZSave.Core.Services
             }
 
         }
-    public void Write(LogModel logModel,ConfigFileModel configModel)
+        public void Write(LogModel logModel, ConfigFileModel configModel)
         {
-            
+
             string? logDirectory = configModel.LogFileDestination;
-            string logFilePath = Path.Combine(logDirectory, DateTime.Now.ToString("yyyyMMdd") + "_log."+configModel.LogType);
+            string logFilePath = Path.Combine(logDirectory, DateTime.Now.ToString("yyyyMMdd") + "_log." + configModel.LogType);
 
             if (!Directory.Exists(logDirectory))
             {
@@ -66,8 +65,8 @@ namespace EZSave.Core.Services
                 using (File.Create(logFilePath)) { } // Ferme immédiatement le fichier
             }
             WriteJSON(logModel, configModel, logFilePath);
-           
+
         }
-  }
+    }
 
 }

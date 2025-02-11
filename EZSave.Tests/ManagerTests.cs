@@ -27,11 +27,11 @@ namespace EZSave.Tests
 
 
             var manager = new ManagerService();
-                
+
             var managerModel = new ManagerModel();
-                
+
             manager.Read(managerModel, model);
-            
+
             Assert.NotEmpty(managerModel.Jobs);
             Assert.Contains(managerModel.Jobs, job2 => job2.Name == "TestJob");
         }
@@ -56,12 +56,12 @@ namespace EZSave.Tests
             var managerModel = new ManagerModel();
 
             manager.Read(managerModel, model);
-           
 
-            var result = manager.RemoveJob(job, managerModel); 
 
-            Assert.True(result); 
-            Assert.Empty(managerModel.Jobs); 
+            var result = manager.RemoveJob(job, managerModel);
+
+            Assert.True(result);
+            Assert.Empty(managerModel.Jobs);
         }
 
         [Fact]
