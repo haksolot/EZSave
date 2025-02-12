@@ -148,7 +148,7 @@
     <value>Retour au menu principal</value>
   </data>
   <data name="ConfModeTitle" xml:space="preserve">
-    <value>Mode configuration : </value>
+    <value>Mode configuration</value>
   </data>
   <data name="EnterDeletedJob" xml:space="preserve">
     <value>Entrez le job à supprimer : </value>
@@ -167,6 +167,12 @@
   </data>
   <data name="EnterType" xml:space="preserve">
     <value>Type de backup du job (full/diff) :  </value>
+  </data>
+  <data name="ExecuteAllJobs" xml:space="preserve">
+    <value>Exécuter tout</value>
+  </data>
+  <data name="ExecuteOneJob" xml:space="preserve">
+    <value>Exécuter </value>
   </data>
   <data name="InvalidChoiceTitle" xml:space="preserve">
     <value>Choix invalide. Veuillez réessayer.</value>

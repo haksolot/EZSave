@@ -151,7 +151,7 @@ namespace EZSave.GUI.Properties {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Configuration mode :.
+        ///   Recherche une chaîne localisée semblable à Configuration mode.
         /// </summary>
         public static string ConfModeTitle {
             get {
@@ -210,6 +210,24 @@ namespace EZSave.GUI.Properties {
         public static string EnterType {
             get {
                 return ResourceManager.GetString("EnterType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Execute all.
+        /// </summary>
+        public static string ExecuteAllJobs {
+            get {
+                return ResourceManager.GetString("ExecuteAllJobs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Execute one.
+        /// </summary>
+        public static string ExecuteOneJob {
+            get {
+                return ResourceManager.GetString("ExecuteOneJob", resourceCulture);
             }
         }
         

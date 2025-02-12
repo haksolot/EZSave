@@ -148,7 +148,7 @@
     <value>Go back to main menu</value>
   </data>
   <data name="ConfModeTitle" xml:space="preserve">
-    <value>Configuration mode :</value>
+    <value>Configuration mode</value>
   </data>
   <data name="EnterDeletedJob" xml:space="preserve">
     <value>Enter the job to delete : </value>
@@ -167,6 +167,12 @@
   </data>
   <data name="EnterType" xml:space="preserve">
     <value>Job backup type (full/diff) : </value>
+  </data>
+  <data name="ExecuteAllJobs" xml:space="preserve">
+    <value>Execute all</value>
+  </data>
+  <data name="ExecuteOneJob" xml:space="preserve">
+    <value>Execute one</value>
   </data>
   <data name="InvalidChoiceTitle" xml:space="preserve">
     <value>Invalid choice. Try again.</value>
