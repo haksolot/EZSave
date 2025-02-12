@@ -1,0 +1,14 @@
+{
+  "ConfFileDestination": "conf.json",
+  "LogFileDestination": null,
+  "LogType": "xml",
+  "StatusFileDestination": null,
+  "Jobs": {
+    "okok": {
+      "Name": "okok",
+      "Source": "C:\\Users\\seanl\\Desktop\\cool",
+      "Destination": "C:\\Users\\seanl\\Desktop\\coucou",
+      "Type": "diff"
+    }
+  }
+}

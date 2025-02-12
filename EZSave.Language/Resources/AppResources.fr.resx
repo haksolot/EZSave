@@ -138,14 +138,17 @@
   <data name="ConfigOption4" xml:space="preserve">
     <value>Changer le chemin de destination des logs</value>
   </data>
-  <data name="ConfigOption5" xml:space="preserve">
+  <data name="ConfigOption7" xml:space="preserve">
     <value>Changer le chemin de destination de la configuration</value>
   </data>
   <data name="ConfigOption6" xml:space="preserve">
     <value>Changer le chemin de destination du statut</value>
   </data>
-  <data name="ConfigOption7" xml:space="preserve">
+  <data name="ConfigOption8" xml:space="preserve">
     <value>Retour au menu principal</value>
+  </data>
+  <data name="ConfigOption5" xml:space="preserve">
+    <value>Changer le type de log (xml/json)</value>
   </data>
   <data name="ConfModeTitle" xml:space="preserve">
     <value>Mode configuration : </value>
@@ -221,5 +224,8 @@
   </data>
   <data name="StatusFilePathChanging" xml:space="preserve">
     <value>Chemin du fichier de status :  </value>
+  </data>
+  <data name="LogTypeChanging" xml:space="preserve">
+    <value>Type de log (xml/json) :</value>
   </data>
 </root>
