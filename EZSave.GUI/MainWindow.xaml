@@ -4,9 +4,44 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EZSave.GUI"
+        xmlns:properties="clr-namespace:EZSave.GUI.Properties"
+
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Padding" Value="12,4,12,4"    />
+            <Setter Property="Margin" Value="8"    />
+        </Style>
+    </Window.Resources>
+    <DockPanel LastChildFill="False" Margin="12">
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+        <Button Command="{Binding RefreshCommand}" 
+        Content="{x:Static properties:Resources.RefreshJobs}" 
+        CommandParameter="Refresh"/>
+            <Button Content="{x:Static properties:Resources.ConfigOption1}" Command="{Binding OpenJobWindowCommand}"  />
+            
+            <Button Content="🇫🇷" Command="{Binding LanguageViewModel.ChangeLanguageCommand}" CommandParameter="fr-FR" Margin="5"/>
+            <Button Content="🇬🇧" Command="{Binding LanguageViewModel.ChangeLanguageCommand}" CommandParameter="en-US" Margin="5"/>
 
-    </Grid>
+        </StackPanel>
+        <DataGrid
+     ItemsSource="{Binding Jobs}"
+     AutoGenerateColumns="False"
+     IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Nom" Binding="{Binding Name}"/>
+                <DataGridTextColumn Header="Source" Binding="{Binding Source}"/>
+                <DataGridTextColumn Header="Destination" Binding="{Binding Destination}"/>
+                <DataGridTextColumn Header="Type" Binding="{Binding Type}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <StackPanel DockPanel.Dock="Right" Orientation="Vertical">
+            <Button  
+Content="Execute One" "
+/>
+            <Button Content="Execute All"  Command="{Binding ExecuteAllJobsCommand} />
+
+        </StackPanel>
+    </DockPanel>
 </Window>

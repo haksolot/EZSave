@@ -1,0 +1,27 @@
+﻿<Window x:Class="EZSave.GUI.AddJobWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:EZSave.GUI"
+xmlns:properties="clr-namespace:EZSave.GUI.Properties"
+        Title="{x:Static properties:Resources.ConfigOption1}" Height="300" Width="400">
+    <Grid>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="300">
+
+            <TextBlock Text="{x:Static properties:Resources.EnterJobName}" Margin="5" />
+            <TextBox Text="{Binding Name}" Margin="5" />
+
+            <TextBlock Text="{x:Static properties:Resources.EnterSource}" Margin="5" TextWrapping="Wrap" />
+            <TextBox Text="{Binding Source}" Margin="5" />
+
+            <TextBlock Text="{x:Static properties:Resources.EnterDestination}" Margin="5" TextWrapping="Wrap" />
+            <TextBox Text="{Binding Destination}" Margin="5" />
+            
+            <TextBlock Text="{x:Static properties:Resources.EnterType}" Margin="5" TextWrapping="Wrap" />
+            <TextBox Text="{Binding Type}" Margin="5" />
+
+            <Button Content="{x:Static properties:Resources.Validate}" Command="{Binding AddJobCommand}"  Margin="5" />
+        </StackPanel>
+    </Grid>
+</Window>
