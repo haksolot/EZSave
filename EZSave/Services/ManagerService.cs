@@ -11,6 +11,7 @@ namespace EZSave.Core.Services
                 Add(job, manager);
             }
         }
+
         public bool Add(JobModel job, ManagerModel manager)
         {
             if (manager.Jobs.Count >= manager.Limit)
@@ -57,5 +58,28 @@ namespace EZSave.Core.Services
                 return false;
             }
         }
+
+        public bool ExecuteSelected(List<string> listeSelected, ManagerModel manager, ConfigFileModel configFileModel)
+        {
+            if (!listeSelected.Any() || manager?.Jobs == null || configFileModel == null)
+                return false;
+
+            var service = new JobService();
+            var logService = new LogService();
+            var statusService = new StatusService();
+
+            var jobsToExecute = manager.Jobs.Where(job => listeSelected.Contains(job.Name)).ToList();
+
+            if (jobsToExecute.Count != listeSelected.Count)
+                return false;
+
+            foreach (var job in jobsToExecute)
+            {
+                service.Start(job, statusService, logService, configFileModel);
+            }
+
+            return true; 
+        }
+
     }
 }
