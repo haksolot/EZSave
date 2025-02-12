@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace EZSave.Core.Models
+﻿namespace EZSave.Core.Models
 {
-  public class LogModel
+    public class LogModel
     {
         public string Name { get; set; } = "";
         public DateTime Timestamp { get; set; }
