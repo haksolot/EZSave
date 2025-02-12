@@ -1,6 +1,6 @@
+using System.Text.Json;
 using EZSave.Core.Models;
 using EZSave.Core.Services;
-using System.Text.Json;
 
 namespace EZSave.Tests
 {
@@ -21,7 +21,7 @@ namespace EZSave.Tests
 
             new ConfigService().LoadConfigFile(conf);
 
-            Assert.NotNull(conf.Jobs); 
+            Assert.NotNull(conf.Jobs);
             Assert.True(conf.Jobs.ContainsKey("job1"));
             Assert.Equal(expectedJob.Source, conf.Jobs["job1"].Source);
             Assert.Equal(expectedJob.Destination, conf.Jobs["job1"].Destination);
@@ -72,7 +72,7 @@ namespace EZSave.Tests
             {
                 json = reader.ReadToEnd();
             }
-                //string json = File.ReadAllText(tempFilePath);
+            //string json = File.ReadAllText(tempFilePath);
             var loadedConfig = JsonSerializer.Deserialize<ConfigFileModel>(json);
 
             Assert.NotNull(loadedConfig);

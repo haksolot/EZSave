@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text.Json;
 using EZSave.Core.Models;
 using EZSave.Core.Services;
-using System.Text.Json;
 
 namespace EZSave.Tests
 {
@@ -20,22 +15,22 @@ namespace EZSave.Tests
                 SourceFilePath = "",
                 TargetFilePath = "",
                 State = "Activate",
-                TotalFilesSize =  1400050,
+                TotalFilesSize = 1400050,
                 TotalFilesToCopy = 1450000,
                 Progression = 0,
                 FilesLeftToCopy = 1450000,
-                FilesSizeLeftToCopy= 1400050
+                FilesSizeLeftToCopy = 1400050
             };
             var testconfigfile = new ConfigFileModel
             {
                 ConfFileDestination = "test",
-                LogFileDestination="test",
-                StatusFileDestination="statustest"
+                LogFileDestination = "test",
+                StatusFileDestination = "statustest"
             };
             var status = new StatusService();
             status.SaveStatus(teststatus, testconfigfile);
 
-            string statusDirectory = Path.Combine(testconfigfile.StatusFileDestination,"_status.json");
+            string statusDirectory = Path.Combine(testconfigfile.StatusFileDestination, "_status.json");
 
             // Vérification fichier créé
             Assert.True(File.Exists(statusDirectory), $"Le fichier de log n'a pas été créé : {statusDirectory}");
@@ -56,7 +51,7 @@ namespace EZSave.Tests
             Assert.Equal(teststatus.State, savedStatus.State);
             Assert.Equal(teststatus.TotalFilesSize, savedStatus.TotalFilesSize);
             Assert.Equal(teststatus.TotalFilesToCopy, savedStatus.TotalFilesToCopy);
-            
+
             teststatus.FilesLeftToCopy = 50;
             teststatus.FilesSizeLeftToCopy = 250;
 
