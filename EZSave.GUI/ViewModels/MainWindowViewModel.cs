@@ -11,6 +11,7 @@ namespace EZSave.GUI.ViewModels
         public LanguageViewModel LanguageViewModel { get; set; }
         public ConfigFileModel configFileModel { get; set; }
         public ManagerService managerService;
+        private readonly ConfigService configService;
 
         private readonly ManagerModel managerModel;
 
@@ -24,19 +25,23 @@ namespace EZSave.GUI.ViewModels
 
         public ICommand RefreshCommand { get; set; }
         public ICommand AddJobCommand { get; set; }
+        public ICommand ExecuteAllJobsCommand { get; set; }
         public ICommand OpenJobWindowCommand { get; set; }
 
         public event PropertyChangedEventHandler? PropertyChanged;
-      
 
 
         public MainWindowViewModel()
         {
             LanguageViewModel = new LanguageViewModel();
+            configFileModel = new ConfigFileModel();
 
+            configService = new ConfigService();
+            managerService = new ManagerService();
             managerModel = new ManagerModel();
             RefreshCommand = new RelayCommand(RefreshJobs);
             OpenJobWindowCommand = new RelayCommand(OpenAddJobWindow);
+            ExecuteAllJobsCommand = new RelayCommand(ExecuteJobs);
             //Jobs = managerModel.Jobs;
         }
 
@@ -60,8 +65,15 @@ namespace EZSave.GUI.ViewModels
             window.ShowDialog();
         }
 
-     
-        
+        private void ExecuteJobs()
+        {
+            configFileModel.LogFileDestination = "Log";
+            configFileModel.StatusFileDestination = "Status";
+            managerService.Execute(managerModel, configFileModel);
+            //return isExecuted;
+        }
+
+
 
     }
 }

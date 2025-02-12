@@ -36,5 +36,12 @@
                 <DataGridTextColumn Header="Type" Binding="{Binding Type}"/>
             </DataGrid.Columns>
         </DataGrid>
+        <StackPanel DockPanel.Dock="Right" Orientation="Vertical">
+            <Button  
+Content="Execute One" "
+/>
+            <Button Content="Execute All"  Command="{Binding ExecuteAllJobsCommand} />
+
+        </StackPanel>
     </DockPanel>
 </Window>
