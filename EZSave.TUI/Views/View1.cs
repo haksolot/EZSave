@@ -19,10 +19,10 @@ namespace EZSave.TUI.Views
     {
       Console.Write(_viewModel.GetJobs());
     }
+
     public void Display()
     {
       bool inConfigMode = false;
-
       while (true)
       {
         Console.Clear();
@@ -177,9 +177,18 @@ namespace EZSave.TUI.Views
             }
             else if (mainChoice == 2)
             {
-              inConfigMode = true;
+              Console.WriteLine(_viewModel.ListJobsPossibleExecute);
+              ShowJobs();
+              Console.WriteLine(_viewModel.EnterJobExecute);
+              string jobName = Console.ReadLine();
+              _viewModel.ExecuteJob(jobName);
+              Console.WriteLine(_viewModel.JobExecutedSuccess);
             }
             else if (mainChoice == 3)
+            {
+              inConfigMode = true;
+            }
+            else if (mainChoice == 4)
             {
               for (int i = 0; i < _viewModel.LanguageOptions.Count; i++)
               {

@@ -193,6 +193,9 @@
     <value>Jobs execution failed !</value>
   </data>
   <data name="JobsExecutedSuccess" xml:space="preserve">
+    <value>Job executed with success !</value>
+  </data>
+  <data name="JobExecutedSuccess" xml:space="preserve">
     <value>Jobs executed with success !</value>
   </data>
   <data name="LanguageOption1" xml:space="preserve">
@@ -216,10 +219,10 @@
   <data name="MainOption1" xml:space="preserve">
     <value>Execute jobs</value>
   </data>
-  <data name="MainOption2" xml:space="preserve">
+  <data name="MainOption3" xml:space="preserve">
     <value>Enter in config mode</value>
   </data>
-  <data name="MainOption3" xml:space="preserve">
+  <data name="MainOption4" xml:space="preserve">
     <value>Change language</value>
   </data>
   <data name="StatusFilePathChanging" xml:space="preserve">
@@ -227,5 +230,14 @@
   </data>
   <data name="LogTypeChanging" xml:space="preserve">
     <value>Log type (xml/json) :</value>
+  </data>
+  <data name="MainOption2" xml:space="preserve">
+    <value>Execute a single job</value>
+  </data>
+  <data name="ListJobsPossibleExecute" xml:space="preserve">
+    <value>Jobs that can be executed :</value>
+  </data>
+  <data name="EnterJobExecute" xml:space="preserve">
+    <value>Enter job to execute :</value>
   </data>
 </root>

@@ -34,11 +34,10 @@ namespace EZSave.TUI.ViewModels
     public string JobNotAdded { get; set; }
     public string JobDeleted { get; set; }
     public string JobNotDeleted { get; set; }
-
+    public string ListJobsPossibleExecute { get; set; }
+    public string JobExecutedSuccess { get; set; }
+    public string EnterJobExecute { get; set; }
     public string JobEdited { get; set; }
-
-
-
     public string JobNotEdited { get; set; }
     public string Message { get; set; }
 
@@ -73,6 +72,7 @@ namespace EZSave.TUI.ViewModels
       MainOptions.Add(_resourcesService.GetString("MainOption1"));
       MainOptions.Add(_resourcesService.GetString("MainOption2"));
       MainOptions.Add(_resourcesService.GetString("MainOption3"));
+      MainOptions.Add(_resourcesService.GetString("MainOption4"));
       MainMenuTitle = _resourcesService.GetString("MainMenuTitle");
       ChoiceTitle = _resourcesService.GetString("ChoiceTitle");
       InvalidChoiceTitle = _resourcesService.GetString("InvalidChoiceTitle");
@@ -110,6 +110,9 @@ namespace EZSave.TUI.ViewModels
       LanguageOptions.Clear();
       LanguageOptions.Add(_resourcesService.GetString("LanguageOption1"));
       LanguageOptions.Add(_resourcesService.GetString("LanguageOption2"));
+      ListJobsPossibleExecute = _resourcesService.GetString("ListJobsPossibleExecute");
+      JobExecutedSuccess = _resourcesService.GetString("JobExecutedSuccess");
+      EnterJobExecute = _resourcesService.GetString("EnterJobExecute");
     }
 
 
@@ -120,6 +123,18 @@ namespace EZSave.TUI.ViewModels
       configModel.LogFileDestination = "Log";
       configModel.StatusFileDestination = "Status";
       bool isExecuted = managerService.Execute(managerModel, configModel);
+      return isExecuted;
+    }
+
+    public bool ExecuteJob(string jobName)
+    {
+      var managerService = new ManagerService();
+      var configModel = new ConfigFileModel();
+      configModel.LogFileDestination = "Log";
+      configModel.StatusFileDestination = "Status";
+      var selected = new List<string>();
+      selected.Add(jobName);
+      bool isExecuted = managerService.ExecuteSelected(selected, managerModel, configModel);
       return isExecuted;
     }
 
@@ -184,24 +199,28 @@ namespace EZSave.TUI.ViewModels
 
     public void ChangeLogPath(string dest)
     {
+            configFileModel.LogFileDestination = dest;
       var configService = new ConfigService();
       configService.SetLogDestination(dest, configFileModel);
     }
 
     public void ChangeLogType(string type)
     {
+            configFileModel.LogType = type;
       var configService = new ConfigService();
       configService.SetLogType(type, configFileModel);
     }
 
     public void ChangeConfigPath(string dest)
     {
+            configFileModel.ConfFileDestination = dest;
       var configService = new ConfigService();
       configService.SetConfigDestination(dest, configFileModel);
     }
 
     public void ChangeStatusPath(string dest)
     {
+            configFileModel.StatusFileDestination = dest;
       var configService = new ConfigService();
       configService.SetStatusDestination(dest, configFileModel);
     }
