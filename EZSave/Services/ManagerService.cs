@@ -1,4 +1,7 @@
 ﻿using EZSave.Core.Models;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace EZSave.Core.Services
 {
@@ -12,74 +15,51 @@ namespace EZSave.Core.Services
             }
         }
 
-        public bool Add(JobModel job, ManagerModel manager)
+        public void Add(JobModel job, ManagerModel manager)
         {
-            if (manager.Jobs.Count >= manager.Limit)
-            {
-                return false;
-            }
-            else
-            {
-                manager.Jobs.Add(job);
-                return true;
-            }
+            manager.Jobs.Add(job);
         }
 
         public bool RemoveJob(JobModel job, ManagerModel manager)
         {
-            for (int i = 0; i < manager.Jobs.Count; i++)
+            var jobToRemove = manager.Jobs.FirstOrDefault(j => j.Name == job.Name);
+            if (jobToRemove != null)
             {
-                var jobList = manager.Jobs[i];
-                if (jobList.Name == job.Name)
-                {
-                    manager.Jobs.RemoveAt(i);
-                    return true;
-                }
+                manager.Jobs.Remove(jobToRemove);
+                return true;
             }
             return false;
         }
 
-        public bool Execute(ManagerModel manager, ConfigFileModel configFileModel)
+        public async Task<bool> Execute(ManagerModel manager)
         {
             if (manager.Jobs.Count > 0)
             {
                 foreach (JobModel job in manager.Jobs)
                 {
-                    var service = new JobService();
-                    var logService = new LogService();
-                    var statusService = new StatusService();
-
-                    service.Start(job, statusService, logService, configFileModel);
+                    await JobService.Start(job);
                 }
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
 
-        public bool ExecuteSelected(List<string> listeSelected, ManagerModel manager, ConfigFileModel configFileModel)
+        public async Task<bool> ExecuteSelected(List<string> listeSelected, ManagerModel manager)
         {
-            if (!listeSelected.Any() || manager?.Jobs == null || configFileModel == null)
+            if (!listeSelected.Any() || manager?.Jobs == null)
                 return false;
-
-            var service = new JobService();
-            var logService = new LogService();
-            var statusService = new StatusService();
 
             var jobsToExecute = manager.Jobs.Where(job => listeSelected.Contains(job.Name)).ToList();
 
-            if (jobsToExecute.Count != listeSelected.Count)
+            if (!jobsToExecute.Any())
                 return false;
 
             foreach (var job in jobsToExecute)
             {
-                service.Start(job, statusService, logService, configFileModel);
+                await JobService.Start(job);
             }
 
-            return true; 
+            return true;
         }
-
     }
 }

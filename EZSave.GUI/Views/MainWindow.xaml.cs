@@ -1,11 +1,8 @@
-﻿using EZSave.GUI.ViewModels;
-using System.Windows;
+﻿using System.Windows;
+using EZSave.GUI.ViewModels;
 
-namespace EZSave.GUI
+namespace EZSave.GUI.Views
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()

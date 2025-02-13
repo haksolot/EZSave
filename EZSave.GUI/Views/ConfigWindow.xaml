@@ -1,0 +1,19 @@
+﻿<Window x:Class="EZSave.GUI.Views.ConfigWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Configuration" Height="350" Width="500">
+    <Grid>
+        <StackPanel Margin="20">
+            <TextBlock Text="Log File Path" FontWeight="Bold" />
+            <TextBox Text="{Binding LogPath, UpdateSourceTrigger=PropertyChanged}" Width="400" />
+
+            <TextBlock Text="Config File Path" FontWeight="Bold" Margin="0,10,0,0"/>
+            <TextBox Text="{Binding ConfigPath, UpdateSourceTrigger=PropertyChanged}" Width="400" />
+
+            <TextBlock Text="Status File Path" FontWeight="Bold" Margin="0,10,0,0"/>
+            <TextBox Text="{Binding StatusPath, UpdateSourceTrigger=PropertyChanged}" Width="400" />
+
+            <Button Content="Enregistrer" Command="{Binding SaveConfigCommand}" Margin="0,20,0,0" />
+        </StackPanel>
+    </Grid>
+</Window>

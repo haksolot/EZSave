@@ -1,0 +1,29 @@
+﻿<Window x:Class="EZSave.GUI.AddJobWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        Title="Ajouter un job" Height="300" Width="400">
+
+    <Grid>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="300">
+
+            <TextBlock Text="Nom du job :" Margin="5" />
+            <TextBox Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Margin="5" />
+
+            <TextBlock Text="Source du job :" Margin="5" />
+            <TextBox Text="{Binding Source, UpdateSourceTrigger=PropertyChanged}" Margin="5" />
+
+            <TextBlock Text="Destination du job :" Margin="5" />
+            <TextBox Text="{Binding Destination, UpdateSourceTrigger=PropertyChanged}" Margin="5" />
+
+            <TextBlock Text="Type de sauvegarde (full/diff) :" Margin="5" />
+            <ComboBox SelectedItem="{Binding Type, UpdateSourceTrigger=PropertyChanged}" Margin="5">
+                <ComboBoxItem Content="full" />
+                <ComboBoxItem Content="diff" />
+            </ComboBox>
+
+            <Button Content="Valider" Click="ValidateJob" Margin="5" />
+        </StackPanel>
+    </Grid>
+</Window>

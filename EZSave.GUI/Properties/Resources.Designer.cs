@@ -61,6 +61,15 @@ namespace EZSave.GUI.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Execute jobs.
+        /// </summary>
+        public static string AllButton {
+            get {
+                return ResourceManager.GetString("AllButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Your choice :.
         /// </summary>
         public static string ChoiceTitle {
@@ -340,15 +349,6 @@ namespace EZSave.GUI.Properties {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Execute jobs.
-        /// </summary>
-        public static string MainOption1 {
-            get {
-                return ResourceManager.GetString("MainOption1", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Recherche une chaîne localisée semblable à Enter in config mode.
         /// </summary>
         public static string MainOption2 {
@@ -363,6 +363,15 @@ namespace EZSave.GUI.Properties {
         public static string MainOption3 {
             get {
                 return ResourceManager.GetString("MainOption3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Mixte.
+        /// </summary>
+        public static string MixButton {
+            get {
+                return ResourceManager.GetString("MixButton", resourceCulture);
             }
         }
         

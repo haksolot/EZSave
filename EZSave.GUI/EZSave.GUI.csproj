@@ -13,6 +13,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Include="App.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\EZSave.Language\EZSave.Language.csproj" />
     <ProjectReference Include="..\EZSave\EZSave.Core.csproj" />
   </ItemGroup>

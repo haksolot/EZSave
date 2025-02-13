@@ -1,173 +1,87 @@
 ﻿using EZSave.Core.Models;
+using System;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace EZSave.Core.Services
 {
-    public class JobService
+    public static class JobService
     {
-        public void Start(JobModel job, StatusService statusService, LogService logService, ConfigFileModel configFileModel)
+        public static async Task Start(JobModel job)
         {
+            if (string.IsNullOrWhiteSpace(job.Source) || string.IsNullOrWhiteSpace(job.Destination))
+            {
+                Console.WriteLine($"❌ ERREUR : Chemins de source ou de destination non valides !");
+                return;
+            }
+
+            if (!Directory.Exists(job.Source))
+            {
+                Console.WriteLine($"❌ ERREUR : Le dossier source '{job.Source}' n'existe pas !");
+                return;
+            }
+
+            if (!Directory.Exists(job.Destination))
+            {
+                Console.WriteLine($"⚠️ Création du dossier destination : {job.Destination}");
+                Directory.CreateDirectory(job.Destination);
+            }
+
             if (job.Type == "full")
             {
-                FullBackup(job, logService, statusService, configFileModel);
-
+                await FullBackup(job);
             }
             else if (job.Type == "diff")
             {
-                DifferentialBackup(job, statusService, logService, configFileModel);
+                await DifferentialBackup(job);
             }
             else
             {
-
+                Console.WriteLine($"❌ ERREUR : Type de job inconnu '{job.Type}' !");
             }
         }
 
-        private void FullBackup(JobModel job, LogService logService, StatusService statusService, ConfigFileModel configFileModel)
+        private static async Task FullBackup(JobModel job)
         {
-            long copiedSize = 0;
-            var startTime = DateTime.Now;
-            long currentFileSize = 0;
+            Console.WriteLine($"📁 Démarrage de la sauvegarde FULL pour {job.Name}");
 
-            long totalSize = Directory.GetFiles(job.Source, "*", SearchOption.AllDirectories).Sum(file => new FileInfo(file).Length);
+            string[] files = Directory.GetFiles(job.Source, "*", SearchOption.AllDirectories);
 
-            int totalFiles = Directory.GetFiles(job.Source, "*", SearchOption.AllDirectories).Length;
-
-            statusService.SaveStatus(new StatusModel
-            {
-                Name = job.Name,
-                SourceFilePath = job.Source,
-                TargetFilePath = job.Destination,
-                State = "Activate",
-                TotalFilesSize = totalSize,
-                TotalFilesToCopy = totalFiles,
-                FilesLeftToCopy = totalFiles,
-                FilesSizeLeftToCopy = totalSize
-            }, configFileModel);
-
-            foreach (string file in Directory.GetFiles(job.Source, "*", SearchOption.AllDirectories))
+            foreach (string file in files)
             {
                 string relativePath = file.Substring(job.Source.Length).TrimStart(Path.DirectorySeparatorChar);
                 string destinationFile = Path.Combine(job.Destination, relativePath);
-                string? directoryPath = Path.GetDirectoryName(destinationFile);
-                long fileSize = new FileInfo(file).Length;
+                Directory.CreateDirectory(Path.GetDirectoryName(destinationFile)!);
 
-                if (!string.IsNullOrEmpty(directoryPath))
-                {
-                    Directory.CreateDirectory(directoryPath);
-                }
-                File.Copy(file, destinationFile, true);
-
-
-                totalSize -= fileSize;
-                totalFiles--;
-
-                statusService.SaveStatus(new StatusModel
-                {
-                    Name = job.Name,
-                    SourceFilePath = job.Source,
-                    TargetFilePath = job.Destination,
-                    State = "End",
-                    TotalFilesSize = totalSize + fileSize,
-                    TotalFilesToCopy = totalFiles + 1,
-                    FilesLeftToCopy = totalFiles,
-                    FilesSizeLeftToCopy = totalSize
-                }, configFileModel);
-
-                var endTime = DateTime.Now;
-
-                float transferTime = (float)(endTime - startTime).TotalSeconds;
-
-
-
-                currentFileSize = new FileInfo(destinationFile).Length;
-
-                copiedSize += currentFileSize;
-
-                logService.WriteJSON(new LogModel
-                {
-                    Name = job.Name,
-                    Timestamp = DateTime.Now,
-                    FileSource = file,
-                    FileDestination = destinationFile,
-                    FileSize = currentFileSize,
-                    FileTransferTime = transferTime
-                }, configFileModel, configFileModel.LogFileDestination);
+                Console.WriteLine($"📂 Copie : {file} → {destinationFile}");
+                await Task.Run(() => File.Copy(file, destinationFile, true));
             }
+
+            Console.WriteLine($"✅ Sauvegarde FULL terminée pour {job.Name}");
         }
 
-
-
-
-        private void DifferentialBackup(JobModel job, StatusService statusService, LogService logService, ConfigFileModel configFileModel)
+        private static async Task DifferentialBackup(JobModel job)
         {
-            long copiedSize = 0;
-            var startTime = DateTime.Now;
-            long currentFileSize = 0;
+            Console.WriteLine($"📁 Démarrage de la sauvegarde DIFF pour {job.Name}");
 
-            long totalSize = Directory.GetFiles(job.Source, "*", SearchOption.AllDirectories).Sum(file => new FileInfo(file).Length);
+            string[] files = Directory.GetFiles(job.Source, "*", SearchOption.AllDirectories);
 
-            int totalFiles = Directory.GetFiles(job.Source, "*", SearchOption.AllDirectories).Length;
-
-            statusService.SaveStatus(new StatusModel
-            {
-                Name = job.Name,
-                SourceFilePath = job.Source,
-                TargetFilePath = job.Destination,
-                State = "Activate",
-                TotalFilesSize = totalSize,
-                TotalFilesToCopy = totalFiles,
-                FilesLeftToCopy = totalFiles,
-                FilesSizeLeftToCopy = totalSize
-            }, configFileModel);
-
-            foreach (string file in Directory.GetFiles(job.Source, "*", SearchOption.AllDirectories))
+            foreach (string file in files)
             {
                 string relativePath = file.Substring(job.Source.Length).TrimStart(Path.DirectorySeparatorChar);
                 string destinationFile = Path.Combine(job.Destination, relativePath);
-                long fileSize = new FileInfo(file).Length;
+
                 if (!File.Exists(destinationFile) || File.GetLastWriteTime(file) > File.GetLastWriteTime(destinationFile))
                 {
-                    string? directoryPath = Path.GetDirectoryName(destinationFile);
-                    if (!string.IsNullOrEmpty(directoryPath))
-                    {
-                        Directory.CreateDirectory(directoryPath);
-                    }
-                    /*Directory.CreateDirectory(Path.GetDirectoryName(destinationFile));*/
-                    File.Copy(file, destinationFile, true);
+                    Directory.CreateDirectory(Path.GetDirectoryName(destinationFile)!);
 
-                    totalSize -= fileSize;
-                    totalFiles--;
-
-                    statusService.SaveStatus(new StatusModel
-                    {
-                        Name = job.Name,
-                        SourceFilePath = job.Source,
-                        TargetFilePath = job.Destination,
-                        State = "End",
-                        TotalFilesSize = totalSize + fileSize,
-                        TotalFilesToCopy = totalFiles + 1,
-                        FilesLeftToCopy = totalFiles,
-                        FilesSizeLeftToCopy = totalSize
-                    }, configFileModel);
-
-                    var endTime = DateTime.Now;
-
-                    float transferTime = (float)(endTime - startTime).TotalSeconds;
-                    currentFileSize = new FileInfo(destinationFile).Length;
-
-                    copiedSize += currentFileSize;
-
-                    logService.WriteJSON(new LogModel
-                    {
-                        Name = job.Name,
-                        Timestamp = DateTime.Now,
-                        FileSource = file,
-                        FileDestination = destinationFile,
-                        FileSize = currentFileSize,
-                        FileTransferTime = transferTime
-                    }, configFileModel, configFileModel.LogFileDestination);
+                    Console.WriteLine($"📂 Copie DIFF : {file} → {destinationFile}");
+                    await Task.Run(() => File.Copy(file, destinationFile, true));
                 }
             }
+
+            Console.WriteLine($"✅ Sauvegarde DIFF terminée pour {job.Name}");
         }
     }
 }
-

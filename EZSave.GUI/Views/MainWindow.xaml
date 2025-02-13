@@ -1,0 +1,50 @@
+﻿<Window x:Class="EZSave.GUI.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:properties="clr-namespace:EZSave.GUI.Properties"
+        Title="{x:Static properties:Resources.MainMenuTitle}" Height="500" Width="900" MinHeight="500" MinWidth="900">
+
+    <Grid Margin="10">
+        <StackPanel Orientation="Vertical">
+
+            <UniformGrid Columns="6" HorizontalAlignment="Center" Margin="5">
+                <Button Command="{Binding RefreshCommand}" 
+                        Content="{x:Static properties:Resources.RefreshJobs}" 
+                        Padding="10" Margin="5" MinWidth="120"/>
+
+                <Button Command="{Binding OpenConfigCommand}" 
+                        Content="{x:Static properties:Resources.ConfModeTitle}" 
+                        Padding="10" Margin="5" MinWidth="120"/>
+
+                <Button Command="{Binding ChangeLanguageCommand}" 
+                        Content="{x:Static properties:Resources.MainOption3}" 
+                        Padding="10" Margin="5" MinWidth="120"/>
+
+                <Button Command="{Binding AddJobCommand}" 
+                        Content="{x:Static properties:Resources.ConfigOption1}" 
+                        Padding="10" Margin="5" MinWidth="120"/>
+
+                <Button Command="{Binding ExecuteSelectedJobsCommand}" 
+                        Content="{x:Static properties:Resources.MixButton}" 
+                        Padding="10" Margin="5" MinWidth="100"/>
+
+                <Button Command="{Binding ExecuteAllJobsCommand}" 
+                        Content="{x:Static properties:Resources.AllButton}" 
+                        Padding="10" Margin="5" MinWidth="100"/>
+            </UniformGrid>
+
+            <!-- 🔥 Liste des Jobs -->
+            <ListView ItemsSource="{Binding Jobs}" SelectedItem="{Binding SelectedJob}" Margin="10">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="{x:Static properties:Resources.EnterJobName}" DisplayMemberBinding="{Binding Name}" Width="200"/>
+                        <GridViewColumn Header="{x:Static properties:Resources.EnterSource}" DisplayMemberBinding="{Binding Source}" Width="250"/>
+                        <GridViewColumn Header="{x:Static properties:Resources.EnterDestination}" DisplayMemberBinding="{Binding Destination}" Width="250"/>
+                        <GridViewColumn Header="{x:Static properties:Resources.EnterType}" DisplayMemberBinding="{Binding Type}" Width="100"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+
+        </StackPanel>
+    </Grid>
+</Window>

@@ -210,7 +210,7 @@
   <data name="MainMenuTitle" xml:space="preserve">
     <value>Menu Principal : </value>
   </data>
-  <data name="MainOption1" xml:space="preserve">
+  <data name="AllButton" xml:space="preserve">
     <value>Exécuter les jobs</value>
   </data>
   <data name="MainOption2" xml:space="preserve">
@@ -218,6 +218,9 @@
   </data>
   <data name="MainOption3" xml:space="preserve">
     <value>Changer la langue</value>
+  </data>
+  <data name="MixButton" xml:space="preserve">
+    <value>Mixte</value>
   </data>
   <data name="RefreshJobs" xml:space="preserve">
     <value>Rafraîchir les jobs</value>
