@@ -127,7 +127,7 @@
     <value>Config file path : </value>
   </data>
   <data name="ConfigOption1" xml:space="preserve">
-    <value>Add a job</value>
+    <value>Add</value>
   </data>
   <data name="ConfigOption2" xml:space="preserve">
     <value>Update a job</value>
@@ -183,8 +183,14 @@
   <data name="JobDeleted" xml:space="preserve">
     <value>The job has been deleted !</value>
   </data>
+  <data name="JobDestination" xml:space="preserve">
+    <value>Destination</value>
+  </data>
   <data name="JobEdited" xml:space="preserve">
     <value>The job has been edited ! </value>
+  </data>
+  <data name="JobName" xml:space="preserve">
+    <value>Nom</value>
   </data>
   <data name="JobNotAdded" xml:space="preserve">
     <value>The job has not been added !</value>
@@ -197,6 +203,12 @@
   </data>
   <data name="JobsExecutedSuccess" xml:space="preserve">
     <value>Jobs executed with success !</value>
+  </data>
+  <data name="JobSource" xml:space="preserve">
+    <value>Source</value>
+  </data>
+  <data name="JobType" xml:space="preserve">
+    <value>Backup type</value>
   </data>
   <data name="LanguageOption1" xml:space="preserve">
     <value>French</value>
@@ -226,7 +238,7 @@
     <value>Change language</value>
   </data>
   <data name="RefreshJobs" xml:space="preserve">
-    <value>Refresh jobs</value>
+    <value>Refresh</value>
   </data>
   <data name="StatusFilePathChanging" xml:space="preserve">
     <value>Status file path : </value>

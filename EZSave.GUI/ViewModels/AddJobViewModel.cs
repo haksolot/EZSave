@@ -18,11 +18,11 @@ namespace EZSave.GUI.ViewModels
         private string _Source;
         private string _Destination;
         private string _Type;
-
+       
         public ICommand AddJobCommand { get; }
         //public ICommand SelectSourceFolderCommand { get; }
         //public ICommand SelectDestinationFolderCommand { get; }
-
+        public List<String> JobTypes { get; } = new List<String> { "full", "diff" };
         public string Name
         {
             get => _Name;
@@ -46,6 +46,8 @@ namespace EZSave.GUI.ViewModels
             get => _Type;
             set => SetProperty(ref _Type, value);
         }
+
+       
 
         public ManagerModel managerModel { get; set; }
         public ConfigFileModel configFileModel { get; set; }

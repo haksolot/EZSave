@@ -25,8 +25,11 @@
             <Button Command="{Binding RefreshCommand}" Content="{x:Static properties:Resources.RefreshJobs}" CommandParameter="Refresh"/>
             <Button Content="{x:Static properties:Resources.ConfigOption1}" Command="{Binding OpenJobWindowCommand}" />
             <Button Content="{x:Static properties:Resources.ConfModeTitle}"  />
+            <Button Content="{x:Static properties:Resources.ExecuteOneJob}" Command="{Binding ExecuteOneCommand}" />
+            <Button Content="{x:Static properties:Resources.ExecuteAllJobs}" Command="{Binding ExecuteAllJobsCommand}" />
             <Button Content="🇫🇷" Command="{Binding LanguageViewModel.ChangeLanguageCommand}" CommandParameter="fr-FR" Margin="5"/>
             <Button Content="🇬🇧" Command="{Binding LanguageViewModel.ChangeLanguageCommand}" CommandParameter="en-US" Margin="5"/>
+            
         </StackPanel>
 
         <Grid Grid.Row="1">
@@ -36,23 +39,19 @@
             </Grid.ColumnDefinitions>
 
             <DataGrid Grid.Column="0"
-                      ItemsSource="{Binding Jobs}"
-                      AutoGenerateColumns="False"
-                      IsReadOnly="True"
-                      HorizontalAlignment="Stretch"
-                      VerticalAlignment="Stretch">
+              ItemsSource="{Binding Jobs}"
+              AutoGenerateColumns="False"
+              IsReadOnly="True"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Stretch">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Nom" Binding="{Binding Name}"/>
-                    <DataGridTextColumn Header="Source" Binding="{Binding Source}"/>
-                    <DataGridTextColumn Header="Destination" Binding="{Binding Destination}"/>
-                    <DataGridTextColumn Header="Type" Binding="{Binding Type}"/>
+                    <DataGridTextColumn Header="{x:Static properties:Resources.JobName}" Binding="{Binding Name}" Width="*" />
+                    <DataGridTextColumn Header="{x:Static properties:Resources.JobSource}" Binding="{Binding Source}" Width="*" />
+                    <DataGridTextColumn Header="{x:Static properties:Resources.JobDestination}" Binding="{Binding Destination}" Width="*" />
+                    <DataGridTextColumn Header="{x:Static properties:Resources.JobType}" Binding="{Binding Type}" Width="*" />
                 </DataGrid.Columns>
             </DataGrid>
-
-            <StackPanel Grid.Column="1" VerticalAlignment="Top" Orientation="Vertical">
-                <Button Content="{x:Static properties:Resources.ExecuteOneJob}" Command="{Binding ExecuteOneCommand}" />
-                <Button Content="{x:Static properties:Resources.ExecuteAllJobs}" Command="{Binding ExecuteAllJobsCommand}" />
-            </StackPanel>
         </Grid>
+
     </Grid>
 </Window>

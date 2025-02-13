@@ -19,7 +19,11 @@ xmlns:properties="clr-namespace:EZSave.GUI.Properties"
             <TextBox Text="{Binding Destination}" Margin="5" />
             
             <TextBlock Text="{x:Static properties:Resources.EnterType}" Margin="5" TextWrapping="Wrap" />
-            <TextBox Text="{Binding Type}" Margin="5" />
+            <ComboBox ItemsSource="{Binding JobTypes}" 
+                  SelectedItem="{Binding Type, Mode=TwoWay}"
+                  Margin="5"
+                  Width="150" />
+            
 
             <Button Content="{x:Static properties:Resources.Validate}" Command="{Binding AddJobCommand}"  Margin="5" />
         </StackPanel>

@@ -127,7 +127,7 @@
     <value>Chemin du fichier de config : </value>
   </data>
   <data name="ConfigOption1" xml:space="preserve">
-    <value>Ajouter un job</value>
+    <value>Ajouter</value>
   </data>
   <data name="ConfigOption2" xml:space="preserve">
     <value>Modifier un job</value>
@@ -183,8 +183,14 @@
   <data name="JobDeleted" xml:space="preserve">
     <value>Le job a été supprimé !</value>
   </data>
+  <data name="JobDestination" xml:space="preserve">
+    <value>Destination</value>
+  </data>
   <data name="JobEdited" xml:space="preserve">
     <value>Le job a été édité !</value>
+  </data>
+  <data name="JobName" xml:space="preserve">
+    <value>Nom</value>
   </data>
   <data name="JobNotAdded" xml:space="preserve">
     <value>Le job n'a pas été ajouté !</value>
@@ -197,6 +203,12 @@
   </data>
   <data name="JobsExecutedSuccess" xml:space="preserve">
     <value>Tous les jobs ont été exécutés avec succès !</value>
+  </data>
+  <data name="JobSource" xml:space="preserve">
+    <value>Source</value>
+  </data>
+  <data name="JobType" xml:space="preserve">
+    <value>Type de backup</value>
   </data>
   <data name="LanguageOption1" xml:space="preserve">
     <value>Français</value>
@@ -226,7 +238,7 @@
     <value>Changer la langue</value>
   </data>
   <data name="RefreshJobs" xml:space="preserve">
-    <value>Rafraîchir les jobs</value>
+    <value>Rafraîchir</value>
   </data>
   <data name="StatusFilePathChanging" xml:space="preserve">
     <value>Chemin du fichier de status :  </value>

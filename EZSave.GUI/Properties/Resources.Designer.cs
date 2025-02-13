@@ -88,7 +88,7 @@ namespace EZSave.GUI.Properties {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Add a job.
+        ///   Recherche une chaîne localisée semblable à Add.
         /// </summary>
         public static string ConfigOption1 {
             get {
@@ -259,11 +259,29 @@ namespace EZSave.GUI.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Destination.
+        /// </summary>
+        public static string JobDestination {
+            get {
+                return ResourceManager.GetString("JobDestination", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à The job has been edited !.
         /// </summary>
         public static string JobEdited {
             get {
                 return ResourceManager.GetString("JobEdited", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Nom.
+        /// </summary>
+        public static string JobName {
+            get {
+                return ResourceManager.GetString("JobName", resourceCulture);
             }
         }
         
@@ -300,6 +318,24 @@ namespace EZSave.GUI.Properties {
         public static string JobsExecutedSuccess {
             get {
                 return ResourceManager.GetString("JobsExecutedSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Source.
+        /// </summary>
+        public static string JobSource {
+            get {
+                return ResourceManager.GetString("JobSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Backup type.
+        /// </summary>
+        public static string JobType {
+            get {
+                return ResourceManager.GetString("JobType", resourceCulture);
             }
         }
         
@@ -385,7 +421,7 @@ namespace EZSave.GUI.Properties {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Refresh jobs.
+        ///   Recherche une chaîne localisée semblable à Refresh.
         /// </summary>
         public static string RefreshJobs {
             get {
