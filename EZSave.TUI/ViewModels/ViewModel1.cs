@@ -62,10 +62,10 @@ namespace EZSave.TUI.ViewModels
       var managerService = new ManagerService();
       configService.SetConfigDestination("conf.json", configFileModel);
       configService.LoadConfigFile(configFileModel);
-
       managerService.Read(managerModel, configFileModel);
       Message = "Fichier de configuration appliqué avec succés !";
     }
+
     public void LoadStrings()
     {
       MainOptions.Clear();
@@ -148,6 +148,7 @@ namespace EZSave.TUI.ViewModels
       }
       return Message;
     }
+
     public bool AddJob(string name, string source, string destination, string type)
     {
       var job = new JobModel();
@@ -199,28 +200,28 @@ namespace EZSave.TUI.ViewModels
 
     public void ChangeLogPath(string dest)
     {
-            configFileModel.LogFileDestination = dest;
+      configFileModel.LogFileDestination = dest;
       var configService = new ConfigService();
       configService.SetLogDestination(dest, configFileModel);
     }
 
     public void ChangeLogType(string type)
     {
-            configFileModel.LogType = type;
+      configFileModel.LogType = type;
       var configService = new ConfigService();
       configService.SetLogType(type, configFileModel);
     }
 
     public void ChangeConfigPath(string dest)
     {
-            configFileModel.ConfFileDestination = dest;
+      configFileModel.ConfFileDestination = dest;
       var configService = new ConfigService();
       configService.SetConfigDestination(dest, configFileModel);
     }
 
     public void ChangeStatusPath(string dest)
     {
-            configFileModel.StatusFileDestination = dest;
+      configFileModel.StatusFileDestination = dest;
       var configService = new ConfigService();
       configService.SetStatusDestination(dest, configFileModel);
     }
