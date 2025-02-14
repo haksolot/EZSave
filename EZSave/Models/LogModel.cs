@@ -8,5 +8,6 @@
         public string FileDestination { get; set; } = "";
         public float FileSize { get; set; }
         public float FileTransferTime { get; set; }
+        public float FileCipherTime { get; set; }
     }
 }
