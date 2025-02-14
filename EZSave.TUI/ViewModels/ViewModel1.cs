@@ -47,11 +47,11 @@ namespace EZSave.TUI.ViewModels
     public ViewModel1(ResourcesService resourcesService)
     {
       _resourcesService = resourcesService;
-      //_managerService = new ManagerService ();
+      // _managerService = new ManagerService ();
       MainOptions = new List<string>();
       ConfigOptions = new List<string>();
       LanguageOptions = new List<string>();
-            //configFileModel = new ConfigFileModel();
+           
             LoadStrings();
     }
 
