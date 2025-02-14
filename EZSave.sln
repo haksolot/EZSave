@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EZSave.Tests", "EZSave.Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EZSave.Language", "EZSave.Language\EZSave.Language.csproj", "{E8A6CF19-AA20-415E-95E8-8FBF87D7C887}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoSoft", "..\CryptoSoft\CryptoSoft.csproj", "{21A261F2-5ECF-4AFF-BB91-F0A590CE5AB6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{E8A6CF19-AA20-415E-95E8-8FBF87D7C887}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E8A6CF19-AA20-415E-95E8-8FBF87D7C887}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E8A6CF19-AA20-415E-95E8-8FBF87D7C887}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21A261F2-5ECF-4AFF-BB91-F0A590CE5AB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21A261F2-5ECF-4AFF-BB91-F0A590CE5AB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21A261F2-5ECF-4AFF-BB91-F0A590CE5AB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21A261F2-5ECF-4AFF-BB91-F0A590CE5AB6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

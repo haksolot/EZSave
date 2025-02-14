@@ -34,12 +34,12 @@ public class Cipher(string path, string key)
     }
   }
 
-  private void TransformFile(string filePath)
+  public Stopwatch TransformFile(string filePath)
   {
     if (!File.Exists(filePath))
     {
-      Console.WriteLine($"File not found: {filePath}");
-      return;
+      /*Console.WriteLine($"File not found: {filePath}");*/
+      return null;
     }
     Stopwatch stopwatch = Stopwatch.StartNew();
     var fileBytes = File.ReadAllBytes(filePath);
@@ -47,8 +47,8 @@ public class Cipher(string path, string key)
     fileBytes = XorMethod(fileBytes, keyBytes);
     File.WriteAllBytes(filePath, fileBytes);
     stopwatch.Stop();
-
-    Console.WriteLine($"Processed: {filePath} in {stopwatch.ElapsedMilliseconds} ms");
+    return stopwatch;
+    /*Console.WriteLine($"Processed: {filePath} in {stopwatch.ElapsedMilliseconds} ms");*/
   }
 
   private static byte[] ConvertToByte(string text)
