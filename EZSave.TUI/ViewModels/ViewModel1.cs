@@ -51,7 +51,8 @@ namespace EZSave.TUI.ViewModels
       MainOptions = new List<string>();
       ConfigOptions = new List<string>();
       LanguageOptions = new List<string>();
-      LoadStrings();
+            //configFileModel = new ConfigFileModel();
+            LoadStrings();
     }
 
     public void Initialize()
@@ -119,22 +120,16 @@ namespace EZSave.TUI.ViewModels
     public bool ExecuteJobs()
     {
       var managerService = new ManagerService();
-      var configModel = new ConfigFileModel();
-      configModel.LogFileDestination = "Log";
-      configModel.StatusFileDestination = "Status";
-      bool isExecuted = managerService.Execute(managerModel, configModel);
+      bool isExecuted = managerService.Execute(managerModel, configFileModel);
       return isExecuted;
     }
 
     public bool ExecuteJob(string jobName)
     {
       var managerService = new ManagerService();
-      var configModel = new ConfigFileModel();
-      configModel.LogFileDestination = "Log";
-      configModel.StatusFileDestination = "Status";
       var selected = new List<string>();
       selected.Add(jobName);
-      bool isExecuted = managerService.ExecuteSelected(selected, managerModel, configModel);
+      bool isExecuted = managerService.ExecuteSelected(selected, managerModel, configFileModel);
       return isExecuted;
     }
 
