@@ -20,8 +20,7 @@ namespace EZSave.GUI.ViewModels
         private string _Type;
        
         public ICommand AddJobCommand { get; }
-        //public ICommand SelectSourceFolderCommand { get; }
-        //public ICommand SelectDestinationFolderCommand { get; }
+      
         public List<String> JobTypes { get; } = new List<String> { "full", "diff" };
         public string Name
         {
@@ -61,8 +60,6 @@ namespace EZSave.GUI.ViewModels
             configService = new ConfigService();
             managerService = new ManagerService();
             AddJobCommand = new RelayCommand(AddJob);
-            //SelectSourceFolderCommand = new RelayCommand(SelectSourceFolder);
-            //SelectDestinationFolderCommand = new RelayCommand(SelectDestinationFolder);
         }
 
         public void AddJob()

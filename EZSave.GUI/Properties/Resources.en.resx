@@ -166,7 +166,7 @@
     <value>Job source : </value>
   </data>
   <data name="EnterType" xml:space="preserve">
-    <value>Job backup type (full/diff) : </value>
+    <value>Job backup type : </value>
   </data>
   <data name="ExecuteAllJobs" xml:space="preserve">
     <value>Execute all</value>
@@ -242,6 +242,9 @@
   </data>
   <data name="StatusFilePathChanging" xml:space="preserve">
     <value>Status file path : </value>
+  </data>
+  <data name="TitleListBox" xml:space="preserve">
+    <value>Jobs ready to be executed :</value>
   </data>
   <data name="Validate" xml:space="preserve">
     <value>Validate</value>

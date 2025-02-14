@@ -1,4 +1,5 @@
 ﻿using EZSave.Core.Models;
+using System.Collections.ObjectModel;
 
 namespace EZSave.Core.Services
 {
@@ -59,7 +60,7 @@ namespace EZSave.Core.Services
       }
     }
 
-    public bool ExecuteSelected(List<string> listeSelected, ManagerModel manager, ConfigFileModel configFileModel)
+    public bool ExecuteSelected(ObservableCollection<string> listeSelected, ManagerModel manager, ConfigFileModel configFileModel)
     {
       if (!listeSelected.Any() || manager?.Jobs == null || configFileModel == null)
         return false;

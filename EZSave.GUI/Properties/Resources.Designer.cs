@@ -205,7 +205,7 @@ namespace EZSave.GUI.Properties {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Job backup type (full/diff) : .
+        ///   Recherche une chaîne localisée semblable à Job backup type : .
         /// </summary>
         public static string EnterType {
             get {
@@ -435,6 +435,15 @@ namespace EZSave.GUI.Properties {
         public static string StatusFilePathChanging {
             get {
                 return ResourceManager.GetString("StatusFilePathChanging", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Jobs ready to be executed : .
+        /// </summary>
+        public static string TitleListBox {
+            get {
+                return ResourceManager.GetString("TitleListBox", resourceCulture);
             }
         }
         
