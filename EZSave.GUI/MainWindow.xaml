@@ -1,10 +1,8 @@
 ﻿<Window x:Class="EZSave.GUI.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:EZSave.GUI"
-        xmlns:properties="clr-namespace:EZSave.GUI.Properties"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
 
@@ -22,14 +20,13 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" Orientation="Horizontal">
-            <Button Command="{Binding RefreshCommand}" Content="{x:Static properties:Resources.RefreshJobs}" CommandParameter="Refresh"/>
-            <Button Content="{x:Static properties:Resources.ConfigOption1}" Command="{Binding OpenJobWindowCommand}" />
-            <Button Content="{x:Static properties:Resources.ConfModeTitle}"  />
-            <Button Content="{x:Static properties:Resources.ExecuteOneJob}" Command="{Binding ExecuteOneCommand}" />
-            <Button Content="{x:Static properties:Resources.ExecuteAllJobs}" Command="{Binding ExecuteAllJobsCommand}" />
-            <Button Content="🇫🇷" Command="{Binding LanguageViewModel.ChangeLanguageCommand}" CommandParameter="fr-FR" Margin="5"/>
-            <Button Content="🇬🇧" Command="{Binding LanguageViewModel.ChangeLanguageCommand}" CommandParameter="en-US" Margin="5"/>
-            
+            <Button Command="{Binding RefreshCommand}" Content="{Binding LanguageViewModel.ButtonRefresh}" CommandParameter="Refresh" />
+            <Button Content="{Binding LanguageViewModel.ButtonAdd}" Command="{Binding OpenJobWindowCommand}" />
+            <Button Content="{Binding LanguageViewModel.ButtonConfig}" />
+            <Button Content="{Binding LanguageViewModel.ButtonExecuteOne}" Command="{Binding ExecuteJobSelectionCommand}" />
+            <Button Content="{Binding LanguageViewModel.ButtonExecuteAll}" Command="{Binding ExecuteAllJobsCommand}" />
+            <Button Content="🇫🇷" Command="{Binding LanguageViewModel.ChangeLanguageCommand}" CommandParameter="fr-FR" Margin="5" />
+            <Button Content="en" Command="{Binding LanguageViewModel.ChangeLanguageCommand}" CommandParameter="en-US" Margin="5" />
         </StackPanel>
 
         <Grid Grid.Row="1">
@@ -39,19 +36,24 @@
             </Grid.ColumnDefinitions>
 
             <DataGrid Grid.Column="0"
+                      x:Name="dataGrid"
               ItemsSource="{Binding Jobs}"
               AutoGenerateColumns="False"
               IsReadOnly="True"
               HorizontalAlignment="Stretch"
-              VerticalAlignment="Stretch">
+              VerticalAlignment="Stretch"
+                      SelectionMode="Extended"
+          
+                    >
+        
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="{x:Static properties:Resources.JobName}" Binding="{Binding Name}" Width="*" />
-                    <DataGridTextColumn Header="{x:Static properties:Resources.JobSource}" Binding="{Binding Source}" Width="*" />
-                    <DataGridTextColumn Header="{x:Static properties:Resources.JobDestination}" Binding="{Binding Destination}" Width="*" />
-                    <DataGridTextColumn Header="{x:Static properties:Resources.JobType}" Binding="{Binding Type}" Width="*" />
+
+                    <DataGridTextColumn Header="Job" Binding="{Binding Name}" Width="*" />
+                    <DataGridTextColumn Header="Source" Binding="{Binding Source}" Width="*" />
+                    <DataGridTextColumn Header="Destination" Binding="{Binding Destination}" Width="*" />
+                    <DataGridTextColumn Header="Type" Binding="{Binding Type}" Width="*" />
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
-
     </Grid>
 </Window>
