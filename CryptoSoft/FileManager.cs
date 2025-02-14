@@ -25,7 +25,9 @@ public class Cipher(string path, string key)
 
   private void TransformDirectory()
   {
-    var files = Directory.GetFiles(Path, "*", SearchOption.AllDirectories);
+    var files = Directory.GetFiles(Path, "*", SearchOption.AllDirectories)
+                         .Where(f => f.EndsWith(".crypto", StringComparison.OrdinalIgnoreCase));
+
     foreach (var file in files)
     {
       TransformFile(file);
@@ -39,7 +41,6 @@ public class Cipher(string path, string key)
       Console.WriteLine($"File not found: {filePath}");
       return;
     }
-
     Stopwatch stopwatch = Stopwatch.StartNew();
     var fileBytes = File.ReadAllBytes(filePath);
     var keyBytes = ConvertToByte(Key);
