@@ -23,6 +23,13 @@ namespace EZSave.GUI.ViewModels
             get => _elementSelectionne;
             set => SetProperty(ref _elementSelectionne, value);
         }
+
+        private string _elementSelectionneList;
+        public string ElementSelectionneList
+        {
+            get =>  _elementSelectionneList;
+            set => SetProperty(ref _elementSelectionneList, value);
+        }
         public ObservableCollection<string> List { get; set; } = new ObservableCollection<string>();
 
         public IEnumerable<JobModel> jobs;
@@ -32,6 +39,8 @@ namespace EZSave.GUI.ViewModels
             set => SetProperty(ref jobs, value);
         }
         public ICommand AddToListCommand { get; }
+        public ICommand RemoveToListCommand { get; }
+
         public ICommand RefreshCommand { get; set; }
         public ICommand AddJobCommand { get; set; }
         public ICommand ExecuteAllJobsCommand { get; set; }
@@ -51,22 +60,11 @@ namespace EZSave.GUI.ViewModels
             OpenJobWindowCommand = new RelayCommand(OpenAddJobWindow);
             ExecuteAllJobsCommand = new RelayCommand(ExecuteJobs);
             AddToListCommand = new RelayCommand(AddToList);
+            RemoveToListCommand = new RelayCommand(DelFromList);
             ExecuteJobSelectionCommand = new RelayCommand<ObservableCollection<string>>(ExecuteJobSelection);
         }
 
-        private void AddToList()
-        {
-            if (ElementSelectionne != null)
-            {
-                var valeur = ElementSelectionne.Name;
-                List.Add(valeur);
-            }
-
-            foreach (var item in List)
-            {
-                Debug.WriteLine(item);
-            }
-        }
+        
 
         private void SetProperty<T>(ref T old, T @new, [CallerMemberName] string name = "")
         {
@@ -100,6 +98,29 @@ namespace EZSave.GUI.ViewModels
                 configFileModel.StatusFileDestination = "Status";
 
                 managerService.ExecuteSelected(selectedNames, managerModel, configFileModel);
+            }
+        }
+
+        private void AddToList()
+        {
+            if (ElementSelectionne != null)
+            {
+                var valeur = ElementSelectionne.Name;
+                List.Add(valeur);
+            }
+        }
+
+        private void DelFromList()
+        {
+            if (ElementSelectionneList != null)
+            {
+                
+                List.Remove(ElementSelectionneList);
+            }
+
+            foreach (var item in List)
+            {
+                Debug.WriteLine(item);
             }
         }
     }
