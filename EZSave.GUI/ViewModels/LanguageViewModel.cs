@@ -52,7 +52,8 @@ namespace EZSave.GUI.ViewModels
         public string ButtonConfig => Resources.ConfModeTitle;
         public string ButtonExecuteAll => Resources.ExecuteAllJobs;
         public string ButtonExecuteOne => Resources.ExecuteOneJob;
-
+        public string JobExecuted => Resources.JobsExecutedSuccess;
+        public string JobNotExecuted => Resources.JobsExecutedFail;
         public string JobBeingExecuted => Resources.TitleListBox;
     }
 }

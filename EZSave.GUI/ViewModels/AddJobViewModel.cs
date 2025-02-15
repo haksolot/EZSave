@@ -7,6 +7,8 @@ using EZSave.Core.Models;
 using EZSave.Core.Services;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Diagnostics;
+using System.Security.Cryptography.X509Certificates;
+using MS.WindowsAPICodePack.Internal;
 
 namespace EZSave.GUI.ViewModels
 {
@@ -46,7 +48,13 @@ namespace EZSave.GUI.ViewModels
             set => SetProperty(ref _Type, value);
         }
 
-       
+        private string _message;
+        public string Message
+        {
+            get => _message;
+            set => SetProperty(ref _message, value);
+        }
+
 
         public ManagerModel managerModel { get; set; }
         public ConfigFileModel configFileModel { get; set; }
@@ -64,22 +72,24 @@ namespace EZSave.GUI.ViewModels
 
         public void AddJob()
         {
-
             var job = new JobModel();
-            job.Name = Name;
+            job.Name = Name;    
             job.Source = Source;
             job.Destination = Destination;
             job.Type = Type;
 
+
+           managerService.Add(job, managerModel);
+            bool result = configService.SaveJob(job, configFileModel);
             
-            managerService.Add(job, managerModel);
-            configService.SaveJob(job, configFileModel);
-           
-
-
-            MessageBox.Show("Job ajouté et sauvegardé avec succès !");
-            //Message = "Job ajouté et sauvegardé dans config !";
-            //return isAdded;
+            if (result)
+            {
+                Message = Properties.Resources.JobAdded;
+            }
+            else
+            {
+                Message = Properties.Resources.JobNotAdded;
+            }
         }
 
         

@@ -20,6 +20,8 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto"/>
+            <!-- Ajout d'une nouvelle ligne pour le TextBlock -->
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0" Margin="0,0,0,15">
@@ -40,12 +42,9 @@
             <Button Content="{Binding LanguageViewModel.ButtonAdd}" Command="{Binding OpenJobWindowCommand}" Grid.Column="3"/>
             <Button Content="{Binding LanguageViewModel.ButtonConfig}" Grid.Column="4"/>
 
-
             <Button Content="{Binding LanguageViewModel.ButtonExecuteOne}" Command="{Binding ExecuteJobSelectionCommand}" CommandParameter="{Binding List}" Grid.Column="6"/>
             <Button Content="{Binding LanguageViewModel.ButtonExecuteAll}" Command="{Binding ExecuteAllJobsCommand}" Grid.Column="7"/>
         </Grid>
-
-
 
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
@@ -74,7 +73,7 @@
                 <Button Content="▶︎" 
                         Command="{Binding AddToListCommand}" />
                 <Button Content="◀︎" 
-        Command="{Binding RemoveToListCommand}" />
+                        Command="{Binding RemoveToListCommand}" />
             </StackPanel>
 
             <GroupBox Grid.Column="2" Header="{Binding LanguageViewModel.JobBeingExecuted}" Padding="5">
@@ -83,10 +82,17 @@
                      Height="300"
                      HorizontalAlignment="Stretch"
                      VerticalAlignment="Stretch"
-                    SelectedItem="{Binding ElementSelectionneList, Mode=TwoWay}"/>
-                  </GroupBox>
+                     SelectedItem="{Binding ElementSelectionneList, Mode=TwoWay}"/>
+            </GroupBox>
         </Grid>
 
+        <TextBlock Text="{Binding Message}" 
+                   Grid.Row="2" 
+                   Grid.Column="0" 
+                   Grid.ColumnSpan="4" 
+                   HorizontalAlignment="Center" 
+                   FontWeight="Bold" 
+                   Margin="8"/>
     </Grid>
 
 </Window>

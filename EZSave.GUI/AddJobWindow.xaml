@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EZSave.GUI"
         xmlns:properties="clr-namespace:EZSave.GUI.Properties"
-        Title="{x:Static properties:Resources.ConfigOption1}" Height="270" Width="400" MinHeight="270" MaxHeight="270" MinWidth="400" MaxWidth="400">
+        Title="{x:Static properties:Resources.ConfigOption1}" Height="290" Width="400" MinHeight="290" MaxHeight="290" MinWidth="400" MaxWidth="400">
 
     <Window.Resources>
         <Style TargetType="TextBox">
@@ -24,6 +24,8 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <!-- Ajout de la ligne pour le TextBlock -->
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
@@ -49,5 +51,8 @@
                   Grid.Row="3" Grid.Column="2" Margin="8,8,8,8" Width="150" Grid.ColumnSpan="2"/>
 
         <Button Content="{x:Static properties:Resources.Validate}" Command="{Binding AddJobCommand}" Grid.Row="4" Margin="8,16,0,8" HorizontalAlignment="Left" Width="115" Grid.ColumnSpan="2" Grid.Column="2"/>
+
+        <TextBlock Text="{Binding Message}" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="4" FontWeight="Bold" Margin="8,8,8,0" HorizontalAlignment="Center"/>
+
     </Grid>
 </Window>

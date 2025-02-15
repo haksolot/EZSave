@@ -1,9 +1,12 @@
 ﻿using EZSave.Core.Models;
 using EZSave.Core.Services;
+using MS.WindowsAPICodePack.Internal;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Input;
 namespace EZSave.GUI.ViewModels
 {
@@ -30,19 +33,27 @@ namespace EZSave.GUI.ViewModels
             get =>  _elementSelectionneList;
             set => SetProperty(ref _elementSelectionneList, value);
         }
-        public ObservableCollection<string> List { get; set; } = new ObservableCollection<string>();
 
-        public IEnumerable<JobModel> jobs;
-        public IEnumerable<JobModel> Jobs
+        private string _message;
+        public string Message
         {
-            get => jobs;
-            set => SetProperty(ref jobs, value);
+            get => _message;
+            set => SetProperty(ref _message, value);
         }
+
+        public ObservableCollection<string> List { get; set; } = new ObservableCollection<string>();
+        public ObservableCollection<JobModel> Jobs { get; set; } = new ObservableCollection<JobModel>();
+
+        //public IEnumerable<JobModel> jobs;
+        //public IEnumerable<JobModel> Jobs
+        //{
+        //    get => jobs;
+        //    set => SetProperty(ref jobs, value);
+        //}
         public ICommand AddToListCommand { get; }
         public ICommand RemoveToListCommand { get; }
 
         public ICommand RefreshCommand { get; set; }
-        public ICommand AddJobCommand { get; set; }
         public ICommand ExecuteAllJobsCommand { get; set; }
         public ICommand OpenJobWindowCommand { get; set; }
         public ICommand ExecuteJobSelectionCommand { get; set; }
@@ -50,6 +61,7 @@ namespace EZSave.GUI.ViewModels
         public event PropertyChangedEventHandler? PropertyChanged;
         public MainWindowViewModel()
         {
+
             LanguageViewModel = new LanguageViewModel();
             configFileModel = new ConfigFileModel();
             configService = new ConfigService();
@@ -62,6 +74,7 @@ namespace EZSave.GUI.ViewModels
             AddToListCommand = new RelayCommand(AddToList);
             RemoveToListCommand = new RelayCommand(DelFromList);
             ExecuteJobSelectionCommand = new RelayCommand<ObservableCollection<string>>(ExecuteJobSelection);
+            //RefreshJobs();
         }
 
         
@@ -70,12 +83,30 @@ namespace EZSave.GUI.ViewModels
         {
             old = @new;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
+            
         }
+
+
 
         private void RefreshJobs()
         {
-            Jobs = managerModel.Jobs.ToList();
+            if (managerModel.Jobs != null && managerModel.Jobs.Any())
+            {
+                Jobs.Clear(); 
+                foreach (var job in managerModel.Jobs)
+                {
+                    Jobs.Add(job); 
+                }
+            }
+            else
+            {
+                Debug.WriteLine("Aucun job à ajouter.");
+            }
         }
+
+
+
 
         private void OpenAddJobWindow()
         {
@@ -87,7 +118,16 @@ namespace EZSave.GUI.ViewModels
         {
             configFileModel.LogFileDestination = "Log";
             configFileModel.StatusFileDestination = "Status";
-            managerService.Execute(managerModel, configFileModel);
+            bool result = managerService.Execute(managerModel, configFileModel);
+
+            if (result)
+            {
+                Message = LanguageViewModel.JobExecuted;
+            }
+            else
+            {
+                Message = LanguageViewModel.JobNotExecuted;
+            }
         }
 
         private void ExecuteJobSelection(ObservableCollection<string> selectedNames)
@@ -97,7 +137,15 @@ namespace EZSave.GUI.ViewModels
                 configFileModel.LogFileDestination = "Log";
                 configFileModel.StatusFileDestination = "Status";
 
-                managerService.ExecuteSelected(selectedNames, managerModel, configFileModel);
+                bool result = managerService.ExecuteSelected(selectedNames, managerModel, configFileModel);
+                if (result)
+                {
+                    Message = LanguageViewModel.JobExecuted;
+                }
+                else
+                {
+                    Message = LanguageViewModel.JobNotExecuted;
+                }
             }
         }
 
