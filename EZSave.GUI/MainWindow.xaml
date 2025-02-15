@@ -20,9 +20,10 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" Orientation="Horizontal">
+            
             <Button Command="{Binding RefreshCommand}" Content="{Binding LanguageViewModel.ButtonRefresh}" CommandParameter="Refresh" />
             <Button Content="{Binding LanguageViewModel.ButtonAdd}" Command="{Binding OpenJobWindowCommand}" />
-            <Button Content="{Binding LanguageViewModel.ButtonConfig}" />
+            <Button Content="{Binding LanguageViewModel.ButtonConfig}" Command="{Binding OpenConfigCommand}" />
             <Button Content="{Binding LanguageViewModel.ButtonExecuteOne}" Command="{Binding ExecuteJobSelectionCommand}" />
             <Button Content="{Binding LanguageViewModel.ButtonExecuteAll}" Command="{Binding ExecuteAllJobsCommand}" />
             <Button Content="🇫🇷" Command="{Binding LanguageViewModel.ChangeLanguageCommand}" CommandParameter="fr-FR" Margin="5" />

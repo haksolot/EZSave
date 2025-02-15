@@ -3,76 +3,65 @@ using EZSave.Core.Services;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Collections.ObjectModel;
-using System.Windows.Controls;
-using System.Diagnostics;
 using System.Windows;
-using System.Collections;
+using EZSave.GUI.Views;
+
 namespace EZSave.GUI.ViewModels
 {
     public class MainWindowViewModel : INotifyPropertyChanged
     {
-
         public LanguageViewModel LanguageViewModel { get; set; }
         public ConfigFileModel configFileModel { get; set; }
         public ManagerService managerService;
         private readonly ConfigService configService;
-
         private readonly ManagerModel managerModel;
 
-        public IEnumerable<JobModel> jobs;
-        public ICommand SelectFolderCommand { get; }
-        public IEnumerable<JobModel> Jobs
-        {
-            get => jobs;
-            set => SetProperty(ref jobs, value);
-        }
-        
-      
-        public ICommand RefreshCommand { get; set; }
-        public ICommand AddJobCommand { get; set; }
-        public ICommand ExecuteAllJobsCommand { get; set; }
-        public ICommand OpenJobWindowCommand { get; set; }
+        public ObservableCollection<JobModel> Jobs { get; set; }
 
-        public ICommand ExecuteJobSelectionCommand { get; set; }
-        
+        public ICommand RefreshCommand { get; }
+        public ICommand AddJobCommand { get; }
+        public ICommand ExecuteAllJobsCommand { get; }
+        public ICommand OpenJobWindowCommand { get; }
+        public ICommand ExecuteJobSelectionCommand { get; }
+        public ICommand OpenConfigCommand { get; }
+
         public event PropertyChangedEventHandler? PropertyChanged;
-
 
         public MainWindowViewModel()
         {
             LanguageViewModel = new LanguageViewModel();
             configFileModel = new ConfigFileModel();
-
             configService = new ConfigService();
             managerService = new ManagerService();
             managerModel = new ManagerModel();
+
             RefreshCommand = new RelayCommand(RefreshJobs);
             OpenJobWindowCommand = new RelayCommand(OpenAddJobWindow);
             ExecuteAllJobsCommand = new RelayCommand(ExecuteJobs);
-           
-                   //Jobs = managerModel.Jobs;
+            OpenConfigCommand = new RelayCommand(OpenConfigWindow);
+
+            RefreshJobs();
         }
 
-       
-
-        private void SetProperty<T>(ref T old, T @new, [CallerMemberName] string name = "")
+        private void OpenConfigWindow()
         {
-            old = @new;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            var configWindow = new ConfigWindow(new ConfigViewModel(configFileModel, managerModel));
+            configWindow.ShowDialog();
+            RefreshJobs(); // Rafraîchir après fermeture de la config
         }
 
         private void RefreshJobs()
         {
-            Jobs = managerModel.Jobs.ToList(); 
+            Jobs = new ObservableCollection<JobModel>(managerModel.Jobs);
+            OnPropertyChanged(nameof(Jobs));
         }
-
 
         private void OpenAddJobWindow()
         {
-            var window = new AddJobWindow(managerModel);  
+            var window = new AddJobWindow(managerModel);
             window.ShowDialog();
+            RefreshJobs();
         }
 
         private void ExecuteJobs()
@@ -80,27 +69,11 @@ namespace EZSave.GUI.ViewModels
             configFileModel.LogFileDestination = "Log";
             configFileModel.StatusFileDestination = "Status";
             managerService.Execute(managerModel, configFileModel);
-            //return isExecuted;
         }
-       
 
-
-        private void ExecuteJobSelection(List<string> selectedNames)
+        private void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
-            if (selectedNames.Any())
-            {
-                configFileModel.LogFileDestination = "Log";
-                configFileModel.StatusFileDestination = "Status";
-
-                managerService.ExecuteSelected(selectedNames, managerModel, configFileModel);
-            }
-
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
-
-
-      
-
-   
     }
 }
