@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EZSave.Core", "EZSave\EZSav
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EZSave.TUI", "EZSave.TUI\EZSave.TUI.csproj", "{7B643AA6-845F-4E38-A586-F90B68330411}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoSoft", "..\CryptoSoft\CryptoSoft.csproj", "{21A261F2-5ECF-4AFF-BB91-F0A590CE5AB6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

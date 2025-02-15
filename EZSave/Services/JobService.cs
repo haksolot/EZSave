@@ -1,4 +1,6 @@
-﻿using EZSave.Core.Models;
+﻿using System.Diagnostics;
+using EZSave.Core.Models;
+using CryptoSoft;
 
 namespace EZSave.Core.Services
 {
@@ -16,7 +18,6 @@ namespace EZSave.Core.Services
       }
       else
       {
-
       }
     }
 
@@ -53,6 +54,17 @@ namespace EZSave.Core.Services
         {
           Directory.CreateDirectory(directoryPath);
         }
+
+        float cipheringTime;
+        if (Path.GetExtension(file) == ".crypto")
+        {
+          var crypto = new Cipher(file, "key");
+          cipheringTime = crypto.TransformFile(file);
+        }
+        else
+        {
+          cipheringTime = 0;
+        }
         File.Copy(file, destinationFile, true);
 
         totalSize -= fileSize;
@@ -85,7 +97,8 @@ namespace EZSave.Core.Services
           FileSource = file,
           FileDestination = destinationFile,
           FileSize = currentFileSize,
-          FileTransferTime = transferTime
+          FileTransferTime = transferTime,
+          FileCipherTime = cipheringTime,
         }, configFileModel);
       }
     }
@@ -96,9 +109,18 @@ namespace EZSave.Core.Services
       var startTime = DateTime.Now;
       long currentFileSize = 0;
 
-      long totalSize = Directory.GetFiles(job.Source, "*", SearchOption.AllDirectories).Sum(file => new FileInfo(file).Length);
+      var filesToCopy = Directory.GetFiles(job.Source, "*", SearchOption.AllDirectories)
+          .Select(file => new
+          {
+            SourceFile = file,
+            DestinationFile = Path.Combine(job.Destination, file.Substring(job.Source.Length).TrimStart(Path.DirectorySeparatorChar))
+          }).Where(f => !File.Exists(f.DestinationFile) || File.GetLastWriteTime(f.SourceFile) > File.GetLastWriteTime(f.DestinationFile))
+          .Select(f => f.SourceFile)
+          .ToList();
 
-      int totalFiles = Directory.GetFiles(job.Source, "*", SearchOption.AllDirectories).Length;
+      long totalSize = filesToCopy.Sum(file => new FileInfo(file).Length);
+
+      int totalFiles = filesToCopy.Count;
 
       statusService.SaveStatus(new StatusModel
       {
@@ -123,6 +145,16 @@ namespace EZSave.Core.Services
           if (!string.IsNullOrEmpty(directoryPath))
           {
             Directory.CreateDirectory(directoryPath);
+          }
+          float cipheringTime;
+          if (Path.GetExtension(file) == ".crypto")
+          {
+            var crypto = new Cipher(file, "key");
+            cipheringTime = crypto.TransformFile(file);
+          }
+          else
+          {
+            cipheringTime = 0;
           }
           File.Copy(file, destinationFile, true);
 
@@ -155,11 +187,11 @@ namespace EZSave.Core.Services
             FileSource = file,
             FileDestination = destinationFile,
             FileSize = currentFileSize,
-            FileTransferTime = transferTime
+            FileTransferTime = transferTime,
+            FileCipherTime = cipheringTime,
           }, configFileModel);
         }
       }
     }
   }
 }
-

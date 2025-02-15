@@ -47,11 +47,12 @@ namespace EZSave.TUI.ViewModels
     public ViewModel1(ResourcesService resourcesService)
     {
       _resourcesService = resourcesService;
-      //_managerService = new ManagerService ();
+      // _managerService = new ManagerService ();
       MainOptions = new List<string>();
       ConfigOptions = new List<string>();
       LanguageOptions = new List<string>();
-      LoadStrings();
+           
+            LoadStrings();
     }
 
     public void Initialize()
@@ -62,10 +63,10 @@ namespace EZSave.TUI.ViewModels
       var managerService = new ManagerService();
       configService.SetConfigDestination("conf.json", configFileModel);
       configService.LoadConfigFile(configFileModel);
-
       managerService.Read(managerModel, configFileModel);
       Message = "Fichier de configuration appliqué avec succés !";
     }
+
     public void LoadStrings()
     {
       MainOptions.Clear();
@@ -119,22 +120,16 @@ namespace EZSave.TUI.ViewModels
     public bool ExecuteJobs()
     {
       var managerService = new ManagerService();
-      var configModel = new ConfigFileModel();
-      configModel.LogFileDestination = "Log";
-      configModel.StatusFileDestination = "Status";
-      bool isExecuted = managerService.Execute(managerModel, configModel);
+      bool isExecuted = managerService.Execute(managerModel, configFileModel);
       return isExecuted;
     }
 
     public bool ExecuteJob(string jobName)
     {
       var managerService = new ManagerService();
-      var configModel = new ConfigFileModel();
-      configModel.LogFileDestination = "Log";
-      configModel.StatusFileDestination = "Status";
       var selected = new List<string>();
       selected.Add(jobName);
-      bool isExecuted = managerService.ExecuteSelected(selected, managerModel, configModel);
+      bool isExecuted = managerService.ExecuteSelected(selected, managerModel, configFileModel);
       return isExecuted;
     }
 
@@ -148,6 +143,7 @@ namespace EZSave.TUI.ViewModels
       }
       return Message;
     }
+
     public bool AddJob(string name, string source, string destination, string type)
     {
       var job = new JobModel();
@@ -199,28 +195,28 @@ namespace EZSave.TUI.ViewModels
 
     public void ChangeLogPath(string dest)
     {
-            configFileModel.LogFileDestination = dest;
+      configFileModel.LogFileDestination = dest;
       var configService = new ConfigService();
       configService.SetLogDestination(dest, configFileModel);
     }
 
     public void ChangeLogType(string type)
     {
-            configFileModel.LogType = type;
+      configFileModel.LogType = type;
       var configService = new ConfigService();
       configService.SetLogType(type, configFileModel);
     }
 
     public void ChangeConfigPath(string dest)
     {
-            configFileModel.ConfFileDestination = dest;
+      configFileModel.ConfFileDestination = dest;
       var configService = new ConfigService();
       configService.SetConfigDestination(dest, configFileModel);
     }
 
     public void ChangeStatusPath(string dest)
     {
-            configFileModel.StatusFileDestination = dest;
+      configFileModel.StatusFileDestination = dest;
       var configService = new ConfigService();
       configService.SetStatusDestination(dest, configFileModel);
     }

@@ -5,6 +5,7 @@ namespace EZSave.Core.Services
 {
   public class ManagerService
   {
+
     public void Read(ManagerModel manager, ConfigFileModel config)
     {
       foreach (JobModel job in config.Jobs.Values)
