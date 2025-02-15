@@ -4,7 +4,6 @@ namespace EZSave.Core.Services
 {
   public class ManagerService
   {
-
     public void Read(ManagerModel manager, ConfigFileModel config)
     {
       foreach (JobModel job in config.Jobs.Values)
@@ -49,8 +48,11 @@ namespace EZSave.Core.Services
           var service = new JobService();
           var logService = new LogService();
           var statusService = new StatusService();
-
-          service.Start(job, statusService, logService, configFileModel);
+          bool check = service.Start(job, statusService, logService, configFileModel);
+          if (check == false)
+          {
+            return false;
+          }
         }
         return true;
       }
@@ -76,9 +78,12 @@ namespace EZSave.Core.Services
 
       foreach (var job in jobsToExecute)
       {
-        service.Start(job, statusService, logService, configFileModel);
+        bool check = service.Start(job, statusService, logService, configFileModel);
+        if (check == false)
+        {
+          return false;
+        }
       }
-
       return true;
     }
 

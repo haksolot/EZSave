@@ -1,34 +1,56 @@
 ﻿using System.Diagnostics;
 using EZSave.Core.Models;
+using EZSave.Core.Services;
 using CryptoSoft;
 
 namespace EZSave.Core.Services
 {
   public class JobService
   {
-    public void Start(JobModel job, StatusService statusService, LogService logService, ConfigFileModel configFileModel)
+    public bool Start(JobModel job, StatusService statusService, LogService logService, ConfigFileModel configFileModel)
     {
+      bool check = ProcessesService.CheckProcess("CalculatorApp");
+      if (check == true)
+      {
+        return false;
+      }
+
       if (job.Type == "full")
       {
-        FullBackup(job, logService, statusService, configFileModel);
+        check = FullBackup(job, logService, statusService, configFileModel);
+        if (check == false)
+        {
+          return false;
+        }
+        else
+        {
+          return true;
+        }
       }
       else if (job.Type == "diff")
       {
-        DifferentialBackup(job, statusService, logService, configFileModel);
+        check = DifferentialBackup(job, statusService, logService, configFileModel);
+        if (check == false)
+        {
+          return false;
+        }
+        else
+        {
+          return true;
+        }
       }
       else
       {
+        return false;
       }
     }
 
-    private void FullBackup(JobModel job, LogService logService, StatusService statusService, ConfigFileModel configFileModel)
+    private bool FullBackup(JobModel job, LogService logService, StatusService statusService, ConfigFileModel configFileModel)
     {
       long copiedSize = 0;
       var startTime = DateTime.Now;
       long currentFileSize = 0;
-
       long totalSize = Directory.GetFiles(job.Source, "*", SearchOption.AllDirectories).Sum(file => new FileInfo(file).Length);
-
       int totalFiles = Directory.GetFiles(job.Source, "*", SearchOption.AllDirectories).Length;
 
       statusService.SaveStatus(new StatusModel
@@ -101,9 +123,10 @@ namespace EZSave.Core.Services
           FileCipherTime = cipheringTime,
         }, configFileModel);
       }
+      return true;
     }
 
-    private void DifferentialBackup(JobModel job, StatusService statusService, LogService logService, ConfigFileModel configFileModel)
+    private bool DifferentialBackup(JobModel job, StatusService statusService, LogService logService, ConfigFileModel configFileModel)
     {
       long copiedSize = 0;
       var startTime = DateTime.Now;
@@ -192,6 +215,7 @@ namespace EZSave.Core.Services
           }, configFileModel);
         }
       }
+      return true;
     }
   }
 }

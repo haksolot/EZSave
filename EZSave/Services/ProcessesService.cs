@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace EZSave.Core.Services
 {
-  public class ProcessesService
+  public static class ProcessesService
   {
-    public bool CheckProcess(string processName) // Check is processName is running on system
+    public static bool CheckProcess(string processName) // Check is processName is running on system
     {
       bool isRunning = Process.GetProcessesByName(processName).Any();
       return isRunning;

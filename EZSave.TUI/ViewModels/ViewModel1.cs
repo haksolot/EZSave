@@ -51,8 +51,8 @@ namespace EZSave.TUI.ViewModels
       MainOptions = new List<string>();
       ConfigOptions = new List<string>();
       LanguageOptions = new List<string>();
-           
-            LoadStrings();
+
+      LoadStrings();
     }
 
     public void Initialize()
@@ -115,7 +115,6 @@ namespace EZSave.TUI.ViewModels
       JobExecutedSuccess = _resourcesService.GetString("JobExecutedSuccess");
       EnterJobExecute = _resourcesService.GetString("EnterJobExecute");
     }
-
 
     public bool ExecuteJobs()
     {
