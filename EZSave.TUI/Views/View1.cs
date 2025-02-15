@@ -181,8 +181,15 @@ namespace EZSave.TUI.Views
               ShowJobs();
               Console.WriteLine(_viewModel.EnterJobExecute);
               string jobName = Console.ReadLine();
-              _viewModel.ExecuteJob(jobName);
-              Console.WriteLine(_viewModel.JobExecutedSuccess);
+              bool value = _viewModel.ExecuteJob(jobName);
+              if (value)
+              {
+                Console.WriteLine(_viewModel.JobExecutedSuccess);
+              }
+              else
+              {
+                Console.WriteLine(_viewModel.JobsExecutedFail);
+              }
             }
             else if (mainChoice == 3)
             {
