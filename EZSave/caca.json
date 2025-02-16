@@ -1,0 +1,7 @@
+{
+  "ConfFileDestination": "C:\\VS\\EZSave\\caca.json",
+  "LogFileDestination": "C:\\VS\\EZSave\\logs",
+  "LogType": "xml",
+  "StatusFileDestination": "C:\\VS\\EZSave\\status",
+  "Jobs": {}
+}

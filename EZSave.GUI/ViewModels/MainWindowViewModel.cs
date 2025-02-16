@@ -1,5 +1,13 @@
 ﻿using EZSave.Core.Models;
 using EZSave.Core.Services;
+
+
+
+
+
+using EZSave.GUI.Views;
+
+
 using MS.WindowsAPICodePack.Internal;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -8,11 +16,26 @@ using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
+
 namespace EZSave.GUI.ViewModels
 {
     public class MainWindowViewModel : INotifyPropertyChanged
     {
         public LanguageViewModel LanguageViewModel { get; set; }
+
+       
+       
+       
+
+      
+     
+        
+      
+       
+        public ICommand OpenConfigCommand { get; }
+
+        
+
         private ConfigFileModel configFileModel { get; set; }
 
         private  ManagerService managerService;
@@ -58,19 +81,31 @@ namespace EZSave.GUI.ViewModels
         public ICommand OpenJobWindowCommand { get; set; }
         public ICommand ExecuteJobSelectionCommand { get; set; }
 
+
         public event PropertyChangedEventHandler? PropertyChanged;
         public MainWindowViewModel()
         {
             Initialize();
 
             LanguageViewModel = new LanguageViewModel();
+
+        
+//             configService = new ConfigService();
+//             managerService = new ManagerService();
+
             //configFileModel = new ConfigFileModel();
             
             //managerModel = new ManagerModel();
 
+
             RefreshCommand = new RelayCommand(RefreshJobs);
             OpenJobWindowCommand = new RelayCommand(OpenAddJobWindow);
             ExecuteAllJobsCommand = new RelayCommand(ExecuteJobs);
+
+            OpenConfigCommand = new RelayCommand(OpenConfigWindow);
+
+        
+
             AddToListCommand = new RelayCommand(AddToList);
             RemoveToListCommand = new RelayCommand(DelFromList);
             ExecuteJobSelectionCommand = new RelayCommand<ObservableCollection<string>>(ExecuteJobSelection);
@@ -78,13 +113,20 @@ namespace EZSave.GUI.ViewModels
         }
 
         
+ private void SetProperty<T>(ref T old, T @new, [CallerMemberName] string name = "")
+ {
+     old = @new;
+     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
-        private void SetProperty<T>(ref T old, T @new, [CallerMemberName] string name = "")
+     
+ }
+
+        private void OpenConfigWindow()
         {
-            old = @new;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
-            
+            var configWindow = new ConfigWindow(new ConfigViewModel(configFileModel, managerModel));
+            configWindow.ShowDialog();
+            RefreshJobs(); // Rafraîchir après fermeture de la config    
         }
 
         private void Initialize()
@@ -96,11 +138,12 @@ namespace EZSave.GUI.ViewModels
             configService.SetConfigDestination("conf.json", configFileModel);
             configService.LoadConfigFile(configFileModel);
             managerService.Read(managerModel, configFileModel);
+
         }
 
         private void RefreshJobs()
         {
-            if (managerModel.Jobs != null && managerModel.Jobs.Any())
+          if (managerModel.Jobs != null && managerModel.Jobs.Any())
             {
                 Jobs.Clear(); 
                 foreach (var job in managerModel.Jobs)
@@ -112,21 +155,27 @@ namespace EZSave.GUI.ViewModels
             {
                 Debug.WriteLine("Aucun job à ajouter.");
             }
+            
         }
-
-
-
 
         private void OpenAddJobWindow()
         {
-            var window = new AddJobWindow(managerModel, configFileModel);
+                        var window = new AddJobWindow(managerModel, configFileModel);
             window.ShowDialog();
+
+
+            
         }
 
         private void ExecuteJobs()
         {
             configFileModel.LogFileDestination = "Log";
             configFileModel.StatusFileDestination = "Status";
+
+            managerService.Execute(managerModel, configFileModel);
+        
+       
+
             bool result = managerService.Execute(managerModel, configFileModel);
 
             if (result)
@@ -179,5 +228,6 @@ namespace EZSave.GUI.ViewModels
                 Debug.WriteLine(item);
             }
         }
+
     }
 }
