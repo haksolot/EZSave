@@ -1,7 +1,12 @@
-﻿using System.Diagnostics;
+/*<<<<<<< HEAD*/
+using System.Diagnostics;
 using EZSave.Core.Models;
 using EZSave.Core.Services;
 using CryptoSoft;
+/*=======*/
+using System.Runtime.InteropServices;
+/*using EZSave.Core.Models;*/
+/*>>>>>>> MergeGUIs*/
 
 namespace EZSave.Core.Services
 {

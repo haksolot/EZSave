@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using EZSave.GUI.ViewModels;
+using System.Windows;
 
 namespace EZSave.GUI
 {
@@ -10,6 +11,7 @@ namespace EZSave.GUI
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = new MainWindowViewModel();
         }
     }
 }

@@ -18,7 +18,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EZSave.Language\EZSave.Language.csproj" />
-    <ProjectReference Include="..\EZSave.TUI\EZSave.TUI.csproj" />
     <ProjectReference Include="..\EZSave\EZSave.Core.csproj" />
   </ItemGroup>
 
