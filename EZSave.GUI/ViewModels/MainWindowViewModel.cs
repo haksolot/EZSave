@@ -13,12 +13,12 @@ namespace EZSave.GUI.ViewModels
     public class MainWindowViewModel : INotifyPropertyChanged
     {
         public LanguageViewModel LanguageViewModel { get; set; }
-        public ConfigFileModel configFileModel { get; set; }
+        private ConfigFileModel configFileModel { get; set; }
 
-        private readonly ManagerService managerService;
-        private readonly ConfigService configService;
-
-        private readonly ManagerModel managerModel;
+        private  ManagerService managerService;
+        private  ConfigService configService;
+    
+        public ManagerModel managerModel;
 
         private JobModel _elementSelectionne;
         public JobModel ElementSelectionne
@@ -61,12 +61,12 @@ namespace EZSave.GUI.ViewModels
         public event PropertyChangedEventHandler? PropertyChanged;
         public MainWindowViewModel()
         {
+            Initialize();
 
             LanguageViewModel = new LanguageViewModel();
-            configFileModel = new ConfigFileModel();
-            configService = new ConfigService();
-            managerService = new ManagerService();
-            managerModel = new ManagerModel();
+            //configFileModel = new ConfigFileModel();
+            
+            //managerModel = new ManagerModel();
 
             RefreshCommand = new RelayCommand(RefreshJobs);
             OpenJobWindowCommand = new RelayCommand(OpenAddJobWindow);
@@ -87,7 +87,16 @@ namespace EZSave.GUI.ViewModels
             
         }
 
-
+        private void Initialize()
+        {
+            configFileModel = new ConfigFileModel();
+            managerModel = new ManagerModel();
+            configService = new ConfigService();
+            managerService = new ManagerService();
+            configService.SetConfigDestination("conf.json", configFileModel);
+            configService.LoadConfigFile(configFileModel);
+            managerService.Read(managerModel, configFileModel);
+        }
 
         private void RefreshJobs()
         {
@@ -110,7 +119,7 @@ namespace EZSave.GUI.ViewModels
 
         private void OpenAddJobWindow()
         {
-            var window = new AddJobWindow(managerModel);
+            var window = new AddJobWindow(managerModel, configFileModel);
             window.ShowDialog();
         }
 
@@ -122,31 +131,30 @@ namespace EZSave.GUI.ViewModels
 
             if (result)
             {
-                Message = LanguageViewModel.JobExecuted;
+                Message = Properties.Resources.JobsExecutedSuccess;
             }
             else
             {
-                Message = LanguageViewModel.JobNotExecuted;
+                Message = Properties.Resources.JobsExecutedFail;
             }
         }
 
         private void ExecuteJobSelection(ObservableCollection<string> selectedNames)
         {
-            if (selectedNames.Any())
-            {
+            
                 configFileModel.LogFileDestination = "Log";
                 configFileModel.StatusFileDestination = "Status";
 
                 bool result = managerService.ExecuteSelected(selectedNames, managerModel, configFileModel);
                 if (result)
                 {
-                    Message = LanguageViewModel.JobExecuted;
+                    Message = Properties.Resources.JobsExecutedSuccess;
                 }
                 else
                 {
-                    Message = LanguageViewModel.JobNotExecuted;
+                    Message = Properties.Resources.JobsExecutedFail;
                 }
-            }
+            
         }
 
         private void AddToList()

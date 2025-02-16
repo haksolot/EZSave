@@ -60,10 +60,10 @@ namespace EZSave.GUI.ViewModels
         public ConfigFileModel configFileModel { get; set; }
         private readonly ConfigService configService;
         private readonly ManagerService managerService;
-        public AddJobViewModel(ManagerModel manager)
+        public AddJobViewModel(ManagerModel manager, ConfigFileModel config)
         {
 
-            configFileModel = new ConfigFileModel();
+            configFileModel = config;
             managerModel = manager;
             configService = new ConfigService();
             managerService = new ManagerService();
@@ -79,7 +79,7 @@ namespace EZSave.GUI.ViewModels
             job.Type = Type;
 
 
-           managerService.Add(job, managerModel);
+            managerService.Add(job, managerModel);
             bool result = configService.SaveJob(job, configFileModel);
             
             if (result)

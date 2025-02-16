@@ -1,21 +1,11 @@
 ﻿using EZSave.GUI.Properties;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
-using System.Windows.Markup;
-using System.Windows.Media;
 
 namespace EZSave.GUI.ViewModels
 {
-    public class LanguageViewModel: INotifyPropertyChanged
+    public class LanguageViewModel : INotifyPropertyChanged
     {
         public ICommand ChangeLanguageCommand { get; }
 
@@ -33,20 +23,14 @@ namespace EZSave.GUI.ViewModels
             CultureInfo.CurrentUICulture = newCulture;
             Resources.Culture = newCulture;
 
-
-            
-            OnPropertyChanged(string.Empty); 
-
+            OnPropertyChanged(string.Empty);
         }
-
-
 
         protected void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        
         public string ButtonAdd => Resources.ConfigOption1;
         public string ButtonRefresh => Resources.RefreshJobs;
         public string ButtonConfig => Resources.ConfModeTitle;
