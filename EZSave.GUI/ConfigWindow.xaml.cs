@@ -6,10 +6,12 @@ namespace EZSave.GUI.Views
 {
     public partial class ConfigWindow : Window
     {
-        public ConfigWindow(ConfigViewModel viewModel)
+        public ConfigWindow(ManagerModel manager, ConfigFileModel config)
         {
             InitializeComponent();
-            DataContext = viewModel;
+            DataContext = new ConfigViewModel(config, manager);
+
+            //DataContext = viewModel;
         }
     }
 }

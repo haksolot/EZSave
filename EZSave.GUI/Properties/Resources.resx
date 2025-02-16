@@ -130,7 +130,7 @@
     <value>Add</value>
   </data>
   <data name="ConfigOption2" xml:space="preserve">
-    <value>Update a job</value>
+    <value>Update</value>
   </data>
   <data name="ConfigOption3" xml:space="preserve">
     <value>Delete a job</value>
@@ -189,6 +189,9 @@
   <data name="JobEdited" xml:space="preserve">
     <value>The job has been edited !</value>
   </data>
+  <data name="JobEdition" xml:space="preserve">
+    <value>Job edition space : </value>
+  </data>
   <data name="JobName" xml:space="preserve">
     <value>Nom</value>
   </data>
@@ -225,6 +228,9 @@
   <data name="LogPathChanging" xml:space="preserve">
     <value>Logs path : </value>
   </data>
+  <data name="LogTypeChanging" xml:space="preserve">
+    <value>Log type (xml/json) :</value>
+  </data>
   <data name="MainMenuTitle" xml:space="preserve">
     <value>Main menu :</value>
   </data>
@@ -239,6 +245,9 @@
   </data>
   <data name="RefreshJobs" xml:space="preserve">
     <value>Refresh</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
   </data>
   <data name="StatusFilePathChanging" xml:space="preserve">
     <value>Status file path : </value>

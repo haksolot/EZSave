@@ -33,6 +33,7 @@ namespace EZSave.GUI.ViewModels
 
         public string ButtonAdd => Resources.ConfigOption1;
         public string ButtonRefresh => Resources.RefreshJobs;
+
         public string ButtonConfig => Resources.ConfModeTitle;
         public string ButtonExecuteAll => Resources.ExecuteAllJobs;
         public string ButtonExecuteOne => Resources.ExecuteOneJob;

@@ -97,7 +97,7 @@ namespace EZSave.GUI.Properties {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Update a job.
+        ///   Recherche une chaîne localisée semblable à Update.
         /// </summary>
         public static string ConfigOption2 {
             get {
@@ -277,6 +277,15 @@ namespace EZSave.GUI.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Job edition space : .
+        /// </summary>
+        public static string JobEdition {
+            get {
+                return ResourceManager.GetString("JobEdition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Nom.
         /// </summary>
         public static string JobName {
@@ -385,6 +394,15 @@ namespace EZSave.GUI.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Log type (xml/json) :.
+        /// </summary>
+        public static string LogTypeChanging {
+            get {
+                return ResourceManager.GetString("LogTypeChanging", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Main menu :.
         /// </summary>
         public static string MainMenuTitle {
@@ -426,6 +444,15 @@ namespace EZSave.GUI.Properties {
         public static string RefreshJobs {
             get {
                 return ResourceManager.GetString("RefreshJobs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Save.
+        /// </summary>
+        public static string Save {
+            get {
+                return ResourceManager.GetString("Save", resourceCulture);
             }
         }
         

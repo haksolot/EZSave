@@ -124,7 +124,7 @@ namespace EZSave.GUI.ViewModels
         private void OpenConfigWindow()
         {
 
-            var configWindow = new ConfigWindow(new ConfigViewModel(configFileModel, managerModel));
+            var configWindow = new ConfigWindow(managerModel, configFileModel);
             configWindow.ShowDialog();
             RefreshJobs(); // Rafraîchir après fermeture de la config    
         }

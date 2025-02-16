@@ -13,6 +13,7 @@ namespace EZSave.GUI.ViewModels
     {
         private readonly ConfigService _configService;
         private readonly ManagerModel _managerModel;
+        private readonly ManagerService _managerService;
         private ConfigFileModel _configFileModel;
 
         public ICommand SaveConfigCommand { get; }
@@ -25,6 +26,7 @@ namespace EZSave.GUI.ViewModels
             _configService = new ConfigService();
             _managerModel = managerModel;
             _configFileModel = config;
+            _managerService = new ManagerService();
 
             SaveConfigCommand = new RelayCommand(SaveConfig);
             EditJobCommand = new RelayCommand(EditJob);
@@ -120,7 +122,7 @@ namespace EZSave.GUI.ViewModels
         }
 
         public List<string> JobTypes { get; } = new() { "full", "diff" };
-
+        public List<string> LogTypes { get; } = new() { "xml", "json" };
         private void RefreshJobs()
         {
             Jobs = new ObservableCollection<JobModel>(_managerModel.Jobs.ToList());
@@ -141,7 +143,8 @@ namespace EZSave.GUI.ViewModels
         {
             if (SelectedJob != null)
             {
-                _configFileModel.Jobs.Remove(SelectedJob.Name);
+                _managerService.RemoveJob(SelectedJob, _managerModel);
+                
                 _configService.SaveConfigFile(_configFileModel);
                 RefreshJobs();
                 MessageBox.Show("Job supprimé avec succès !");
