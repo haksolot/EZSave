@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Windows;
 using System.Windows.Input;
 
 namespace EZSave.GUI.ViewModels
@@ -123,6 +122,19 @@ namespace EZSave.GUI.ViewModels
 
         public List<string> JobTypes { get; } = new() { "full", "diff" };
         public List<string> LogTypes { get; } = new() { "xml", "json" };
+
+        private string _statusMessage;
+        public string StatusMessage
+        {
+            get => _statusMessage;
+            set { _statusMessage = value; OnPropertyChanged(); }
+        }
+
+        private void SetStatusMessage(string message)
+        {
+            StatusMessage = message;
+        }
+
         private void RefreshJobs()
         {
             Jobs = new ObservableCollection<JobModel>(_managerModel.Jobs.ToList());
@@ -135,7 +147,7 @@ namespace EZSave.GUI.ViewModels
                 _configFileModel.Jobs[SelectedJob.Name] = SelectedJob;
                 _configService.SaveConfigFile(_configFileModel);
                 RefreshJobs();
-                MessageBox.Show("Job modifié avec succès !");
+                SetStatusMessage("Job modifié avec succès !");
             }
         }
 
@@ -144,10 +156,9 @@ namespace EZSave.GUI.ViewModels
             if (SelectedJob != null)
             {
                 _managerService.RemoveJob(SelectedJob, _managerModel);
-                
                 _configService.SaveConfigFile(_configFileModel);
                 RefreshJobs();
-                MessageBox.Show("Job supprimé avec succès !");
+                SetStatusMessage("Job supprimé avec succès !");
             }
         }
 
@@ -155,6 +166,7 @@ namespace EZSave.GUI.ViewModels
         {
             _configService.SaveConfigFile(_configFileModel);
             RefreshJobs();
+            SetStatusMessage("Configuration sauvegardée !");
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

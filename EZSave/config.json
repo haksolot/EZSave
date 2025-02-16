@@ -1,7 +1,0 @@
-{
-  "ConfFileDestination": "C:\\VS\\EZSave\\config.json",
-  "LogFileDestination": "C:\\VS\\EZSave\\logs",
-  "LogType": "json",
-  "StatusFileDestination": "C:\\VS\\EZSave\\status",
-  "Jobs": {}
-}

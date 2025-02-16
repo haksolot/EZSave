@@ -26,9 +26,9 @@
 			<ListView ItemsSource="{Binding Jobs}" SelectedItem="{Binding SelectedJob}" Margin="10" Height="150">
 				<ListView.View>
 					<GridView>
-						<GridViewColumn Header="Job" DisplayMemberBinding="{Binding Name}" Width="150"/>
-						<GridViewColumn Header="Source" DisplayMemberBinding="{Binding Source}" Width="200"/>
-						<GridViewColumn Header="Destination" DisplayMemberBinding="{Binding Destination}" Width="200"/>
+						<GridViewColumn Header="Job" DisplayMemberBinding="{Binding Name}" Width="80"/>
+						<GridViewColumn Header="Source" DisplayMemberBinding="{Binding Source}" Width="100"/>
+						<GridViewColumn Header="Destination" DisplayMemberBinding="{Binding Destination}" Width="100"/>
 						<GridViewColumn Header="Type" DisplayMemberBinding="{Binding Type}" Width="100"/>
 					</GridView>
 				</ListView.View>
@@ -46,7 +46,8 @@
 			<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
 				<Button Content="{x:Static properties:Resources.ConfigOption2}" Command="{Binding EditJobCommand}" Padding="10" Margin="5"/>
 				<Button Content="{x:Static properties:Resources.ConfigOption3}" Command="{Binding DeleteJobCommand}" Padding="10" Margin="5"/>
-			</StackPanel>
+                <TextBlock Text="{Binding StatusMessage}" Margin="10" FontWeight="Bold" Foreground="Green" TextAlignment="Center"/>
+            </StackPanel>
 		</StackPanel>
 	</Grid>
 </Window>
