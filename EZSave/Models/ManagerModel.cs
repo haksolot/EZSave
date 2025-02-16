@@ -1,8 +1,10 @@
-﻿namespace EZSave.Core.Models
+﻿using System.Collections.ObjectModel;
+
+namespace EZSave.Core.Models
 {
     public class ManagerModel
     {
-        public List<JobModel> Jobs { get; set; } = [];
+        public ObservableCollection<JobModel> Jobs { get; set; } = new ObservableCollection<JobModel>();
         public int Limit { get; set; } = 5;
 
     }

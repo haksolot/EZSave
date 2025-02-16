@@ -1,79 +1,233 @@
 ﻿using EZSave.Core.Models;
 using EZSave.Core.Services;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows.Input;
-using System.Collections.ObjectModel;
-using System.Windows;
+
+
+
+
+
 using EZSave.GUI.Views;
+
+
+using MS.WindowsAPICodePack.Internal;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
+using System.Windows;
+using System.Windows.Input;
 
 namespace EZSave.GUI.ViewModels
 {
     public class MainWindowViewModel : INotifyPropertyChanged
     {
         public LanguageViewModel LanguageViewModel { get; set; }
-        public ConfigFileModel configFileModel { get; set; }
-        public ManagerService managerService;
-        private readonly ConfigService configService;
-        private readonly ManagerModel managerModel;
 
-        public ObservableCollection<JobModel> Jobs { get; set; }
+       
+       
+       
 
-        public ICommand RefreshCommand { get; }
-        public ICommand AddJobCommand { get; }
-        public ICommand ExecuteAllJobsCommand { get; }
-        public ICommand OpenJobWindowCommand { get; }
-        public ICommand ExecuteJobSelectionCommand { get; }
+      
+     
+        
+      
+       
         public ICommand OpenConfigCommand { get; }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
+        
 
+        private ConfigFileModel configFileModel { get; set; }
+
+        private  ManagerService managerService;
+        private  ConfigService configService;
+    
+        public ManagerModel managerModel;
+
+        private JobModel _elementSelectionne;
+        public JobModel ElementSelectionne
+        {
+            get => _elementSelectionne;
+            set => SetProperty(ref _elementSelectionne, value);
+        }
+
+        private string _elementSelectionneList;
+        public string ElementSelectionneList
+        {
+            get =>  _elementSelectionneList;
+            set => SetProperty(ref _elementSelectionneList, value);
+        }
+
+        private string _message;
+        public string Message
+        {
+            get => _message;
+            set => SetProperty(ref _message, value);
+        }
+
+        public ObservableCollection<string> List { get; set; } = new ObservableCollection<string>();
+        public ObservableCollection<JobModel> Jobs { get; set; } = new ObservableCollection<JobModel>();
+
+        //public IEnumerable<JobModel> jobs;
+        //public IEnumerable<JobModel> Jobs
+        //{
+        //    get => jobs;
+        //    set => SetProperty(ref jobs, value);
+        //}
+        public ICommand AddToListCommand { get; }
+        public ICommand RemoveToListCommand { get; }
+
+        public ICommand RefreshCommand { get; set; }
+        public ICommand ExecuteAllJobsCommand { get; set; }
+        public ICommand OpenJobWindowCommand { get; set; }
+        public ICommand ExecuteJobSelectionCommand { get; set; }
+
+
+        public event PropertyChangedEventHandler? PropertyChanged;
         public MainWindowViewModel()
         {
+            Initialize();
+
             LanguageViewModel = new LanguageViewModel();
-            configFileModel = new ConfigFileModel();
-            configService = new ConfigService();
-            managerService = new ManagerService();
-            managerModel = new ManagerModel();
+
+        
+//             configService = new ConfigService();
+//             managerService = new ManagerService();
+
+            //configFileModel = new ConfigFileModel();
+            
+            //managerModel = new ManagerModel();
+
 
             RefreshCommand = new RelayCommand(RefreshJobs);
             OpenJobWindowCommand = new RelayCommand(OpenAddJobWindow);
             ExecuteAllJobsCommand = new RelayCommand(ExecuteJobs);
+
             OpenConfigCommand = new RelayCommand(OpenConfigWindow);
 
-            RefreshJobs();
+        
+
+            AddToListCommand = new RelayCommand(AddToList);
+            RemoveToListCommand = new RelayCommand(DelFromList);
+            ExecuteJobSelectionCommand = new RelayCommand<ObservableCollection<string>>(ExecuteJobSelection);
+            //RefreshJobs();
         }
+
+        
+ private void SetProperty<T>(ref T old, T @new, [CallerMemberName] string name = "")
+ {
+     old = @new;
+     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
+     
+ }
 
         private void OpenConfigWindow()
         {
+
             var configWindow = new ConfigWindow(new ConfigViewModel(configFileModel, managerModel));
             configWindow.ShowDialog();
-            RefreshJobs(); // Rafraîchir après fermeture de la config
+            RefreshJobs(); // Rafraîchir après fermeture de la config    
+        }
+
+        private void Initialize()
+        {
+            configFileModel = new ConfigFileModel();
+            managerModel = new ManagerModel();
+            configService = new ConfigService();
+            managerService = new ManagerService();
+            configService.SetConfigDestination("conf.json", configFileModel);
+            configService.LoadConfigFile(configFileModel);
+            managerService.Read(managerModel, configFileModel);
+
         }
 
         private void RefreshJobs()
         {
-            Jobs = new ObservableCollection<JobModel>(managerModel.Jobs);
-            OnPropertyChanged(nameof(Jobs));
+          if (managerModel.Jobs != null && managerModel.Jobs.Any())
+            {
+                Jobs.Clear(); 
+                foreach (var job in managerModel.Jobs)
+                {
+                    Jobs.Add(job); 
+                }
+            }
+            else
+            {
+                Debug.WriteLine("Aucun job à ajouter.");
+            }
+            
         }
 
         private void OpenAddJobWindow()
         {
-            var window = new AddJobWindow(managerModel);
+                        var window = new AddJobWindow(managerModel, configFileModel);
             window.ShowDialog();
-            RefreshJobs();
+
+
+            
         }
 
         private void ExecuteJobs()
         {
             configFileModel.LogFileDestination = "Log";
             configFileModel.StatusFileDestination = "Status";
+
             managerService.Execute(managerModel, configFileModel);
+        
+       
+
+            bool result = managerService.Execute(managerModel, configFileModel);
+
+            if (result)
+            {
+                Message = Properties.Resources.JobsExecutedSuccess;
+            }
+            else
+            {
+                Message = Properties.Resources.JobsExecutedFail;
+            }
         }
 
-        private void OnPropertyChanged([CallerMemberName] string propertyName = "")
+        private void ExecuteJobSelection(ObservableCollection<string> selectedNames)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            
+                configFileModel.LogFileDestination = "Log";
+                configFileModel.StatusFileDestination = "Status";
+
+                bool result = managerService.ExecuteSelected(selectedNames, managerModel, configFileModel);
+                if (result)
+                {
+                    Message = Properties.Resources.JobsExecutedSuccess;
+                }
+                else
+                {
+                    Message = Properties.Resources.JobsExecutedFail;
+                }
+            
         }
+
+        private void AddToList()
+        {
+            if (ElementSelectionne != null)
+            {
+                var valeur = ElementSelectionne.Name;
+                List.Add(valeur);
+            }
+        }
+
+        private void DelFromList()
+        {
+            if (ElementSelectionneList != null)
+            {
+                
+                List.Remove(ElementSelectionneList);
+            }
+
+            foreach (var item in List)
+            {
+                Debug.WriteLine(item);
+            }
+        }
+
     }
 }

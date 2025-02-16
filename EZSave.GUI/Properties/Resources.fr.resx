@@ -166,7 +166,7 @@
     <value>Source du job : </value>
   </data>
   <data name="EnterType" xml:space="preserve">
-    <value>Type de backup du job (full/diff) :  </value>
+    <value>Type de backup du job :  </value>
   </data>
   <data name="ExecuteAllJobs" xml:space="preserve">
     <value>Exécuter tout</value>
@@ -242,6 +242,9 @@
   </data>
   <data name="StatusFilePathChanging" xml:space="preserve">
     <value>Chemin du fichier de status :  </value>
+  </data>
+  <data name="TitleListBox" xml:space="preserve">
+    <value>Jobs prêts à être exécutés : </value>
   </data>
   <data name="Validate" xml:space="preserve">
     <value>Valider</value>

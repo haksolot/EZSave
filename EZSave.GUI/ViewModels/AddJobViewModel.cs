@@ -7,6 +7,8 @@ using EZSave.Core.Models;
 using EZSave.Core.Services;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Diagnostics;
+using System.Security.Cryptography.X509Certificates;
+using MS.WindowsAPICodePack.Internal;
 
 namespace EZSave.GUI.ViewModels
 {
@@ -20,8 +22,7 @@ namespace EZSave.GUI.ViewModels
         private string _Type;
        
         public ICommand AddJobCommand { get; }
-        //public ICommand SelectSourceFolderCommand { get; }
-        //public ICommand SelectDestinationFolderCommand { get; }
+      
         public List<String> JobTypes { get; } = new List<String> { "full", "diff" };
         public string Name
         {
@@ -47,42 +48,48 @@ namespace EZSave.GUI.ViewModels
             set => SetProperty(ref _Type, value);
         }
 
-       
+        private string _message;
+        public string Message
+        {
+            get => _message;
+            set => SetProperty(ref _message, value);
+        }
+
 
         public ManagerModel managerModel { get; set; }
         public ConfigFileModel configFileModel { get; set; }
         private readonly ConfigService configService;
         private readonly ManagerService managerService;
-        public AddJobViewModel(ManagerModel manager)
+        public AddJobViewModel(ManagerModel manager, ConfigFileModel config)
         {
 
-            configFileModel = new ConfigFileModel();
+            configFileModel = config;
             managerModel = manager;
             configService = new ConfigService();
             managerService = new ManagerService();
             AddJobCommand = new RelayCommand(AddJob);
-            //SelectSourceFolderCommand = new RelayCommand(SelectSourceFolder);
-            //SelectDestinationFolderCommand = new RelayCommand(SelectDestinationFolder);
         }
 
         public void AddJob()
         {
-
             var job = new JobModel();
-            job.Name = Name;
+            job.Name = Name;    
             job.Source = Source;
             job.Destination = Destination;
             job.Type = Type;
 
-            
+
             managerService.Add(job, managerModel);
-            configService.SaveJob(job, configFileModel);
-           
-
-
-            MessageBox.Show("Job ajouté et sauvegardé avec succès !");
-            //Message = "Job ajouté et sauvegardé dans config !";
-            //return isAdded;
+            bool result = configService.SaveJob(job, configFileModel);
+            
+            if (result)
+            {
+                Message = Properties.Resources.JobAdded;
+            }
+            else
+            {
+                Message = Properties.Resources.JobNotAdded;
+            }
         }
 
         

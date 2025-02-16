@@ -4,28 +4,55 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EZSave.GUI"
-xmlns:properties="clr-namespace:EZSave.GUI.Properties"
-        Title="{x:Static properties:Resources.ConfigOption1}" Height="300" Width="400">
-    <Grid>
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="300">
+        xmlns:properties="clr-namespace:EZSave.GUI.Properties"
+        Title="{x:Static properties:Resources.ConfigOption1}" Height="290" Width="400" MinHeight="290" MaxHeight="290" MinWidth="400" MaxWidth="400">
 
-            <TextBlock Text="{x:Static properties:Resources.EnterJobName}" Margin="5" />
-            <TextBox Text="{Binding Name}" Margin="5" />
+    <Window.Resources>
+        <Style TargetType="TextBox">
+            <Setter Property="Padding" Value="4" />
+            <Setter Property="Margin" Value="8" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="FontFamily" Value="Arial" />
+            <Setter Property="BorderBrush" Value="Gray"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+    </Window.Resources>
 
-            <TextBlock Text="{x:Static properties:Resources.EnterSource}" Margin="5" TextWrapping="Wrap" />
-            <TextBox Text="{Binding Source}" Margin="5" />
+    <Grid Margin="8,12,8,8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <!-- Ajout de la ligne pour le TextBlock -->
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
 
-            <TextBlock Text="{x:Static properties:Resources.EnterDestination}" Margin="5" TextWrapping="Wrap" />
-            <TextBox Text="{Binding Destination}" Margin="5" />
-            
-            <TextBlock Text="{x:Static properties:Resources.EnterType}" Margin="5" TextWrapping="Wrap" />
-            <ComboBox ItemsSource="{Binding JobTypes}" 
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="129.8"/>
+            <ColumnDefinition Width="13.27"/>
+            <ColumnDefinition Width="15*"/>
+            <ColumnDefinition Width="242*"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Text="{x:Static properties:Resources.EnterJobName}" Grid.Column="0" VerticalAlignment="Center" Margin="8,0,8,0" Grid.ColumnSpan="2"/>
+        <TextBox Text="{Binding Name}" Grid.Row="0" Grid.Column="2" Margin="8" Grid.ColumnSpan="2"/>
+
+        <TextBlock Text="{x:Static properties:Resources.EnterSource}" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="8,0,8,0" Grid.ColumnSpan="2"/>
+        <TextBox Text="{Binding Source}" Grid.Row="1" Grid.Column="2" Margin="8" Grid.ColumnSpan="2"/>
+
+        <TextBlock Text="{x:Static properties:Resources.EnterDestination}" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="8,0,8,0" Grid.ColumnSpan="2"/>
+        <TextBox Text="{Binding Destination}" Grid.Row="2" Grid.Column="2" Margin="8" Grid.ColumnSpan="2"/>
+
+        <TextBlock Text="{x:Static properties:Resources.EnterType}" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="8,0,8,0" Grid.ColumnSpan="2"/>
+        <ComboBox ItemsSource="{Binding JobTypes}" 
                   SelectedItem="{Binding Type, Mode=TwoWay}"
-                  Margin="5"
-                  Width="150" />
-            
+                  Grid.Row="3" Grid.Column="2" Margin="8,8,8,8" Width="150" Grid.ColumnSpan="2"/>
 
-            <Button Content="{x:Static properties:Resources.Validate}" Command="{Binding AddJobCommand}"  Margin="5" />
-        </StackPanel>
+        <Button Content="{x:Static properties:Resources.Validate}" Command="{Binding AddJobCommand}" Grid.Row="4" Margin="8,16,0,8" HorizontalAlignment="Left" Width="115" Grid.ColumnSpan="2" Grid.Column="2"/>
+
+        <TextBlock Text="{Binding Message}" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="4" FontWeight="Bold" Margin="8,8,8,0" HorizontalAlignment="Center"/>
+
     </Grid>
 </Window>

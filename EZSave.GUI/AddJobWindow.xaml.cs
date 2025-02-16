@@ -9,10 +9,10 @@ namespace EZSave.GUI
     /// </summary>
     public partial class AddJobWindow : Window
     {
-        public AddJobWindow(ManagerModel manager)
+        public AddJobWindow(ManagerModel manager, ConfigFileModel config)
         {
             InitializeComponent();
-            DataContext = new AddJobViewModel(manager);
+            DataContext = new AddJobViewModel(manager, config);
 
         }
     }
