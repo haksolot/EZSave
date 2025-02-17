@@ -95,16 +95,27 @@ namespace EZSave.Core.Services
             JobService service = new JobService();
             LogService logService = new LogService();   
             StatusService statusService = new StatusService();
-            //taf = service.Start(job, statusService, logService, configModel);
-            Action taf = service.AsyncStart(job, statusService, logService, configModel);
             var t = new Thread (() =>
                 {
-                Thread.CurrentThread.IsBackground = false;
+                Thread.CurrentThread.IsBackground = true;
                 service.Start(job, statusService, logService, configModel);
             });
             t.Start();
             return t;
         }
 
-  }
+        public void PauseThread(Thread thread)
+        {
+            thread.Suspend(); // à voir wait et notify pour pause et resume
+        }
+        public void ResumeThread(Thread thread)
+        {
+            thread.Resume(); // à voir wait et notify pour pause et resume
+        }
+
+        public void StopThread(Thread thread)
+        {
+            thread.Interrupt();
+        }
+    }
 }
