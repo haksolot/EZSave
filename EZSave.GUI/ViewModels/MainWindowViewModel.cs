@@ -69,6 +69,9 @@ namespace EZSave.GUI.ViewModels
         public ICommand OpenJobWindowCommand { get; set; }
         public ICommand ExecuteJobSelectionCommand { get; set; }
         public ICommand PlayThread { get; set; }
+        public ICommand PauseThread { get; set; }
+        public ICommand StopThread { get; set; }
+        public ICommand ResumeThread { get; set; }
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -94,7 +97,13 @@ namespace EZSave.GUI.ViewModels
 
             OpenConfigCommand = new RelayCommand(OpenConfigWindow);
 
-        
+
+
+            PlayThread = new RelayCommand(Play);
+            PauseThread = new RelayCommand(Pause);
+            ResumeThread = new RelayCommand(Resume);// IDEE Mettre le resume avec le PLay
+            StopThread = new RelayCommand(Stop);
+
 
             AddToListCommand = new RelayCommand(AddToList);
             RemoveToListCommand = new RelayCommand(DelFromList);
