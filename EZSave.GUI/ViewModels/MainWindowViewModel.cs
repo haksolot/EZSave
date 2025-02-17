@@ -131,9 +131,18 @@ namespace EZSave.GUI.ViewModels
 
         private void Play(string jobName)
         {
-            var selectedjob = managerModel.Jobs.Where( job => job.Name == jobName);
+            //var selectedjob = managerModel.Jobs.Where( job => job.Name == jobName);
+            var jobmodel = new JobModel();
 
-            managerService.ExecuteAsThread(selectedjob); //TODO methode qui lance le job avec un thread
+            foreach (var job in managerModel.Jobs)
+            {
+                if (job.Name == jobName)
+                {
+                    jobmodel = job;
+                }
+            }
+
+            managerService.ExecuteAsThread(jobmodel, managerModel, configFileModel); //TODO methode qui lance le job avec un thread
 
         }
 

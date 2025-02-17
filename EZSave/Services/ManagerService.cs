@@ -97,7 +97,11 @@ namespace EZSave.Core.Services
             StatusService statusService = new StatusService();
             //taf = service.Start(job, statusService, logService, configModel);
             Action taf = service.AsyncStart(job, statusService, logService, configModel);
-            var t = new Thread(taf);
+            var t = new Thread (() =>
+                {
+                Thread.CurrentThread.IsBackground = false;
+                service.Start(job, statusService, logService, configModel);
+            });
             t.Start();
             return t;
         }
