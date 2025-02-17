@@ -19,7 +19,7 @@ using System.Windows.Input;
 
 namespace EZSave.GUI.ViewModels
 {
-    public class MainWindowViewModel : INotifyPropertyChanged
+    public class MainWindowViewModel : BaseViewModel, INotifyPropertyChanged
     {
         public LanguageViewModel LanguageViewModel { get; set; }
         public ICommand OpenConfigCommand { get; }
@@ -73,6 +73,8 @@ namespace EZSave.GUI.ViewModels
         public event PropertyChangedEventHandler? PropertyChanged;
         public MainWindowViewModel()
         {
+            BaseViewModel.MainWindowViewModel = this;
+
             Initialize();
 
             LanguageViewModel = new LanguageViewModel();
@@ -206,7 +208,7 @@ namespace EZSave.GUI.ViewModels
             }
         }
 
-        private void DelFromList()
+        public void DelFromList()
         {
             if (ElementSelectionneList != null)
             {

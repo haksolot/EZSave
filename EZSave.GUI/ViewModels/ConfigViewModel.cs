@@ -2,6 +2,7 @@
 using EZSave.Core.Services;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
@@ -26,7 +27,6 @@ namespace EZSave.GUI.ViewModels
             _managerModel = managerModel;
             _configFileModel = config;
             _managerService = new ManagerService();
-
             SaveConfigCommand = new RelayCommand(SaveConfig);
             EditJobCommand = new RelayCommand(EditJob);
             DeleteJobCommand = new RelayCommand(DeleteJob);
@@ -151,6 +151,21 @@ namespace EZSave.GUI.ViewModels
             }
         }
 
+        public void DelFromSelectedList(string job, ObservableCollection<string>JobList)
+        {
+            if (job != null)
+            {
+
+                JobList.Remove(job);
+            }
+
+            foreach (var item in JobList)
+            {
+                Debug.WriteLine(item);
+            }
+
+        }
+
         private void DeleteJob()
         {
             if (SelectedJob != null)
@@ -159,6 +174,12 @@ namespace EZSave.GUI.ViewModels
                 _configService.SaveConfigFile(_configFileModel);
                 RefreshJobs();
                 SetStatusMessage("Job supprimé avec succès !");
+                foreach (var item in BaseViewModel.MainWindowViewModel.List)
+                {
+                    Debug.WriteLine(item);
+                }
+                DelFromSelectedList(SelectedJob.Name, BaseViewModel.MainWindowViewModel.List);
+
             }
         }
 
