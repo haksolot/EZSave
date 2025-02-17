@@ -90,7 +90,7 @@ namespace EZSave.GUI.ViewModels
                 Message = Properties.Resources.JobNotAdded;
             }
 
-            MainWindowViewModel.RefreshJobs();
+            
         }
 
         

@@ -132,14 +132,14 @@ namespace EZSave.GUI.ViewModels
         public void RefreshJobs()
         {
             Jobs.Clear();
-            List.Clear();
+            //List.Clear();
 
             if (managerModel.Jobs != null && managerModel.Jobs.Any())
             {
                 foreach (var job in managerModel.Jobs)
                 {
                     Jobs.Add(job);
-                    List.Add(job.Name);
+                    //List.Add(job.Name);
                 }
             }
             else
@@ -153,9 +153,9 @@ namespace EZSave.GUI.ViewModels
         {
                         var window = new AddJobWindow(managerModel, configFileModel);
             window.ShowDialog();
+            RefreshJobs();
 
 
-            
         }
 
         private void ExecuteJobs()
