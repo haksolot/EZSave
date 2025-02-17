@@ -1,12 +1,9 @@
-/*<<<<<<< HEAD*/
 using System.Diagnostics;
 using EZSave.Core.Models;
 using EZSave.Core.Services;
 using CryptoSoft;
-/*=======*/
 using System.Runtime.InteropServices;
-/*using EZSave.Core.Models;*/
-/*>>>>>>> MergeGUIs*/
+
 
 namespace EZSave.Core.Services
 {
@@ -86,9 +83,9 @@ namespace EZSave.Core.Services
         if (Path.GetExtension(file) == ".crypto")
         {
           var crypto = new Cipher(file, "key");
-          //TODO FM Erreur compil cipheringTime = crypto.TransformFile(file);
-        }
-        else
+                    cipheringTime = crypto.TransformFile(file);
+                }
+                else
         {
           cipheringTime = 0;
         }
@@ -178,7 +175,7 @@ namespace EZSave.Core.Services
           if (Path.GetExtension(file) == ".crypto")
           {
             var crypto = new Cipher(file, "key");
-            //TODO FM Erreur compil cipheringTime = crypto.TransformFile(file);
+            cipheringTime = crypto.TransformFile(file);
                     }
                     else
           {
