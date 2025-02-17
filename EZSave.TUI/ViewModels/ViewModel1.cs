@@ -1,5 +1,6 @@
 ﻿using EZSave.Core.Models;
 using EZSave.Core.Services;
+using System.Collections.ObjectModel;
 
 namespace EZSave.TUI.ViewModels
 {
@@ -126,10 +127,10 @@ namespace EZSave.TUI.ViewModels
     public bool ExecuteJob(string jobName)
     {
       var managerService = new ManagerService();
-      var selected = new List<string>();
+      var selected = new ObservableCollection<string>();
       selected.Add(jobName);
       bool isExecuted = managerService.ExecuteSelected(selected, managerModel, configFileModel);
-      return isExecuted;
+            return isExecuted;
     }
 
     public string GetJobs()

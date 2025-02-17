@@ -2,7 +2,7 @@
 using EZSave.Core.Services;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 
@@ -26,7 +26,6 @@ namespace EZSave.GUI.ViewModels
             _managerModel = managerModel;
             _configFileModel = config;
             _managerService = new ManagerService();
-
             SaveConfigCommand = new RelayCommand(SaveConfig);
             EditJobCommand = new RelayCommand(EditJob);
             DeleteJobCommand = new RelayCommand(DeleteJob);
@@ -61,6 +60,7 @@ namespace EZSave.GUI.ViewModels
         }
 
         private ObservableCollection<JobModel> _jobs;
+
         public ObservableCollection<JobModel> Jobs
         {
             get => _jobs;
@@ -68,6 +68,7 @@ namespace EZSave.GUI.ViewModels
         }
 
         private JobModel _selectedJob;
+
         public JobModel SelectedJob
         {
             get => _selectedJob;
@@ -124,6 +125,7 @@ namespace EZSave.GUI.ViewModels
         public List<string> LogTypes { get; } = new() { "xml", "json" };
 
         private string _statusMessage;
+
         public string StatusMessage
         {
             get => _statusMessage;
@@ -151,6 +153,19 @@ namespace EZSave.GUI.ViewModels
             }
         }
 
+        public void DelFromSelectedList(string job, ObservableCollection<string> JobList)
+        {
+            if (job != null)
+            {
+                JobList.Remove(job);
+            }
+
+            foreach (var item in JobList)
+            {
+                Debug.WriteLine(item);
+            }
+        }
+
         private void DeleteJob()
         {
             if (SelectedJob != null)
@@ -159,6 +174,8 @@ namespace EZSave.GUI.ViewModels
                 _configService.SaveConfigFile(_configFileModel);
                 RefreshJobs();
                 SetStatusMessage("Job supprimé avec succès !");
+
+                //DelFromSelectedList(SelectedJob.Name, BaseViewModel.MainWindowViewModel.List);
             }
         }
 
@@ -170,6 +187,7 @@ namespace EZSave.GUI.ViewModels
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
+
         private void OnPropertyChanged([CallerMemberName] string propertyName = "") =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
