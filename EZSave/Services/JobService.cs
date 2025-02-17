@@ -12,45 +12,63 @@ namespace EZSave.Core.Services
 {
   public class JobService
   {
-    public bool Start(JobModel job, StatusService statusService, LogService logService, ConfigFileModel configFileModel)
-    {
-      bool check = ProcessesService.CheckProcess("CalculatorApp");
-      if (check == true)
-      {
-        return false;
-      }
+    //public Action<JobModel, StatusService, LogService, ConfigFileModel> AsyncStart(JobModel job, StatusService statusService, LogService logService, ConfigFileModel configFileModel)
+        public Action AsyncStart(JobModel job, StatusService statusService, LogService logService, ConfigFileModel configFileModel)
+        {
+            bool check = ProcessesService.CheckProcess("CalculatorApp");
 
-      if (job.Type == "full")
-      {
-        check = FullBackup(job, logService, statusService, configFileModel);
-        if (check == false)
-        {
-          return false;
-        }
-        else
-        {
-          return true;
-        }
-      }
-      else if (job.Type == "diff")
-      {
-        check = DifferentialBackup(job, statusService, logService, configFileModel);
-        if (check == false)
-        {
-          return false;
-        }
-        else
-        {
-          return true;
-        }
-      }
-      else
-      {
-        return false;
-      }
-    }
+            if (job.Type == "full")
+            {
+                FullBackup(job, logService, statusService, configFileModel);
+            }
+            else if (job.Type == "diff")
+            {
+                DifferentialBackup(job, statusService, logService, configFileModel);
+            }
 
-    private bool FullBackup(JobModel job, LogService logService, StatusService statusService, ConfigFileModel configFileModel)
+            return () => { };
+        }
+
+        public bool Start(JobModel job, StatusService statusService, LogService logService, ConfigFileModel configFileModel)
+        {
+            bool check = ProcessesService.CheckProcess("CalculatorApp");
+            if (check == true)
+            {
+                return false;
+            }
+
+            if (job.Type == "full")
+            {
+                check = FullBackup(job, logService, statusService, configFileModel);
+                if (check == false)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            else if (job.Type == "diff")
+            {
+                check = DifferentialBackup(job, statusService, logService, configFileModel);
+                if (check == false)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+
+        private bool FullBackup(JobModel job, LogService logService, StatusService statusService, ConfigFileModel configFileModel)
     {
       long copiedSize = 0;
       var startTime = DateTime.Now;

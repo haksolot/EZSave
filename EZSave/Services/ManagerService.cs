@@ -90,5 +90,17 @@ namespace EZSave.Core.Services
       return true;
     }
 
+        public Thread ExecuteAsThread(JobModel job, ManagerModel managerModel, ConfigFileModel configModel)
+        {
+            JobService service = new JobService();
+            LogService logService = new LogService();   
+            StatusService statusService = new StatusService();
+            //taf = service.Start(job, statusService, logService, configModel);
+            Action taf = service.AsyncStart(job, statusService, logService, configModel);
+            var t = new Thread(taf);
+            t.Start();
+            return t;
+        }
+
   }
 }
