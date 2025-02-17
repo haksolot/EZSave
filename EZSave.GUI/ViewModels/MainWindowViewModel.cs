@@ -131,9 +131,10 @@ namespace EZSave.GUI.ViewModels
 
         private void RefreshJobs()
         {
-          if (managerModel.Jobs != null && managerModel.Jobs.Any())
+            Jobs.Clear();
+
+            if (managerModel.Jobs != null && managerModel.Jobs.Any())
             {
-                Jobs.Clear(); 
                 foreach (var job in managerModel.Jobs)
                 {
                     Jobs.Add(job); 
