@@ -129,6 +129,26 @@ namespace EZSave.GUI.ViewModels
 
         }
 
+        private void Play(string jobName)
+        {
+            var selectedjob = managerModel.Jobs.Where( job => job.Name == jobName);
+            //managerService.ExecuteAsThread(selectedjob); //TODO methode qui lance le job avec un thread
+
+        }
+
+        private void Stop(string jobName)
+        {
+            //managerService.StopAsThread(jobName); //TODO methode qui arrete totalement le job 
+        }
+
+        private void Pause()
+        {
+            //managerService.PauseAsThread(jobName); //TODO methode qui pause le job 
+        }
+        private void Resume()
+        {
+            //managerService.ResumeAsThread(jobName); //TODO methode qui relance le job 
+        }
         private void RefreshJobs()
         {
             Jobs.Clear();
@@ -151,9 +171,6 @@ namespace EZSave.GUI.ViewModels
         {
                         var window = new AddJobWindow(managerModel, configFileModel);
             window.ShowDialog();
-
-
-            
         }
 
         private void ExecuteJobs()
