@@ -129,20 +129,22 @@ namespace EZSave.GUI.ViewModels
 
         }
 
-        private void RefreshJobs()
+        public void RefreshJobs()
         {
             Jobs.Clear();
+            List.Clear();
 
             if (managerModel.Jobs != null && managerModel.Jobs.Any())
             {
                 foreach (var job in managerModel.Jobs)
                 {
-                    Jobs.Add(job); 
+                    Jobs.Add(job);
+                    List.Add(job.Name);
                 }
             }
             else
             {
-                Debug.WriteLine("Aucun job à ajouter.");
+                Debug.WriteLine("Aucun job à changer dans les listes.");
             }
             
         }

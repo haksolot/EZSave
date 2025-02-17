@@ -15,7 +15,6 @@ namespace EZSave.GUI.ViewModels
     public class AddJobViewModel : INotifyPropertyChanged
     {
 
-
         private string _Name;
         private string _Source;
         private string _Destination;
