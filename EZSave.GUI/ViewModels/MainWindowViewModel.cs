@@ -139,7 +139,7 @@ namespace EZSave.GUI.ViewModels
                 foreach (var job in managerModel.Jobs)
                 {
                     Jobs.Add(job);
-                    //List.Add(job.Name);
+                  
                 }
             }
             else

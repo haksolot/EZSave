@@ -38,12 +38,14 @@
 
             <Button Content="🇫🇷" Command="{Binding LanguageViewModel.ChangeLanguageCommand}" CommandParameter="fr-FR" Grid.Column="0"/>
             <Button Content="en" Command="{Binding LanguageViewModel.ChangeLanguageCommand}" CommandParameter="en-US" Grid.Column="1"/>
-            <Button Command="{Binding RefreshCommand}" Content="{Binding LanguageViewModel.ButtonRefresh}" CommandParameter="Refresh" Grid.Column="2"/>
-            <Button Content="{Binding LanguageViewModel.ButtonAdd}" Command="{Binding OpenJobWindowCommand}" Grid.Column="3"/>
+            <Button Content="{Binding LanguageViewModel.ButtonAdd}" Command="{Binding OpenJobWindowCommand}" Grid.Column="2"/>
+            <Button Content="{Binding LanguageViewModel.ButtonExecuteAll}" Command="{Binding ExecuteAllJobsCommand}" Grid.Column="3"/>
             <Button Content="{Binding LanguageViewModel.ButtonConfig}" Command="{Binding OpenConfigCommand}" Grid.Column="4"/>
 
+
+
             <Button Content="{Binding LanguageViewModel.ButtonExecuteOne}" Command="{Binding ExecuteJobSelectionCommand}" CommandParameter="{Binding List}" Grid.Column="6"/>
-            <Button Content="{Binding LanguageViewModel.ButtonExecuteAll}" Command="{Binding ExecuteAllJobsCommand}" Grid.Column="7"/>
+            
         </Grid>
 
 
