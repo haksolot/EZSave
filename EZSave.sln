@@ -7,13 +7,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EZSave.Tests", "EZSave.Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EZSave.Language", "EZSave.Language\EZSave.Language.csproj", "{E8A6CF19-AA20-415E-95E8-8FBF87D7C887}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoSoft", "..\CryptoSoft\CryptoSoft.csproj", "{AA25D25E-91C9-4346-9A51-E5955E7C1DA8}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EZSave.GUI", "EZSave.GUI\EZSave.GUI.csproj", "{35676C74-7CDE-44D7-AB5D-F34AC78339A4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EZSave.Core", "EZSave\EZSave.Core.csproj", "{450DEA8B-304F-49A3-8278-FCD59139CA03}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EZSave.TUI", "EZSave.TUI\EZSave.TUI.csproj", "{7B643AA6-845F-4E38-A586-F90B68330411}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoSoft", "CryptoSoft\CryptoSoft.csproj", "{F17AC4F9-E834-354E-B694-7C47867E9A79}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,14 +29,6 @@ Global
 		{E8A6CF19-AA20-415E-95E8-8FBF87D7C887}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E8A6CF19-AA20-415E-95E8-8FBF87D7C887}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E8A6CF19-AA20-415E-95E8-8FBF87D7C887}.Release|Any CPU.Build.0 = Release|Any CPU
-		{21A261F2-5ECF-4AFF-BB91-F0A590CE5AB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{21A261F2-5ECF-4AFF-BB91-F0A590CE5AB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{21A261F2-5ECF-4AFF-BB91-F0A590CE5AB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{21A261F2-5ECF-4AFF-BB91-F0A590CE5AB6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AA25D25E-91C9-4346-9A51-E5955E7C1DA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AA25D25E-91C9-4346-9A51-E5955E7C1DA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AA25D25E-91C9-4346-9A51-E5955E7C1DA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AA25D25E-91C9-4346-9A51-E5955E7C1DA8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{35676C74-7CDE-44D7-AB5D-F34AC78339A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{35676C74-7CDE-44D7-AB5D-F34AC78339A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35676C74-7CDE-44D7-AB5D-F34AC78339A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -49,6 +41,10 @@ Global
 		{7B643AA6-845F-4E38-A586-F90B68330411}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7B643AA6-845F-4E38-A586-F90B68330411}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7B643AA6-845F-4E38-A586-F90B68330411}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F17AC4F9-E834-354E-B694-7C47867E9A79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F17AC4F9-E834-354E-B694-7C47867E9A79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F17AC4F9-E834-354E-B694-7C47867E9A79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F17AC4F9-E834-354E-B694-7C47867E9A79}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

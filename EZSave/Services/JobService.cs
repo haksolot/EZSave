@@ -82,11 +82,11 @@ namespace EZSave.Core.Services
           Directory.CreateDirectory(directoryPath);
         }
 
-        float cipheringTime;
+                float cipheringTime = 0f;
         if (Path.GetExtension(file) == ".crypto")
         {
           var crypto = new Cipher(file, "key");
-          cipheringTime = crypto.TransformFile(file);
+          //TODO FM Erreur compil cipheringTime = crypto.TransformFile(file);
         }
         else
         {
@@ -174,13 +174,13 @@ namespace EZSave.Core.Services
           {
             Directory.CreateDirectory(directoryPath);
           }
-          float cipheringTime;
+          float cipheringTime = 0f;
           if (Path.GetExtension(file) == ".crypto")
           {
             var crypto = new Cipher(file, "key");
-            cipheringTime = crypto.TransformFile(file);
-          }
-          else
+            //TODO FM Erreur compil cipheringTime = crypto.TransformFile(file);
+                    }
+                    else
           {
             cipheringTime = 0;
           }

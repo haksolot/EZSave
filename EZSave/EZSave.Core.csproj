@@ -8,7 +8,7 @@
   </PropertyGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\CryptoSoft\CryptoSoft.csproj" />
+		<ProjectReference Include="..\CryptoSoft\CryptoSoft.csproj" />
 		<ProjectReference Include="..\EZSave.Language\EZSave.Language.csproj" />
 	</ItemGroup>
 
