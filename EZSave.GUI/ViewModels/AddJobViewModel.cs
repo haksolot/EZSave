@@ -14,7 +14,7 @@ namespace EZSave.GUI.ViewModels
 {
     public class AddJobViewModel : INotifyPropertyChanged
     {
-
+        public MainWindowViewModel MainWindowViewModel { get; set; }
         private string _Name;
         private string _Source;
         private string _Destination;
@@ -61,7 +61,7 @@ namespace EZSave.GUI.ViewModels
         private readonly ManagerService managerService;
         public AddJobViewModel(ManagerModel manager, ConfigFileModel config)
         {
-
+            MainWindowViewModel = new MainWindowViewModel();
             configFileModel = config;
             managerModel = manager;
             configService = new ConfigService();
@@ -89,6 +89,8 @@ namespace EZSave.GUI.ViewModels
             {
                 Message = Properties.Resources.JobNotAdded;
             }
+
+            MainWindowViewModel.RefreshJobs();
         }
 
         

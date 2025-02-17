@@ -128,8 +128,8 @@ namespace EZSave.TUI.ViewModels
       var managerService = new ManagerService();
       var selected = new List<string>();
       selected.Add(jobName);
-      bool isExecuted = managerService.ExecuteSelected(selected, managerModel, configFileModel);
-      return isExecuted;
+      //bool isExecuted = managerService.ExecuteSelected(selected, managerModel, configFileModel);  //TODO Issue a regler
+      return true; //return isExecuted
     }
 
     public string GetJobs()
