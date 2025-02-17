@@ -1,14 +1,8 @@
-﻿using System.ComponentModel;
-using System.IO;
-using System.Runtime.CompilerServices;
-using System.Windows;
-using System.Windows.Input;
-using EZSave.Core.Models;
+﻿using EZSave.Core.Models;
 using EZSave.Core.Services;
-using Microsoft.WindowsAPICodePack.Dialogs;
-using System.Diagnostics;
-using System.Security.Cryptography.X509Certificates;
-using MS.WindowsAPICodePack.Internal;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Windows.Input;
 
 namespace EZSave.GUI.ViewModels
 {
@@ -19,10 +13,11 @@ namespace EZSave.GUI.ViewModels
         private string _Source;
         private string _Destination;
         private string _Type;
-       
+
         public ICommand AddJobCommand { get; }
-      
+
         public List<String> JobTypes { get; } = new List<String> { "full", "diff" };
+
         public string Name
         {
             get => _Name;
@@ -48,17 +43,18 @@ namespace EZSave.GUI.ViewModels
         }
 
         private string _message;
+
         public string Message
         {
             get => _message;
             set => SetProperty(ref _message, value);
         }
 
-
         public ManagerModel managerModel { get; set; }
         public ConfigFileModel configFileModel { get; set; }
         private readonly ConfigService configService;
         private readonly ManagerService managerService;
+
         public AddJobViewModel(ManagerModel manager, ConfigFileModel config)
         {
             MainWindowViewModel = new MainWindowViewModel();
@@ -72,15 +68,14 @@ namespace EZSave.GUI.ViewModels
         public void AddJob()
         {
             var job = new JobModel();
-            job.Name = Name;    
+            job.Name = Name;
             job.Source = Source;
             job.Destination = Destination;
             job.Type = Type;
 
-
             managerService.Add(job, managerModel);
             bool result = configService.SaveJob(job, configFileModel);
-            
+
             if (result)
             {
                 Message = Properties.Resources.JobAdded;
@@ -89,12 +84,7 @@ namespace EZSave.GUI.ViewModels
             {
                 Message = Properties.Resources.JobNotAdded;
             }
-
-            
         }
-
-        
-
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -103,8 +93,5 @@ namespace EZSave.GUI.ViewModels
             old = @new;
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
-
-      
-
     }
 }
