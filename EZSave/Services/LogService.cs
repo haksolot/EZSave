@@ -6,7 +6,8 @@ namespace EZSave.Core.Services
 {
   public class LogService
   {
-    public void WriteJSON(LogModel logModel, ConfigFileModel configModel, string logFilePath)
+        private static readonly object obj = new object();
+        public void WriteJSON(LogModel logModel, ConfigFileModel configModel, string logFilePath)
     {
 
       string existingJson = File.ReadAllText(logFilePath).Trim();
@@ -23,34 +24,39 @@ namespace EZSave.Core.Services
       File.WriteAllText(logFilePath, jsonString);
 
     }
-    public void WriteXML(LogModel logModel, ConfigFileModel configModel, string logFilePath)
-    {
-      List<LogModel> logModels = new List<LogModel>();
+       
 
-      // Vérifie si le fichier XML existe déjà 
-      if (File.Exists(logFilePath))
-      {
-        XmlSerializer serializer = new XmlSerializer(typeof(List<LogModel>));
-        using (FileStream fileStream = new FileStream(logFilePath, FileMode.Open))
+        public void WriteXML(LogModel logModel, ConfigFileModel configModel, string logFilePath)
         {
-          if (fileStream.Length > 0)
-          {
-            logModels = (List<LogModel>)serializer.Deserialize(fileStream) ?? new List<LogModel>();
-          }
+            List<LogModel> logModels = new List<LogModel>();
+
+            lock (obj) 
+            {
+                if (File.Exists(logFilePath))
+                {
+                    XmlSerializer serializer = new XmlSerializer(typeof(List<LogModel>));
+
+                  
+                    using (FileStream fileStream = new FileStream(logFilePath, FileMode.Open))
+                    {
+                        if (fileStream.Length > 0)
+                        {
+                            logModels = (List<LogModel>)serializer.Deserialize(fileStream) ?? new List<LogModel>();
+                        }
+                    }
+                }
+
+                logModels.Add(logModel);
+
+                XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<LogModel>));
+                using (StreamWriter writer = new StreamWriter(logFilePath))
+                {
+                    xmlSerializer.Serialize(writer, logModels);
+                }
+            }
         }
-      }
 
-      logModels.Add(logModel);
-
-      // Ecriture en XML
-      XmlSerializer xmlSerializer = new XmlSerializer(typeof(List<LogModel>));
-      using (StreamWriter writer = new StreamWriter(logFilePath))
-      {
-        xmlSerializer.Serialize(writer, logModels);
-      }
-
-    }
-    public void Write(LogModel logModel, ConfigFileModel configModel)
+        public void Write(LogModel logModel, ConfigFileModel configModel)
     {
 
       string? logDirectory = configModel.LogFileDestination;

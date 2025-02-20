@@ -43,42 +43,45 @@ namespace EZSave.Core.Services
         public bool Execute(ManagerModel manager, ConfigFileModel configFileModel)
         {
             object obj = new object();
-            List<Thread> threads = [];
-            bool hasFailed = true;
-            if (manager.Jobs.Count > 0)
+            List<Thread> threads = new List<Thread>();
+            bool hasFailed = false;
+
+            if (manager.Jobs.Count == 0)
             {
-                foreach (JobModel job in manager.Jobs)
-                {
-                    threads.Add(new Thread(() =>
-                    {
-                        var service = new JobService();
-                        var logService = new LogService();
-                        var statusService = new StatusService();
-                        bool check = service.Start(job, statusService, logService, configFileModel);
-                        if (check == false)
-                        {
-                            lock (obj)
-                            {
-                                hasFailed = true;
-                            }
-                        }
-                        hasFailed = false;
-                    }));
-                }
-                foreach (var item in threads)
-                    item.Start();
-            }
-            else
-            {
-                hasFailed = true;
+                return true; 
             }
 
-            //foreach (var item in threads)
-            //{
-            //    item.Join();
-            //}
-            return hasFailed;
+            foreach (JobModel job in manager.Jobs)
+            {
+                Thread thread = new Thread(() =>
+                {
+                    var service = new JobService();
+                    var logService = new LogService();
+                    var statusService = new StatusService();
+
+                    bool check = service.Start(job, statusService, logService, configFileModel);
+
+                    if (!check)
+                    {
+                        lock (obj)
+                        {
+                            hasFailed = true;
+                        }
+                    }
+                });
+
+                thread.Start(); 
+                threads.Add(thread);
+            }
+
+            foreach (var thread in threads)
+            {
+                thread.Join();
+            }
+
+            return !hasFailed; 
         }
+
 
         public bool ExecuteSelected(ObservableCollection<string> listeSelected, ManagerModel manager, ConfigFileModel configFileModel)
         {

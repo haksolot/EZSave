@@ -5,7 +5,8 @@ namespace EZSave.Core.Services
 {
   public class StatusService
   {
-    public void SaveStatus(StatusModel statusmodel, ConfigFileModel configmodel)
+        private static readonly object obj = new object();
+        public void SaveStatus(StatusModel statusmodel, ConfigFileModel configmodel)
     {
       var liststatus = new Dictionary<string, StatusModel>();
 
@@ -19,11 +20,15 @@ namespace EZSave.Core.Services
 
       if (File.Exists(statusFilePath))
       {
-        string json = File.ReadAllText(statusFilePath);
-        if (!string.IsNullOrWhiteSpace(json))
-        {
-          liststatus = JsonSerializer.Deserialize<Dictionary<string, StatusModel>>(json) ?? new Dictionary<string, StatusModel>();
-        }
+                lock (obj)
+                {
+                    string json = File.ReadAllText(statusFilePath);
+                    if (!string.IsNullOrWhiteSpace(json))
+                    {
+                        liststatus = JsonSerializer.Deserialize<Dictionary<string, StatusModel>>(json) ?? new Dictionary<string, StatusModel>();
+                    }
+                }
+        
       }
       if (liststatus.ContainsKey(statusmodel.Name))
       {
@@ -53,7 +58,10 @@ namespace EZSave.Core.Services
       }
 
       string jsonString = JsonSerializer.Serialize(liststatus, new JsonSerializerOptions { WriteIndented = true });
-      File.WriteAllText(statusFilePath, jsonString);
+            lock (obj)
+            {
+                File.WriteAllText(statusFilePath, jsonString);
+            }
     }
   }
 }
