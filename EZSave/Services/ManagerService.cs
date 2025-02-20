@@ -1,94 +1,109 @@
 ﻿using EZSave.Core.Models;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 
 namespace EZSave.Core.Services
 {
-  public class ManagerService
-  {
-    public void Read(ManagerModel manager, ConfigFileModel config)
+    public class ManagerService
     {
-      foreach (JobModel job in config.Jobs.Values)
-      {
-        Add(job, manager);
-      }
-    }
-
-    public bool Add(JobModel job, ManagerModel manager)
-    {
-      //if (manager.Jobs.Count >= manager.Limit)
-      //{
-      //  return false;
-      //}
-      //else
-      //{
-        manager.Jobs.Add(job);
-        return true;
-      //}
-    }
-
-    public bool RemoveJob(JobModel job, ManagerModel manager)
-    {
-      for (int i = 0; i < manager.Jobs.Count; i++)
-      {
-        var jobList = manager.Jobs[i];
-        if (jobList.Name == job.Name)
+        public void Read(ManagerModel manager, ConfigFileModel config)
         {
-          manager.Jobs.RemoveAt(i);
-          return true;
+            foreach (JobModel job in config.Jobs.Values)
+            {
+                Add(job, manager);
+            }
         }
-      }
-      return false;
-    }
 
-    public bool Execute(ManagerModel manager, ConfigFileModel configFileModel)
-    {
-      if (manager.Jobs.Count > 0)
-      {
-        foreach (JobModel job in manager.Jobs)
+        public bool Add(JobModel job, ManagerModel manager)
         {
-          var service = new JobService();
-          var logService = new LogService();
-          var statusService = new StatusService();
-          bool check = service.Start(job, statusService, logService, configFileModel);
-          if (check == false)
-          {
+            //if (manager.Jobs.Count >= manager.Limit)
+            //{
+            //  return false;
+            //}
+            //else
+            //{
+            manager.Jobs.Add(job);
+            return true;
+            //}
+        }
+
+        public bool RemoveJob(JobModel job, ManagerModel manager)
+        {
+            for (int i = 0; i < manager.Jobs.Count; i++)
+            {
+                var jobList = manager.Jobs[i];
+                if (jobList.Name == job.Name)
+                {
+                    manager.Jobs.RemoveAt(i);
+                    return true;
+                }
+            }
             return false;
-          }
         }
-        return true;
-      }
-      else
-      {
-        return false;
-      }
-    }
 
-    public bool ExecuteSelected(ObservableCollection<string> listeSelected, ManagerModel manager, ConfigFileModel configFileModel)
-    {
-            if (listeSelected== null || listeSelected.Count == 0 || manager?.Jobs == null || configFileModel == null)
+        public bool Execute(ManagerModel manager, ConfigFileModel configFileModel)
+        {
+            object obj = new object();
+            List<Thread> threads = [];
+            bool hasFailed = true;
+            if (manager.Jobs.Count > 0)
+            {
+                foreach (JobModel job in manager.Jobs)
+                {
+                    threads.Add(new Thread(() =>
+                    {
+                        var service = new JobService();
+                        var logService = new LogService();
+                        var statusService = new StatusService();
+                        bool check = service.Start(job, statusService, logService, configFileModel);
+                        if (check == false)
+                        {
+                            lock (obj)
+                            {
+                                hasFailed = true;
+                            }
+                        }
+                        hasFailed = false;
+                    }));
+                }
+                foreach (var item in threads)
+                    item.Start();
+            }
+            else
+            {
+                hasFailed = true;
+            }
+
+            //foreach (var item in threads)
+            //{
+            //    item.Join();
+            //}
+            return hasFailed;
+        }
+
+        public bool ExecuteSelected(ObservableCollection<string> listeSelected, ManagerModel manager, ConfigFileModel configFileModel)
+        {
+            if (listeSelected == null || listeSelected.Count == 0 || manager?.Jobs == null || configFileModel == null)
             {
                 return false;
             }
-      var service = new JobService();
-      var logService = new LogService();
-      var statusService = new StatusService();
+            var service = new JobService();
+            var logService = new LogService();
+            var statusService = new StatusService();
 
-      var jobsToExecute = manager.Jobs.Where(job => listeSelected.Contains(job.Name)).ToList();
+            var jobsToExecute = manager.Jobs.Where(job => listeSelected.Contains(job.Name)).ToList();
 
-      if (jobsToExecute.Count != listeSelected.Count)
-        return false;
+            if (jobsToExecute.Count != listeSelected.Count)
+                return false;
 
-      foreach (var job in jobsToExecute)
-      {
-        bool check = service.Start(job, statusService, logService, configFileModel);
-        if (check == false)
-        {
-          return false;
+            foreach (var job in jobsToExecute)
+            {
+                bool check = service.Start(job, statusService, logService, configFileModel);
+                if (check == false)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
-      }
-      return true;
     }
-
-  }
 }
