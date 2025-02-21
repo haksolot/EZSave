@@ -48,7 +48,7 @@ namespace EZSave.Core.Services
 
             if (manager.Jobs.Count == 0)
             {
-                return true;
+                return false;
             }
 
             foreach (JobModel job in manager.Jobs)
@@ -83,6 +83,10 @@ namespace EZSave.Core.Services
 
         public bool ExecuteSelected(ObservableCollection<string> listeSelected, ManagerModel manager, ConfigFileModel configFileModel)
         {
+            object obj = new object();
+            List<Thread> threads = new List<Thread>();
+            bool hasFailed = false;
+
             if (listeSelected == null || listeSelected.Count == 0 || manager?.Jobs == null || configFileModel == null)
             {
                 return false;
@@ -98,13 +102,28 @@ namespace EZSave.Core.Services
 
             foreach (var job in jobsToExecute)
             {
-                bool check = service.Start(job, statusService, logService, configFileModel, job.Name);
-                if (check == false)
+                Thread thread = new Thread(() =>
                 {
-                    return false;
-                }
+                    bool check = service.Start(job, statusService, logService, configFileModel, job.Name);
+                    if (!check)
+                    {
+                        lock (obj)
+                        {
+                            hasFailed = true;
+                        }
+                    }
+                });
+
+                thread.Start();
+                threads.Add(thread);
             }
-            return true;
+
+            foreach (var thread in threads)
+            {
+                thread.Join();
+            }
+
+            return !hasFailed;
         }
     }
 }
