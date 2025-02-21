@@ -38,7 +38,6 @@ namespace EZSave.GUI.ViewModels
         public string ButtonExecuteAll => Resources.ExecuteAllJobs;
         public string ButtonPLay => Resources.PlayJob;
         public string ButtonStop => Resources.StopJob;
-
         public string ButtonPause => Resources.PauseJob;
         public string ButtonResume => Resources.ResumeJob;
         public string ButtonExecuteOne => Resources.ExecuteOneJob;

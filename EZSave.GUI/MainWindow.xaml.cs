@@ -13,5 +13,10 @@ namespace EZSave.GUI
             InitializeComponent();
             DataContext = new MainWindowViewModel();
         }
+
+        private void Button_Click()
+        {
+
+        }
     }
 }

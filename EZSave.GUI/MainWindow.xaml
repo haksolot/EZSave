@@ -53,40 +53,6 @@
                 Content="en" />
             <Button
                 Grid.Column="2"
-                Command="{Binding RefreshCommand}"
-                CommandParameter="Refresh"
-                Content="{Binding LanguageViewModel.ButtonRefresh}" />
-            <Button
-                Grid.Column="3"
-                Command="{Binding OpenJobWindowCommand}"
-                Content="{Binding LanguageViewModel.ButtonAdd}" />
-            <Button
-                Grid.Column="4"
-                Command="{Binding OpenConfigCommand}"
-                Content="{Binding LanguageViewModel.ButtonConfig}" />
-
-            <Button
-                Grid.Column="6"
-                Command="{Binding ExecuteJobSelectionCommand}"
-                CommandParameter="{Binding List}"
-                Content="{Binding LanguageViewModel.ButtonExecuteOne}" />
-            <Button
-                Grid.Column="7"
-                Command="{Binding ExecuteAllJobsCommand}"
-                Content="{Binding LanguageViewModel.ButtonExecuteAll}" />
-
-            <Button
-                Grid.Column="0"
-                Command="{Binding LanguageViewModel.ChangeLanguageCommand}"
-                CommandParameter="fr-FR"
-                Content="🇫🇷" />
-            <Button
-                Grid.Column="1"
-                Command="{Binding LanguageViewModel.ChangeLanguageCommand}"
-                CommandParameter="en-US"
-                Content="en" />
-            <Button
-                Grid.Column="2"
                 Command="{Binding OpenJobWindowCommand}"
                 Content="{Binding LanguageViewModel.ButtonAdd}" />
             <Button
@@ -124,6 +90,7 @@
                 Command="{Binding ExecuteJobSelectionCommand}"
                 CommandParameter="{Binding List}"
                 Content="{Binding LanguageViewModel.ButtonExecuteOne}" />
+
         </Grid>
 
 

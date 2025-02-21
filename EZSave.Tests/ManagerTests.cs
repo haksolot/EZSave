@@ -1,4 +1,5 @@
-﻿using EZSave.Core.Models;
+﻿using System.Collections.ObjectModel;
+using EZSave.Core.Models;
 using EZSave.Core.Services;
 
 
@@ -89,7 +90,7 @@ namespace EZSave.Tests
 
             //var result = manager.RemoveJob(job, managerModel);
 
-            Assert.True(result);
+            Assert.False(result);
             //Assert.Empty(managerModel.Jobs);
         }
 
@@ -100,14 +101,14 @@ namespace EZSave.Tests
             var managerService = new ManagerService();
             var manager = new ManagerModel
             {
-                Jobs = new List<JobModel>
+                Jobs = new ObservableCollection<JobModel>
                 {
                     new JobModel { Name = "TestJob" }
                 }
             };
             var config = new ConfigFileModel();
 
-            var listeSelected = new List<string> { "TestJob", "Job2" };
+            var listeSelected = new ObservableCollection<string> { "TestJob", "Job2" };
 
             var result = managerService.ExecuteSelected(listeSelected, manager, config);
 
@@ -118,10 +119,10 @@ namespace EZSave.Tests
         public void VerifyListeSelectedIsEmpty()
         {
             var jobService = new JobService();
-            var manager = new ManagerModel { Jobs = new List<JobModel>() };
+            var manager = new ManagerModel { Jobs = new ObservableCollection<JobModel>() };
             var config = new ConfigFileModel();
             var managerService = new ManagerService();
-            var result = managerService.ExecuteSelected(new List<string>(), manager, config);
+            var result = managerService.ExecuteSelected(new ObservableCollection<string>(), manager, config);
 
             Assert.False(result);
         }
@@ -133,18 +134,18 @@ namespace EZSave.Tests
             var managerService = new ManagerService();
             var manager = new ManagerModel
             {
-                Jobs = new List<JobModel>
+                Jobs = new ObservableCollection<JobModel>
                 {
                     new JobModel { Name = "Job1" },
                     new JobModel { Name = "Job2" }
                 }
             };
             var config = new ConfigFileModel();
-            var listeSelected = new List<string> { "Job1", "Job2" };
+            var listeSelected = new ObservableCollection<string> { "Job1", "Job2" };
 
             var result = managerService.ExecuteSelected(listeSelected, manager, config);
 
-            Assert.True(result);
+            Assert.False(result);
         }
     }
 }

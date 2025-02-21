@@ -243,14 +243,26 @@
   <data name="MainOption3" xml:space="preserve">
     <value>Changer la langue</value>
   </data>
+  <data name="PauseJob" xml:space="preserve">
+    <value>Pause</value>
+  </data>
+  <data name="PlayJob" xml:space="preserve">
+    <value>Lancer</value>
+  </data>
   <data name="RefreshJobs" xml:space="preserve">
     <value>Rafraîchir</value>
+  </data>
+  <data name="ResumeJob" xml:space="preserve">
+    <value>Relancer</value>
   </data>
   <data name="Save" xml:space="preserve">
     <value>Sauvegarder</value>
   </data>
   <data name="StatusFilePathChanging" xml:space="preserve">
     <value>Chemin du fichier de status :  </value>
+  </data>
+  <data name="StopJob" xml:space="preserve">
+    <value>Arrêter</value>
   </data>
   <data name="TitleListBox" xml:space="preserve">
     <value>Jobs prêts à être exécutés : </value>

@@ -1,37 +1,29 @@
 ﻿using EZSave.Core.Models;
 using EZSave.Core.Services;
 
-
-
-
-
 using EZSave.GUI.Views;
-
-
-using MS.WindowsAPICodePack.Internal;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
-using System.Windows;
 using System.Windows.Input;
 
 namespace EZSave.GUI.ViewModels
 {
-    public class MainWindowViewModel : INotifyPropertyChanged
+    public class MainWindowViewModel : BaseViewModel, INotifyPropertyChanged
     {
         public LanguageViewModel LanguageViewModel { get; set; }
         public ICommand OpenConfigCommand { get; }
 
         private ConfigFileModel configFileModel { get; set; }
 
-        private  ManagerService managerService;
-        private  ConfigService configService;
-    
+        private ManagerService managerService;
+        private ConfigService configService;
+
         public ManagerModel managerModel;
 
         private JobModel _elementSelectionne;
+
         public JobModel ElementSelectionne
         {
             get => _elementSelectionne;
@@ -39,13 +31,15 @@ namespace EZSave.GUI.ViewModels
         }
 
         private string _elementSelectionneList;
+
         public string ElementSelectionneList
         {
-            get =>  _elementSelectionneList;
+            get => _elementSelectionneList;
             set => SetProperty(ref _elementSelectionneList, value);
         }
 
         private string _message;
+
         public string Message
         {
             get => _message;
@@ -62,6 +56,7 @@ namespace EZSave.GUI.ViewModels
         //    set => SetProperty(ref jobs, value);
         //}
         public ICommand AddToListCommand { get; }
+
         public ICommand RemoveToListCommand { get; }
 
         public ICommand RefreshCommand { get; set; }
@@ -76,20 +71,21 @@ namespace EZSave.GUI.ViewModels
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public Thread tempThread; 
+
         public MainWindowViewModel()
         {
+            BaseViewModel.MainWindowViewModel = this;
+
             Initialize();
 
             LanguageViewModel = new LanguageViewModel();
 
-        
-//             configService = new ConfigService();
-//             managerService = new ManagerService();
+            //             configService = new ConfigService();
+            //             managerService = new ManagerService();
 
             //configFileModel = new ConfigFileModel();
-            
-            //managerModel = new ManagerModel();
 
+            //managerModel = new ManagerModel();
 
             RefreshCommand = new RelayCommand(RefreshJobs);
             OpenJobWindowCommand = new RelayCommand(OpenAddJobWindow);
@@ -97,13 +93,10 @@ namespace EZSave.GUI.ViewModels
 
             OpenConfigCommand = new RelayCommand(OpenConfigWindow);
 
-
-
             PlayThread = new RelayCommand(Play);
             PauseThread = new RelayCommand(Pause);
             ResumeThread = new RelayCommand(Resume);// IDEE Mettre le resume avec le PLay
             StopThread = new RelayCommand(Stop);
-
 
             AddToListCommand = new RelayCommand(AddToList);
             RemoveToListCommand = new RelayCommand(DelFromList);
@@ -112,21 +105,17 @@ namespace EZSave.GUI.ViewModels
             //RefreshJobs();
         }
 
-        
- private void SetProperty<T>(ref T old, T @new, [CallerMemberName] string name = "")
- {
-     old = @new;
-     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-
-     
- }
+        private void SetProperty<T>(ref T old, T @new, [CallerMemberName] string name = "")
+        {
+            old = @new;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
 
         private void OpenConfigWindow()
         {
-
             var configWindow = new ConfigWindow(managerModel, configFileModel);
             configWindow.ShowDialog();
-            RefreshJobs(); // Rafraîchir après fermeture de la config    
+            RefreshJobs(); // Rafraîchir après fermeture de la config
         }
 
         private void Initialize()
@@ -138,9 +127,7 @@ namespace EZSave.GUI.ViewModels
             configService.SetConfigDestination("conf.json", configFileModel);
             configService.LoadConfigFile(configFileModel);
             managerService.Read(managerModel, configFileModel);
-
         }
-
         private void Play() // Button to bind
         {
             string jobName = _elementSelectionne.Name;
@@ -169,39 +156,33 @@ namespace EZSave.GUI.ViewModels
         {
             managerService.ResumeThread(tempThread); //TODO methode qui relance le job 
         }
-        private void RefreshJobs()
+        public void RefreshJobs()
         {
             Jobs.Clear();
+            //List.Clear();
 
             if (managerModel.Jobs != null && managerModel.Jobs.Any())
             {
                 foreach (var job in managerModel.Jobs)
                 {
-                    Jobs.Add(job); 
+                    Jobs.Add(job);
                 }
             }
             else
             {
-                Debug.WriteLine("Aucun job à ajouter.");
+                Debug.WriteLine("Aucun job à changer dans les listes.");
             }
-            
         }
 
         private void OpenAddJobWindow()
         {
-                        var window = new AddJobWindow(managerModel, configFileModel);
+            var window = new AddJobWindow(managerModel, configFileModel);
             window.ShowDialog();
+            RefreshJobs();
         }
 
         private void ExecuteJobs()
         {
-            //configFileModel.LogFileDestination = "Log";
-            //configFileModel.StatusFileDestination = "Status";
-
-            managerService.Execute(managerModel, configFileModel);
-        
-       
-
             bool result = managerService.Execute(managerModel, configFileModel);
 
             if (result)
@@ -216,20 +197,15 @@ namespace EZSave.GUI.ViewModels
 
         private void ExecuteJobSelection(ObservableCollection<string> selectedNames)
         {
-            
-                //configFileModel.LogFileDestination = "Log";
-                //configFileModel.StatusFileDestination = "Status";
-
-                bool result = managerService.ExecuteSelected(selectedNames, managerModel, configFileModel);
-                if (result)
-                {
-                    Message = Properties.Resources.JobsExecutedSuccess;
-                }
-                else
-                {
-                    Message = Properties.Resources.JobsExecutedFail;
-                }
-            
+            bool result = managerService.ExecuteSelected(selectedNames, managerModel, configFileModel);
+            if (result)
+            {
+                Message = Properties.Resources.JobsExecutedSuccess;
+            }
+            else
+            {
+                Message = Properties.Resources.JobsExecutedFail;
+            }
         }
 
         private void AddToList()
@@ -241,11 +217,10 @@ namespace EZSave.GUI.ViewModels
             }
         }
 
-        private void DelFromList()
+        public void DelFromList()
         {
             if (ElementSelectionneList != null)
             {
-                
                 List.Remove(ElementSelectionneList);
             }
 
@@ -254,6 +229,5 @@ namespace EZSave.GUI.ViewModels
                 Debug.WriteLine(item);
             }
         }
-
     }
 }
