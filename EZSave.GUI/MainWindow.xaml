@@ -67,7 +67,7 @@
             <Button
                 Grid.Column="5"
                 Command="{Binding PlayThread}"
-                CommandParameter="{Binding List}"
+                
                 Content="{Binding LanguageViewModel.ButtonPlay}" />
             <Button
                 Grid.Column="6"
