@@ -62,5 +62,27 @@ namespace EZSave.Core.Services
                 File.WriteAllText(statusFilePath, jsonString);
             }
         }
+
+
+        public int GetProgression(string jobName, ConfigFileModel configFileModel)
+        {
+            string statusFilePath = Path.Combine(configFileModel.StatusFileDestination, "_status.json");
+            if (!File.Exists(statusFilePath))
+                return 0;
+
+            lock (obj)
+            {
+                string json = File.ReadAllText(statusFilePath);
+                if (!string.IsNullOrWhiteSpace(json))
+                {
+                    var liststatus = JsonSerializer.Deserialize<Dictionary<string, StatusModel>>(json);
+                    if (liststatus != null && liststatus.ContainsKey(jobName))
+                    {
+                        return liststatus[jobName].Progression;
+                    }
+                }
+            }
+            return 0;
+        }
     }
 }

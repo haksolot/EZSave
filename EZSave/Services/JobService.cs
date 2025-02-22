@@ -76,7 +76,7 @@ namespace EZSave.Core.Services
                 pauseEvent.WaitOne();
                 cancellationToken.ThrowIfCancellationRequested();
 
-                Thread.Sleep(4000);
+                Thread.Sleep(4000); // Thread.Sleep pour mieux voir le pause et stop
                 string relativePath = file.Substring(job.Source.Length).TrimStart(Path.DirectorySeparatorChar);
                 string destinationFile = Path.Combine(job.Destination, relativePath);
                 string? directoryPath = Path.GetDirectoryName(destinationFile);
@@ -179,7 +179,7 @@ namespace EZSave.Core.Services
                     pauseEvent.WaitOne();
                     cancellationToken.ThrowIfCancellationRequested();
 
-                    Thread.Sleep(4000);
+                    Thread.Sleep(4000); // Thread.Sleep pour mieux voir le pause et stop
 
                     string? directoryPath = Path.GetDirectoryName(destinationFile);
                     if (!string.IsNullOrEmpty(directoryPath))
@@ -199,12 +199,12 @@ namespace EZSave.Core.Services
                     using (FileStream sourceStream = new FileStream(file, FileMode.Open, FileAccess.Read))
                     using (FileStream destinationStream = new FileStream(destinationFile, FileMode.Create, FileAccess.Write))
                     {
-                        byte[] buffer = new byte[81920]; // 80 KB buffer
+                        byte[] buffer = new byte[81920]; 
                         int bytesRead;
 
                         while ((bytesRead = sourceStream.Read(buffer, 0, buffer.Length)) > 0)
                         {
-                            cancellationToken.ThrowIfCancellationRequested(); // ✅ Vérifie si on doit stopper immédiatement
+                            cancellationToken.ThrowIfCancellationRequested(); 
                             destinationStream.Write(buffer, 0, bytesRead);
                         }
                     }

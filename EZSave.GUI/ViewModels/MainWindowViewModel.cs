@@ -19,6 +19,7 @@ namespace EZSave.GUI.ViewModels
 
         private ManagerService managerService;
         private ConfigService configService;
+        private StatusService statusService;
 
         public ManagerModel managerModel;
 
@@ -46,20 +47,20 @@ namespace EZSave.GUI.ViewModels
             set => SetProperty(ref _message, value);
         }
 
+        private int progression;
+        public int Progression
+        {
+            get => progression;
+            set => SetProperty(ref progression, value);
+        }
+
+
         List<Thread> threads = new List<Thread>();
         Dictionary<string, (Thread thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> JobStates = new();
-        //Dictionary<string, Thread> dictionary = new Dictionary<string, Thread>();
-        //Dictionary<string, CancellationTokenSource> cancellationTokens = new Dictionary<string, CancellationTokenSource>();
-        //Dictionary<string, ManualResetEvent> pauseEvents = new Dictionary<string, ManualResetEvent>();
         public ObservableCollection<string> List { get; set; } = new ObservableCollection<string>();
         public ObservableCollection<JobModel> Jobs { get; set; } = new ObservableCollection<JobModel>();
 
-        //public IEnumerable<JobModel> jobs;
-        //public IEnumerable<JobModel> Jobs
-        //{
-        //    get => jobs;
-        //    set => SetProperty(ref jobs, value);
-        //}
+        public ICommand UpdateProgressionCommand { get; }
         public ICommand AddToListCommand { get; }
         public ICommand RemoveToListCommand { get; }
         public ICommand RemoveAllToListCommand { get; }
@@ -81,12 +82,6 @@ namespace EZSave.GUI.ViewModels
 
             LanguageViewModel = new LanguageViewModel();
 
-            //             configService = new ConfigService();
-            //             managerService = new ManagerService();
-
-            //configFileModel = new ConfigFileModel();
-
-            //managerModel = new ManagerModel();
 
             RefreshCommand = new RelayCommand(RefreshJobs);
             OpenJobWindowCommand = new RelayCommand(OpenAddJobWindow);
@@ -99,8 +94,8 @@ namespace EZSave.GUI.ViewModels
             AddAllToListCommand = new RelayCommand(AddAllToList);
             PauseCommand = new RelayCommand(Pause);
             StopCommand = new RelayCommand(Stop);
+            UpdateProgressionCommand = new RelayCommand(UpdateProgression);
             ExecuteJobSelectionCommand = new RelayCommand<ObservableCollection<string>>(ExecuteJobSelection);
-            //RefreshJobs();
         }
 
         private void SetProperty<T>(ref T old, T @new, [CallerMemberName] string name = "")
@@ -113,7 +108,7 @@ namespace EZSave.GUI.ViewModels
         {
             var configWindow = new ConfigWindow(managerModel, configFileModel);
             configWindow.ShowDialog();
-            RefreshJobs(); // Rafraîchir après fermeture de la config
+            RefreshJobs(); 
         }
 
         private void Initialize()
@@ -130,7 +125,6 @@ namespace EZSave.GUI.ViewModels
         public void RefreshJobs()
         {
             Jobs.Clear();
-            //List.Clear();
 
             if (managerModel.Jobs != null && managerModel.Jobs.Any())
             {
@@ -226,6 +220,14 @@ namespace EZSave.GUI.ViewModels
             {
                 Debug.WriteLine($"{ElementSelectionneList} mis en arret");
                 managerService.Stop(ElementSelectionneList, JobStates);
+            }
+        }
+
+        private void UpdateProgression()
+        {
+            if (ElementSelectionneList != null)
+            { 
+                Progression = statusService.GetProgression(ElementSelectionneList, configFileModel);
             }
         }
     }

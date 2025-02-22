@@ -48,47 +48,6 @@ namespace EZSave.Core.Services
             return false;
         }
 
-        //public bool Execute(ManagerModel manager, ConfigFileModel configFileModel)
-        //{
-        //    object obj = new object();
-        //    List<Thread> threads = new List<Thread>();
-        //    bool hasFailed = false;
-
-        //    if (manager.Jobs.Count == 0)
-        //    {
-        //        return false;
-        //    }
-
-        //    foreach (JobModel job in manager.Jobs)
-        //    {
-        //        Thread thread = new Thread(() =>
-        //        {
-        //            var service = new JobService();
-        //            var logService = new LogService();
-        //            var statusService = new StatusService();
-        //            bool check = service.Start(job, statusService, logService, configFileModel, job.Name);
-
-        //            if (!check)
-        //            {
-        //                lock (obj)
-        //                {
-        //                    hasFailed = true;
-        //                }
-        //            }
-        //        });
-
-        //        thread.Start();
-        //        threads.Add(thread);
-        //    }
-
-        //    foreach (var thread in threads)
-        //    {
-        //        thread.Join();
-        //    }
-
-        //    return !hasFailed;
-        //}
-
         public bool ExecuteSelected(
      Dictionary<string, (Thread Thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> jobStates,
      ObservableCollection<string> listeSelected,
@@ -133,8 +92,7 @@ namespace EZSave.Core.Services
 
                 var cts = new CancellationTokenSource();
                 var pauseEvent = new ManualResetEvent(true);
-                //cancellationTokens[job.Name] = cts;
-                //pauseEvents[job.Name] = pauseEventNouveau;
+              
                 Thread thread = null; 
                 thread = new Thread(() =>
                 {
@@ -164,11 +122,9 @@ namespace EZSave.Core.Services
                         Console.WriteLine("Erreur");
                     }
                 });
-
                 jobStates[job.Name] = (thread, cts, pauseEvent, "Running");
                 thread.Start();
             }
-
             return !hasFailed;
         }
 
@@ -196,18 +152,14 @@ namespace EZSave.Core.Services
                 if (jobState.Thread.IsAlive)
                 {
                     jobState.Thread.Join(); 
-                }
-
-               
+                }              
                 jobStates[jobName] = (jobState.Thread, jobState.Cts, jobState.PauseEvent, "Stopped"); 
                 foreach (var kvp in jobStates)
                 {
                     Debug.WriteLine($"Job: {kvp.Key}, Status: {kvp.Value.Status}");
                 }
-
                 return true;
             }
-
             return false;
         }
 
