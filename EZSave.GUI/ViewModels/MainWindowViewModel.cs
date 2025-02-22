@@ -46,6 +46,11 @@ namespace EZSave.GUI.ViewModels
             set => SetProperty(ref _message, value);
         }
 
+        List<Thread> threads = new List<Thread>();
+        Dictionary<string, (Thread thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> JobStates = new();
+        //Dictionary<string, Thread> dictionary = new Dictionary<string, Thread>();
+        //Dictionary<string, CancellationTokenSource> cancellationTokens = new Dictionary<string, CancellationTokenSource>();
+        //Dictionary<string, ManualResetEvent> pauseEvents = new Dictionary<string, ManualResetEvent>();
         public ObservableCollection<string> List { get; set; } = new ObservableCollection<string>();
         public ObservableCollection<JobModel> Jobs { get; set; } = new ObservableCollection<JobModel>();
 
@@ -56,13 +61,15 @@ namespace EZSave.GUI.ViewModels
         //    set => SetProperty(ref jobs, value);
         //}
         public ICommand AddToListCommand { get; }
-
         public ICommand RemoveToListCommand { get; }
-
+        public ICommand RemoveAllToListCommand { get; }
+        public ICommand AddAllToListCommand { get; }
         public ICommand RefreshCommand { get; set; }
         public ICommand ExecuteAllJobsCommand { get; set; }
         public ICommand OpenJobWindowCommand { get; set; }
         public ICommand ExecuteJobSelectionCommand { get; set; }
+        public ICommand PauseCommand { get; set; }
+        public ICommand StopCommand { get; set; }
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -83,12 +90,15 @@ namespace EZSave.GUI.ViewModels
 
             RefreshCommand = new RelayCommand(RefreshJobs);
             OpenJobWindowCommand = new RelayCommand(OpenAddJobWindow);
-            ExecuteAllJobsCommand = new RelayCommand(ExecuteJobs);
 
             OpenConfigCommand = new RelayCommand(OpenConfigWindow);
 
             AddToListCommand = new RelayCommand(AddToList);
             RemoveToListCommand = new RelayCommand(DelFromList);
+            RemoveAllToListCommand = new RelayCommand(DelAllFromList);
+            AddAllToListCommand = new RelayCommand(AddAllToList);
+            PauseCommand = new RelayCommand(Pause);
+            StopCommand = new RelayCommand(Stop);
             ExecuteJobSelectionCommand = new RelayCommand<ObservableCollection<string>>(ExecuteJobSelection);
             //RefreshJobs();
         }
@@ -142,23 +152,11 @@ namespace EZSave.GUI.ViewModels
             RefreshJobs();
         }
 
-        private void ExecuteJobs()
-        {
-            bool result = managerService.Execute(managerModel, configFileModel);
-
-            if (result)
-            {
-                Message = Properties.Resources.JobsExecutedSuccess;
-            }
-            else
-            {
-                Message = Properties.Resources.JobsExecutedFail;
-            }
-        }
-
         private void ExecuteJobSelection(ObservableCollection<string> selectedNames)
         {
-            bool result = managerService.ExecuteSelected(selectedNames, managerModel, configFileModel);
+            Debug.WriteLine($"element selectionné { ElementSelectionneList}");
+
+            bool result = managerService.ExecuteSelected(JobStates, selectedNames, managerModel, configFileModel, ElementSelectionneList);
             if (result)
             {
                 Message = Properties.Resources.JobsExecutedSuccess;
@@ -171,11 +169,26 @@ namespace EZSave.GUI.ViewModels
 
         private void AddToList()
         {
-            if (ElementSelectionne != null)
+            if (ElementSelectionne != null && !List.Contains(ElementSelectionne.Name))
             {
                 var valeur = ElementSelectionne.Name;
                 List.Add(valeur);
             }
+        }
+
+        private void AddAllToList()
+        {
+            if (managerModel.Jobs.Count != 0)
+            {
+                foreach (var item in managerModel.Jobs)
+                {
+                    if (!List.Contains(item.Name))
+                    {
+                        List.Add(item.Name);
+                    }
+                }
+            }
+            
         }
 
         public void DelFromList()
@@ -190,5 +203,31 @@ namespace EZSave.GUI.ViewModels
                 Debug.WriteLine(item);
             }
         }
+
+        public void DelAllFromList()
+        {
+            if (List.Count != 0)
+            {
+                List.Clear();
+            }
+        }
+
+        public void Pause()
+        {
+            if (ElementSelectionneList != null)
+            {
+                managerService.Pause(ElementSelectionneList, JobStates);
+            }
+        }
+
+        public void Stop()
+        {
+            if (ElementSelectionneList != null)
+            {
+                Debug.WriteLine($"{ElementSelectionneList} mis en arret");
+                managerService.Stop(ElementSelectionneList, JobStates);
+            }
+        }
     }
+    
 }

@@ -31,7 +31,8 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
@@ -39,12 +40,13 @@
             <Button Content="🇫🇷" Command="{Binding LanguageViewModel.ChangeLanguageCommand}" CommandParameter="fr-FR" Grid.Column="0"/>
             <Button Content="en" Command="{Binding LanguageViewModel.ChangeLanguageCommand}" CommandParameter="en-US" Grid.Column="1"/>
             <Button Content="{Binding LanguageViewModel.ButtonAdd}" Command="{Binding OpenJobWindowCommand}" Grid.Column="2"/>
-            <Button Content="{Binding LanguageViewModel.ButtonExecuteAll}" Command="{Binding ExecuteAllJobsCommand}" Grid.Column="3"/>
             <Button Content="{Binding LanguageViewModel.ButtonConfig}" Command="{Binding OpenConfigCommand}" Grid.Column="4"/>
+            <Button Content="{Binding LanguageViewModel.ButtonPlay}" Command="{Binding ExecuteJobSelectionCommand}" CommandParameter="{Binding List}" Grid.Column="5"/>
+            <Button Content="{Binding LanguageViewModel.ButtonPause}" Command="{Binding PauseCommand}" CommandParameter="{Binding List}" Grid.Column="6"/>
+            <Button Content="{Binding LanguageViewModel.ButtonStop}"  Command="{Binding StopCommand}" CommandParameter="{Binding List}" Grid.Column="7"/>
 
 
 
-            <Button Content="{Binding LanguageViewModel.ButtonExecuteOne}" Command="{Binding ExecuteJobSelectionCommand}" CommandParameter="{Binding List}" Grid.Column="6"/>
             
         </Grid>
 
@@ -73,10 +75,16 @@
             </DataGrid>
 
             <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                <Button Content="☑"
+                        Command="{Binding AddAllToListCommand}"/>
+                <Button Content="☒" 
+                        Command="{Binding RemoveAllToListCommand}" />
                 <Button Content="▶︎" 
                         Command="{Binding AddToListCommand}" />
                 <Button Content="◀︎" 
                         Command="{Binding RemoveToListCommand}" />
+                
+                
             </StackPanel>
 
             <GroupBox Grid.Column="2" Header="{Binding LanguageViewModel.JobBeingExecuted}" Padding="5">

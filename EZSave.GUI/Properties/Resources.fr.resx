@@ -243,6 +243,12 @@
   <data name="MainOption3" xml:space="preserve">
     <value>Changer la langue</value>
   </data>
+  <data name="Pause" xml:space="preserve">
+    <value>Pause</value>
+  </data>
+  <data name="Play" xml:space="preserve">
+    <value>Lancer</value>
+  </data>
   <data name="RefreshJobs" xml:space="preserve">
     <value>Rafraîchir</value>
   </data>
@@ -251,6 +257,9 @@
   </data>
   <data name="StatusFilePathChanging" xml:space="preserve">
     <value>Chemin du fichier de status :  </value>
+  </data>
+  <data name="Stop" xml:space="preserve">
+    <value>Arrêter</value>
   </data>
   <data name="TitleListBox" xml:space="preserve">
     <value>Jobs prêts à être exécutés : </value>

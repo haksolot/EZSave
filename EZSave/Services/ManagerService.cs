@@ -1,5 +1,6 @@
 ﻿using EZSave.Core.Models;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace EZSave.Core.Services
 {
@@ -11,6 +12,13 @@ namespace EZSave.Core.Services
             {
                 Add(job, manager);
             }
+        }
+
+        public void ThreadedAction()
+        {
+            ManualResetEvent pauseEvent = new ManualResetEvent(false);
+            bool isRunning = false;
+            bool isStopped = false;
         }
 
         public bool Add(JobModel job, ManagerModel manager)
@@ -40,57 +48,62 @@ namespace EZSave.Core.Services
             return false;
         }
 
-        public bool Execute(ManagerModel manager, ConfigFileModel configFileModel)
+        //public bool Execute(ManagerModel manager, ConfigFileModel configFileModel)
+        //{
+        //    object obj = new object();
+        //    List<Thread> threads = new List<Thread>();
+        //    bool hasFailed = false;
+
+        //    if (manager.Jobs.Count == 0)
+        //    {
+        //        return false;
+        //    }
+
+        //    foreach (JobModel job in manager.Jobs)
+        //    {
+        //        Thread thread = new Thread(() =>
+        //        {
+        //            var service = new JobService();
+        //            var logService = new LogService();
+        //            var statusService = new StatusService();
+        //            bool check = service.Start(job, statusService, logService, configFileModel, job.Name);
+
+        //            if (!check)
+        //            {
+        //                lock (obj)
+        //                {
+        //                    hasFailed = true;
+        //                }
+        //            }
+        //        });
+
+        //        thread.Start();
+        //        threads.Add(thread);
+        //    }
+
+        //    foreach (var thread in threads)
+        //    {
+        //        thread.Join();
+        //    }
+
+        //    return !hasFailed;
+        //}
+
+        public bool ExecuteSelected(
+     Dictionary<string, (Thread Thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> jobStates,
+     ObservableCollection<string> listeSelected,
+     ManagerModel manager,
+     ConfigFileModel configFileModel, 
+     string jobToResume)
         {
             object obj = new object();
-            List<Thread> threads = new List<Thread>();
-            bool hasFailed = false;
-
-            if (manager.Jobs.Count == 0)
-            {
-                return false;
-            }
-
-            foreach (JobModel job in manager.Jobs)
-            {
-                Thread thread = new Thread(() =>
-                {
-                    var service = new JobService();
-                    var logService = new LogService();
-                    var statusService = new StatusService();
-                    bool check = service.Start(job, statusService, logService, configFileModel, job.Name);
-
-                    if (!check)
-                    {
-                        lock (obj)
-                        {
-                            hasFailed = true;
-                        }
-                    }
-                });
-
-                thread.Start();
-                threads.Add(thread);
-            }
-
-            foreach (var thread in threads)
-            {
-                thread.Join();
-            }
-
-            return !hasFailed;
-        }
-
-        public bool ExecuteSelected(ObservableCollection<string> listeSelected, ManagerModel manager, ConfigFileModel configFileModel)
-        {
-            object obj = new object();
-            List<Thread> threads = new List<Thread>();
             bool hasFailed = false;
 
             if (listeSelected == null || listeSelected.Count == 0 || manager?.Jobs == null || configFileModel == null)
             {
                 return false;
             }
+
             var service = new JobService();
             var logService = new LogService();
             var statusService = new StatusService();
@@ -102,28 +115,101 @@ namespace EZSave.Core.Services
 
             foreach (var job in jobsToExecute)
             {
-                Thread thread = new Thread(() =>
+                if (jobStates.TryGetValue(job.Name, out var jobState))
                 {
-                    bool check = service.Start(job, statusService, logService, configFileModel, job.Name);
-                    if (!check)
+                    if (jobState.Status == "Paused" && (jobToResume == job.Name || jobToResume == null))
                     {
-                        lock (obj)
+                        jobState.PauseEvent.Set();
+                        jobStates[job.Name] = (jobState.Thread, jobState.Cts, jobState.PauseEvent, "Running");
+                        foreach (var kvp in jobStates)
                         {
-                            hasFailed = true;
+                            Debug.WriteLine($"Job: {kvp.Key}, Status: {kvp.Value.Status}");
                         }
+                        Debug.WriteLine($"{job.Name} a repris.");
+                    }
+                    continue;
+                }
+
+
+                var cts = new CancellationTokenSource();
+                var pauseEvent = new ManualResetEvent(true);
+                //cancellationTokens[job.Name] = cts;
+                //pauseEvents[job.Name] = pauseEventNouveau;
+                Thread thread = null; 
+                thread = new Thread(() =>
+                {
+                    try
+                    {
+                        pauseEvent.WaitOne();
+
+                        if (!cts.Token.IsCancellationRequested)
+                        {
+                            bool success = service.Start(job, statusService, logService, configFileModel, job.Name, pauseEvent, cts.Token);
+                            if (!success)
+                            {
+                                lock (obj)
+                                {
+                                    hasFailed = true;
+                                    jobStates[job.Name] = (thread, cts, pauseEvent, "Stopped");
+                                    foreach (var kvp in jobStates)
+                                    {
+                                        Debug.WriteLine($"Job: {kvp.Key}, Status: {kvp.Value.Status}");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Erreur");
                     }
                 });
 
+                jobStates[job.Name] = (thread, cts, pauseEvent, "Running");
                 thread.Start();
-                threads.Add(thread);
-            }
-
-            foreach (var thread in threads)
-            {
-                thread.Join();
             }
 
             return !hasFailed;
         }
+
+        public bool Pause(string jobName, Dictionary<string, (Thread Thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> jobStates)
+        {
+            if (jobStates.TryGetValue(jobName, out var jobState) && jobState.Status == "Running")
+            {
+                jobState.PauseEvent.Reset();
+                jobStates[jobName] = (jobState.Thread, jobState.Cts, jobState.PauseEvent, "Paused");
+                foreach (var kvp in jobStates)
+                {
+                    Debug.WriteLine($"Job: {kvp.Key}, Status: {kvp.Value.Status}");
+                }
+                return true;
+            }
+            return false;
+        }
+
+        public bool Stop(string jobName, Dictionary<string, (Thread Thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> jobStates)
+        {
+            if (jobStates.TryGetValue(jobName, out var jobState))
+            {
+                jobState.Cts.Cancel();
+
+                if (jobState.Thread.IsAlive)
+                {
+                    jobState.Thread.Join(); 
+                }
+
+               
+                jobStates[jobName] = (jobState.Thread, jobState.Cts, jobState.PauseEvent, "Stopped"); 
+                foreach (var kvp in jobStates)
+                {
+                    Debug.WriteLine($"Job: {kvp.Key}, Status: {kvp.Value.Status}");
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
     }
 }
