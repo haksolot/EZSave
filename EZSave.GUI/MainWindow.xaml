@@ -28,7 +28,6 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-
         <Grid Grid.Row="0" Margin="0,0,0,15">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -67,7 +66,7 @@
             <Button
                 Grid.Column="5"
                 Command="{Binding PlayThread}"
-                
+
                 Content="{Binding LanguageViewModel.ButtonPlay}" />
             <Button
                 Grid.Column="6"
@@ -90,9 +89,7 @@
                 Command="{Binding ExecuteJobSelectionCommand}"
                 CommandParameter="{Binding List}"
                 Content="{Binding LanguageViewModel.ButtonExecuteOne}" />
-
         </Grid>
-
 
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
@@ -156,6 +153,9 @@
             HorizontalAlignment="Center"
             FontWeight="Bold"
             Text="{Binding Message}" />
-    </Grid>
 
+        <GroupBox Grid.Row="3" Header="Logs">
+            <ListBox x:Name="LogsListBox" ItemsSource="{Binding Logs}" />
+        </GroupBox>
+    </Grid>
 </Window>

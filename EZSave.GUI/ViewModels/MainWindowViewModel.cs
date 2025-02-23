@@ -1,12 +1,12 @@
-﻿using EZSave.Core.Models;
-using EZSave.Core.Services;
-
-using EZSave.GUI.Views;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using System.Windows.Threading;
+using EZSave.Core.Models;
+using EZSave.Core.Services;
+using EZSave.GUI.Views;
 
 namespace EZSave.GUI.ViewModels
 {
@@ -23,6 +23,9 @@ namespace EZSave.GUI.ViewModels
         public ManagerModel managerModel;
 
         private JobModel _elementSelectionne;
+
+        private SocketServerService _socketServer;
+        private Thread _serverThread;
 
         public JobModel ElementSelectionne
         {
@@ -70,7 +73,7 @@ namespace EZSave.GUI.ViewModels
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        public Thread tempThread; 
+        public Thread tempThread;
 
         public MainWindowViewModel()
         {
@@ -127,7 +130,12 @@ namespace EZSave.GUI.ViewModels
             configService.SetConfigDestination("conf.json", configFileModel);
             configService.LoadConfigFile(configFileModel);
             managerService.Read(managerModel, configFileModel);
+
+            _socketServer = new SocketServerService(6969, managerModel, configFileModel);
+            _serverThread = new Thread(_socketServer.Start) { IsBackground = true };
+            _serverThread.Start();
         }
+
         private void Play() // Button to bind
         {
             string jobName = _elementSelectionne.Name;
@@ -145,17 +153,19 @@ namespace EZSave.GUI.ViewModels
 
         private void Stop()
         {
-            managerService.StopThread(tempThread); //TODO methode qui arrete totalement le job 
+            managerService.StopThread(tempThread); //TODO methode qui arrete totalement le job
         }
 
         private void Pause()
         {
-            managerService.PauseThread(tempThread); //TODO methode qui pause le job 
+            managerService.PauseThread(tempThread); //TODO methode qui pause le job
         }
+
         private void Resume()
         {
-            managerService.ResumeThread(tempThread); //TODO methode qui relance le job 
+            managerService.ResumeThread(tempThread); //TODO methode qui relance le job
         }
+
         public void RefreshJobs()
         {
             Jobs.Clear();
