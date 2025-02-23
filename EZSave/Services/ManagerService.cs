@@ -52,7 +52,7 @@ namespace EZSave.Core.Services
      Dictionary<string, (Thread Thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> jobStates,
      ObservableCollection<string> listeSelected,
      ManagerModel manager,
-     ConfigFileModel configFileModel, 
+     ConfigFileModel configFileModel,
      string jobToResume)
         {
             object obj = new object();
@@ -89,11 +89,10 @@ namespace EZSave.Core.Services
                     continue;
                 }
 
-
                 var cts = new CancellationTokenSource();
                 var pauseEvent = new ManualResetEvent(true);
-              
-                Thread thread = null; 
+
+                Thread thread = null;
                 thread = new Thread(() =>
                 {
                     try
@@ -151,9 +150,9 @@ namespace EZSave.Core.Services
 
                 if (jobState.Thread.IsAlive)
                 {
-                    jobState.Thread.Join(); 
-                }              
-                jobStates[jobName] = (jobState.Thread, jobState.Cts, jobState.PauseEvent, "Stopped"); 
+                    jobState.Thread.Join();
+                }
+                jobStates[jobName] = (jobState.Thread, jobState.Cts, jobState.PauseEvent, "Stopped");
                 foreach (var kvp in jobStates)
                 {
                     Debug.WriteLine($"Job: {kvp.Key}, Status: {kvp.Value.Status}");
@@ -162,6 +161,5 @@ namespace EZSave.Core.Services
             }
             return false;
         }
-
     }
 }

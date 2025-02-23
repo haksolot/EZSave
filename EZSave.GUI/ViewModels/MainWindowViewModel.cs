@@ -93,10 +93,10 @@ namespace EZSave.GUI.ViewModels
 
             OpenConfigCommand = new RelayCommand(OpenConfigWindow);
 
-            PlayThread = new RelayCommand(Play);
-            PauseThread = new RelayCommand(Pause);
-            ResumeThread = new RelayCommand(Resume);// IDEE Mettre le resume avec le PLay
-            StopThread = new RelayCommand(Stop);
+            //PlayThread = new RelayCommand(Play);
+            //PauseThread = new RelayCommand(Pause);
+            //ResumeThread = new RelayCommand(Resume);// IDEE Mettre le resume avec le PLay
+            //StopThread = new RelayCommand(Stop);
 
             AddToListCommand = new RelayCommand(AddToList);
             RemoveToListCommand = new RelayCommand(DelFromList);
@@ -136,35 +136,35 @@ namespace EZSave.GUI.ViewModels
             _serverThread.Start();
         }
 
-        private void Play() // Button to bind
-        {
-            string jobName = _elementSelectionne.Name;
-            var jobmodel = new JobModel();
+        //private void Play() // Button to bind
+        //{
+        //    string jobName = _elementSelectionne.Name;
+        //    var jobmodel = new JobModel();
 
-            foreach (var job in managerModel.Jobs)
-            {
-                if (job.Name == jobName)
-                {
-                    jobmodel = job;
-                }
-            }
-            tempThread = managerService.ExecuteAsThread(jobmodel, managerModel, configFileModel); //TODO methode qui lance le job avec un thread
-        }
+        //    foreach (var job in managerModel.Jobs)
+        //    {
+        //        if (job.Name == jobName)
+        //        {
+        //            jobmodel = job;
+        //        }
+        //    }
+        //    tempThread = managerService.ExecuteAsThread(jobmodel, managerModel, configFileModel); //TODO methode qui lance le job avec un thread
+        //}
 
-        private void Stop()
-        {
-            managerService.StopThread(tempThread); //TODO methode qui arrete totalement le job
-        }
+        //private void Stop()
+        //{
+        //    managerService.StopThread(tempThread); //TODO methode qui arrete totalement le job
+        //}
 
-        private void Pause()
-        {
-            managerService.PauseThread(tempThread); //TODO methode qui pause le job
-        }
+        //private void Pause()
+        //{
+        //    managerService.PauseThread(tempThread); //TODO methode qui pause le job
+        //}
 
-        private void Resume()
-        {
-            managerService.ResumeThread(tempThread); //TODO methode qui relance le job
-        }
+        //private void Resume()
+        //{
+        //    managerService.ResumeThread(tempThread); //TODO methode qui relance le job
+        //}
 
         public void RefreshJobs()
         {
