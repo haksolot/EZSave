@@ -30,38 +30,24 @@
 
         <Grid Grid.Row="0" Margin="0,0,0,15">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="1*" />
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <Button
-                Grid.Column="0"
-                Command="{Binding LanguageViewModel.ChangeLanguageCommand}"
-                CommandParameter="fr-FR"
-                Content="🇫🇷" />
-            <Button
-                Grid.Column="1"
-                Command="{Binding LanguageViewModel.ChangeLanguageCommand}"
-                CommandParameter="en-US"
-                Content="en" />
-            <Button
-                Grid.Column="2"
-                Command="{Binding OpenJobWindowCommand}"
-                Content="{Binding LanguageViewModel.ButtonAdd}" />
-            <Button
-                Grid.Column="3"
-                Command="{Binding ExecuteAllJobsCommand}"
-                Content="{Binding LanguageViewModel.ButtonExecuteAll}" />
-            <Button
-                Grid.Column="4"
-                Command="{Binding OpenConfigCommand}"
-                Content="{Binding LanguageViewModel.ButtonConfig}" />
+            <Button Content="🇫🇷" Command="{Binding LanguageViewModel.ChangeLanguageCommand}" CommandParameter="fr-FR" Grid.Column="0"/>
+            <Button Content="en" Command="{Binding LanguageViewModel.ChangeLanguageCommand}" CommandParameter="en-US" Grid.Column="1"/>
+            <Button Content="{Binding LanguageViewModel.ButtonAdd}" Command="{Binding OpenJobWindowCommand}" Grid.Column="2"/>
+            <Button Content="{Binding LanguageViewModel.ButtonConfig}" Command="{Binding OpenConfigCommand}" Grid.Column="4"/>
+            <Button Content="{Binding LanguageViewModel.ButtonPlay}" Command="{Binding ExecuteJobSelectionCommand}" CommandParameter="{Binding List}" Grid.Column="5"/>
+            <Button Content="{Binding LanguageViewModel.ButtonPause}" Command="{Binding PauseCommand}" CommandParameter="{Binding List}" Grid.Column="6"/>
+            <Button Content="{Binding LanguageViewModel.ButtonStop}"  Command="{Binding StopCommand}" CommandParameter="{Binding List}" Grid.Column="7"/>
 
             <Button
                 Grid.Column="5"
@@ -83,12 +69,6 @@
                 Command="{Binding PauseThread}"
                 CommandParameter="{Binding List}"
                 Content="{Binding LanguageViewModel.ButtonPause}" />
-
-            <Button
-                Grid.Column="9"
-                Command="{Binding ExecuteJobSelectionCommand}"
-                CommandParameter="{Binding List}"
-                Content="{Binding LanguageViewModel.ButtonExecuteOne}" />
         </Grid>
 
         <Grid Grid.Row="1">
@@ -128,8 +108,16 @@
             </DataGrid>
 
             <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                <Button Command="{Binding AddToListCommand}" Content="▶︎" />
-                <Button Command="{Binding RemoveToListCommand}" Content="◀︎" />
+                <Button Content="☑"
+                        Command="{Binding AddAllToListCommand}"/>
+                <Button Content="☒" 
+                        Command="{Binding RemoveAllToListCommand}" />
+                <Button Content="▶︎" 
+                        Command="{Binding AddToListCommand}" />
+                <Button Content="◀︎" 
+                        Command="{Binding RemoveToListCommand}" />
+
+
             </StackPanel>
 
             <GroupBox
@@ -144,18 +132,42 @@
                     SelectedItem="{Binding ElementSelectionneList, Mode=TwoWay}" />
             </GroupBox>
         </Grid>
+        <Grid Grid.Row="2" Margin="0,10,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="{Binding Message}" 
+                   Grid.Row="2" 
+                   Grid.Column="0" 
+                   Grid.ColumnSpan="4" 
+                   HorizontalAlignment="Center" 
+                   FontWeight="Bold" 
+                   Margin="8"/>
 
-        <TextBlock
-            Grid.Row="2"
-            Grid.Column="0"
-            Grid.ColumnSpan="4"
-            Margin="8"
-            HorizontalAlignment="Center"
-            FontWeight="Bold"
-            Text="{Binding Message}" />
+            <Grid Grid.Row="1" Margin="0,5,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <ProgressBar x:Name="pbstatus1"
+             Grid.Column="0"
+             Height="30"
+             VerticalAlignment="Center"
+             Minimum="0"
+             Maximum="100"
+             Value="{Binding Progression, Mode=OneWay}" />
 
-        <GroupBox Grid.Row="3" Header="Logs">
-            <ListBox x:Name="LogsListBox" ItemsSource="{Binding Logs}" />
-        </GroupBox>
+                <Label x:Name="lb_etat_prog_server" 
+                   Grid.Column="1"
+                   Content="0%" 
+                   HorizontalAlignment="Center" 
+                   VerticalAlignment="Center" 
+                   FontSize="18" 
+                   FontWeight="Bold"/>
+            </Grid>
+        </Grid>
     </Grid>
+
+
 </Window>

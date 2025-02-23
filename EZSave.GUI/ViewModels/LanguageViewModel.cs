@@ -36,10 +36,9 @@ namespace EZSave.GUI.ViewModels
 
         public string ButtonConfig => Resources.ConfModeTitle;
         public string ButtonExecuteAll => Resources.ExecuteAllJobs;
-        public string ButtonPLay => Resources.PlayJob;
-        public string ButtonStop => Resources.StopJob;
-        public string ButtonPause => Resources.PauseJob;
-        public string ButtonResume => Resources.ResumeJob;
+        public string ButtonPlay => Resources.Play;
+        public string ButtonPause => Resources.Pause;
+        public string ButtonStop => Resources.Stop;
         public string ButtonExecuteOne => Resources.ExecuteOneJob;
         public string JobExecuted => Resources.JobsExecutedSuccess;
         public string JobNotExecuted => Resources.JobsExecutedFail;

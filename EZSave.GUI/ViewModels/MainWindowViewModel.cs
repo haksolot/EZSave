@@ -19,6 +19,7 @@ namespace EZSave.GUI.ViewModels
 
         private ManagerService managerService;
         private ConfigService configService;
+        private StatusService statusService;
 
         public ManagerModel managerModel;
 
@@ -49,27 +50,30 @@ namespace EZSave.GUI.ViewModels
             set => SetProperty(ref _message, value);
         }
 
+        private int progression;
+        public int Progression
+        {
+            get => progression;
+            set => SetProperty(ref progression, value);
+        }
+
+
+        List<Thread> threads = new List<Thread>();
+        Dictionary<string, (Thread thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> JobStates = new();
         public ObservableCollection<string> List { get; set; } = new ObservableCollection<string>();
         public ObservableCollection<JobModel> Jobs { get; set; } = new ObservableCollection<JobModel>();
 
-        //public IEnumerable<JobModel> jobs;
-        //public IEnumerable<JobModel> Jobs
-        //{
-        //    get => jobs;
-        //    set => SetProperty(ref jobs, value);
-        //}
+        public ICommand UpdateProgressionCommand { get; }
         public ICommand AddToListCommand { get; }
-
         public ICommand RemoveToListCommand { get; }
-
+        public ICommand RemoveAllToListCommand { get; }
+        public ICommand AddAllToListCommand { get; }
         public ICommand RefreshCommand { get; set; }
         public ICommand ExecuteAllJobsCommand { get; set; }
         public ICommand OpenJobWindowCommand { get; set; }
         public ICommand ExecuteJobSelectionCommand { get; set; }
-        public ICommand PlayThread { get; set; }
-        public ICommand PauseThread { get; set; }
-        public ICommand StopThread { get; set; }
-        public ICommand ResumeThread { get; set; }
+        public ICommand PauseCommand { get; set; }
+        public ICommand StopCommand { get; set; }
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -83,16 +87,9 @@ namespace EZSave.GUI.ViewModels
 
             LanguageViewModel = new LanguageViewModel();
 
-            //             configService = new ConfigService();
-            //             managerService = new ManagerService();
-
-            //configFileModel = new ConfigFileModel();
-
-            //managerModel = new ManagerModel();
 
             RefreshCommand = new RelayCommand(RefreshJobs);
             OpenJobWindowCommand = new RelayCommand(OpenAddJobWindow);
-            ExecuteAllJobsCommand = new RelayCommand(ExecuteJobs);
 
             OpenConfigCommand = new RelayCommand(OpenConfigWindow);
 
@@ -103,9 +100,12 @@ namespace EZSave.GUI.ViewModels
 
             AddToListCommand = new RelayCommand(AddToList);
             RemoveToListCommand = new RelayCommand(DelFromList);
+            RemoveAllToListCommand = new RelayCommand(DelAllFromList);
+            AddAllToListCommand = new RelayCommand(AddAllToList);
+            PauseCommand = new RelayCommand(Pause);
+            StopCommand = new RelayCommand(Stop);
+            UpdateProgressionCommand = new RelayCommand(UpdateProgression);
             ExecuteJobSelectionCommand = new RelayCommand<ObservableCollection<string>>(ExecuteJobSelection);
-            PlayThread = new RelayCommand(Play);
-            //RefreshJobs();
         }
 
         private void SetProperty<T>(ref T old, T @new, [CallerMemberName] string name = "")
@@ -118,7 +118,7 @@ namespace EZSave.GUI.ViewModels
         {
             var configWindow = new ConfigWindow(managerModel, configFileModel);
             configWindow.ShowDialog();
-            RefreshJobs(); // Rafraîchir après fermeture de la config
+            RefreshJobs(); 
         }
 
         private void Initialize()
@@ -169,7 +169,6 @@ namespace EZSave.GUI.ViewModels
         public void RefreshJobs()
         {
             Jobs.Clear();
-            //List.Clear();
 
             if (managerModel.Jobs != null && managerModel.Jobs.Any())
             {
@@ -191,23 +190,11 @@ namespace EZSave.GUI.ViewModels
             RefreshJobs();
         }
 
-        private void ExecuteJobs()
-        {
-            bool result = managerService.Execute(managerModel, configFileModel);
-
-            if (result)
-            {
-                Message = Properties.Resources.JobsExecutedSuccess;
-            }
-            else
-            {
-                Message = Properties.Resources.JobsExecutedFail;
-            }
-        }
-
         private void ExecuteJobSelection(ObservableCollection<string> selectedNames)
         {
-            bool result = managerService.ExecuteSelected(selectedNames, managerModel, configFileModel);
+            Debug.WriteLine($"element selectionné { ElementSelectionneList}");
+
+            bool result = managerService.ExecuteSelected(JobStates, selectedNames, managerModel, configFileModel, ElementSelectionneList);
             if (result)
             {
                 Message = Properties.Resources.JobsExecutedSuccess;
@@ -220,11 +207,26 @@ namespace EZSave.GUI.ViewModels
 
         private void AddToList()
         {
-            if (ElementSelectionne != null)
+            if (ElementSelectionne != null && !List.Contains(ElementSelectionne.Name))
             {
                 var valeur = ElementSelectionne.Name;
                 List.Add(valeur);
             }
+        }
+
+        private void AddAllToList()
+        {
+            if (managerModel.Jobs.Count != 0)
+            {
+                foreach (var item in managerModel.Jobs)
+                {
+                    if (!List.Contains(item.Name))
+                    {
+                        List.Add(item.Name);
+                    }
+                }
+            }
+            
         }
 
         public void DelFromList()
@@ -239,5 +241,39 @@ namespace EZSave.GUI.ViewModels
                 Debug.WriteLine(item);
             }
         }
+
+        public void DelAllFromList()
+        {
+            if (List.Count != 0)
+            {
+                List.Clear();
+            }
+        }
+
+        public void Pause()
+        {
+            if (ElementSelectionneList != null)
+            {
+                managerService.Pause(ElementSelectionneList, JobStates);
+            }
+        }
+
+        public void Stop()
+        {
+            if (ElementSelectionneList != null)
+            {
+                Debug.WriteLine($"{ElementSelectionneList} mis en arret");
+                managerService.Stop(ElementSelectionneList, JobStates);
+            }
+        }
+
+        private void UpdateProgression()
+        {
+            if (ElementSelectionneList != null)
+            { 
+                Progression = statusService.GetProgression(ElementSelectionneList, configFileModel);
+            }
+        }
     }
+    
 }

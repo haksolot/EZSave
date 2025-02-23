@@ -441,18 +441,18 @@ namespace EZSave.GUI.Properties {
         /// <summary>
         ///   Recherche une chaîne localisée semblable à Pause.
         /// </summary>
-        public static string PauseJob {
+        public static string Pause {
             get {
-                return ResourceManager.GetString("PauseJob", resourceCulture);
+                return ResourceManager.GetString("Pause", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Recherche une chaîne localisée semblable à Play.
         /// </summary>
-        public static string PlayJob {
+        public static string Play {
             get {
-                return ResourceManager.GetString("PlayJob", resourceCulture);
+                return ResourceManager.GetString("Play", resourceCulture);
             }
         }
         
@@ -495,9 +495,9 @@ namespace EZSave.GUI.Properties {
         /// <summary>
         ///   Recherche une chaîne localisée semblable à Stop.
         /// </summary>
-        public static string StopJob {
+        public static string Stop {
             get {
-                return ResourceManager.GetString("StopJob", resourceCulture);
+                return ResourceManager.GetString("Stop", resourceCulture);
             }
         }
         
