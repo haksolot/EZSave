@@ -252,6 +252,9 @@
   <data name="RefreshJobs" xml:space="preserve">
     <value>Refresh</value>
   </data>
+  <data name="ResumeJob" xml:space="preserve">
+    <value>Resume</value>
+  </data>
   <data name="Save" xml:space="preserve">
     <value>Save</value>
   </data>

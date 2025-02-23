@@ -466,6 +466,15 @@ namespace EZSave.GUI.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Resume.
+        /// </summary>
+        public static string ResumeJob {
+            get {
+                return ResourceManager.GetString("ResumeJob", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Save.
         /// </summary>
         public static string Save {
