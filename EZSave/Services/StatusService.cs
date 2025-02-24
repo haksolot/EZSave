@@ -36,20 +36,11 @@ namespace EZSave.Core.Services
                 liststatus[statusmodel.Name].TargetFilePath = statusmodel.TargetFilePath;
                 liststatus[statusmodel.Name].State = statusmodel.State;
                 liststatus[statusmodel.Name].TotalFilesSize = statusmodel.TotalFilesSize;
-
+                liststatus[statusmodel.Name].Progression = statusmodel.Progression;
                 liststatus[statusmodel.Name].TotalFilesToCopy = statusmodel.TotalFilesToCopy;
                 liststatus[statusmodel.Name].FilesLeftToCopy = statusmodel.FilesLeftToCopy;
                 liststatus[statusmodel.Name].FilesSizeLeftToCopy = statusmodel.FilesSizeLeftToCopy;
-                if (statusmodel.TotalFilesSize != 0)
-                {
-                    decimal progress = (decimal)((statusmodel.TotalFilesToCopy - statusmodel.FilesLeftToCopy) / statusmodel.TotalFilesToCopy) * 100;
-                    liststatus[statusmodel.Name].Progression = (int)Math.Floor(progress);
-                }
-                else
-                {
-                    decimal progress = 0;
-                    liststatus[statusmodel.Name].Progression = (int)Math.Floor(progress);
-                }
+               
             }
             else
             {

@@ -103,25 +103,22 @@ namespace EZSave.Core.Services
         private bool CopyFiles(JobModel job, string[] filesToCopy, LogService logService, StatusService statusService, ConfigFileModel configFileModel, ManualResetEvent pauseEvent, CancellationToken cancellationToken)
         {
             using var fileLock = new SemaphoreSlim(1, 1);
+            StatusModel statusModel = new StatusModel();
 
             long copiedSize = 0;
             long currentFileSize = 0;
             var startTime = DateTime.Now;
 
-            long totalSize = filesToCopy.Sum(file => new FileInfo(file).Length);
-            int totalFiles = filesToCopy.Length;
-
-            statusService.SaveStatus(new StatusModel
-            {
-                Name = job.Name,
-                SourceFilePath = job.Source,
-                TargetFilePath = job.Destination,
-                State = "Activate",
-                TotalFilesSize = totalSize,
-                TotalFilesToCopy = totalFiles,
-                FilesLeftToCopy = totalFiles,
-                FilesSizeLeftToCopy = totalSize
-            }, configFileModel);
+            statusModel.Name = job.Name;
+            statusModel.SourceFilePath = job.Source;
+            statusModel.TargetFilePath = job.Destination;
+            statusModel.State = "Activate";
+            statusModel.Progression = 0;
+            statusModel.TotalFilesSize = Directory.GetFiles(job.Source, "*", SearchOption.AllDirectories).Sum(file => new FileInfo(file).Length); ;
+            statusModel.TotalFilesToCopy = Directory.GetFiles(job.Source, "*", SearchOption.AllDirectories).Length;
+            statusModel.FilesLeftToCopy = Directory.GetFiles(job.Source, "*", SearchOption.AllDirectories).Length;
+            statusModel.FilesSizeLeftToCopy = Directory.GetFiles(job.Source, "*", SearchOption.AllDirectories).Sum(file => new FileInfo(file).Length);
+            statusService.SaveStatus(statusModel, configFileModel);
 
             foreach (string file in filesToCopy)
             {
@@ -132,8 +129,8 @@ namespace EZSave.Core.Services
                 Thread.Sleep(4000);
 
                 string relativePath = file.Substring(job.Source.Length).TrimStart(Path.DirectorySeparatorChar);
-                string destinationFile = Path.Combine(job.Destination, relativePath);
-                string? directoryPath = Path.GetDirectoryName(destinationFile);
+                statusModel.TargetFilePath = Path.Combine(job.Destination, relativePath);
+                string? directoryPath = Path.GetDirectoryName(statusModel.TargetFilePath);
                 long fileSize = new FileInfo(file).Length;
 
                 if (!string.IsNullOrEmpty(directoryPath))
@@ -152,34 +149,40 @@ namespace EZSave.Core.Services
                     cipheringTime = crypto.TransformFile(file);
                 }
 
-                File.Copy(file, destinationFile, true);
+                File.Copy(file, statusModel.TargetFilePath, true);
+
+                statusModel.FilesSizeLeftToCopy -= fileSize;
+                statusModel.FilesLeftToCopy--;
+                if (statusModel.TotalFilesSize != 0)
+                {
+                    var temp1 = statusModel.TotalFilesSize - statusModel.FilesSizeLeftToCopy;
+                    var temp2 = (decimal)temp1 / statusModel.TotalFilesSize;
+                    var temp3 = temp2 * 100;
+                    decimal progression_temp = (decimal)temp3;
+                    statusModel.Progression = (int)Math.Floor(progression_temp);
+                }
+                else
+                {
+                    statusModel.Progression = 100;
+                }
+
+                statusModel.State = "En Cours";
+
+                statusService.SaveStatus(statusModel, configFileModel);
 
                 var endTime = DateTime.Now;
                 float transferTime = (float)(endTime - startTime).TotalSeconds;
-                currentFileSize = new FileInfo(destinationFile).Length;
+                currentFileSize = new FileInfo(statusModel.TargetFilePath).Length;
                 copiedSize += currentFileSize;
 
-                totalSize -= fileSize;
-                totalFiles--;
-
-                statusService.SaveStatus(new StatusModel
-                {
-                    Name = job.Name,
-                    SourceFilePath = job.Source,
-                    TargetFilePath = job.Destination,
-                    State = "End",
-                    TotalFilesSize = totalSize + fileSize,
-                    TotalFilesToCopy = totalFiles + 1,
-                    FilesLeftToCopy = totalFiles,
-                    FilesSizeLeftToCopy = totalSize
-                }, configFileModel);
+              
 
                 logService.Write(new LogModel
                 {
                     Name = job.Name,
                     Timestamp = DateTime.Now,
                     FileSource = file,
-                    FileDestination = destinationFile,
+                    FileDestination = statusModel.TargetFilePath,
                     FileSize = currentFileSize,
                     FileTransferTime = transferTime,
                     FileCipherTime = cipheringTime,
@@ -192,6 +195,9 @@ namespace EZSave.Core.Services
                     fileLock.Release();
                 }
             }
+
+            statusModel.State = "End";
+            statusService.SaveStatus(statusModel, configFileModel);
             return true;
         }
 
