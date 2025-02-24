@@ -1,71 +1,56 @@
-using System.Diagnostics;
-using EZSave.Core.Models;
-using EZSave.Core.Services;
 using CryptoSoft;
-using System.Runtime.InteropServices;
-
+using EZSave.Core.Models;
+using System.Diagnostics;
 
 namespace EZSave.Core.Services
 {
   public class JobService
   {
-    //public Action<JobModel, StatusService, LogService, ConfigFileModel> AsyncStart(JobModel job, StatusService statusService, LogService logService, ConfigFileModel configFileModel)
-        public Action AsyncStart(JobModel job, StatusService statusService, LogService logService, ConfigFileModel configFileModel)
+    public bool Start(JobModel job, StatusService statusService, LogService logService, ConfigFileModel configFileModel, string name, ManualResetEvent pauseEvent, CancellationToken cancellationToken) // TODO Enlever le param name de la fonction et vérifier les appels
+    {
+      if (cancellationToken.IsCancellationRequested)
+      {
+        return false;
+      }
+
+      Debug.WriteLine(name);
+      bool check = ProcessesService.CheckProcess("CalculatorApp");
+      if (check == true)
+      {
+        return false;
+      }
+
+      if (job.Type == "full")
+      {
+        check = FullBackup(job, logService, statusService, configFileModel, pauseEvent, cancellationToken);
+        if (check == false)
         {
-            bool check = ProcessesService.CheckProcess("CalculatorApp");
-
-            if (job.Type == "full")
-            {
-                FullBackup(job, logService, statusService, configFileModel);
-            }
-            else if (job.Type == "diff")
-            {
-                DifferentialBackup(job, statusService, logService, configFileModel);
-            }
-
-            return () => { };
+          return false;
         }
-
-        public bool Start(JobModel job, StatusService statusService, LogService logService, ConfigFileModel configFileModel)
+        else
         {
-            bool check = ProcessesService.CheckProcess("CalculatorApp");
-            if (check == true)
-            {
-                return false;
-            }
-
-            if (job.Type == "full")
-            {
-                check = FullBackup(job, logService, statusService, configFileModel);
-                if (check == false)
-                {
-                    return false;
-                }
-                else
-                {
-                    return true;
-                }
-            }
-            else if (job.Type == "diff")
-            {
-                check = DifferentialBackup(job, statusService, logService, configFileModel);
-                if (check == false)
-                {
-                    return false;
-                }
-                else
-                {
-                    return true;
-                }
-            }
-            else
-            {
-                return false;
-            }
+          return true;
         }
+      }
+      else if (job.Type == "diff")
+      {
+        check = DifferentialBackup(job, statusService, logService, configFileModel, pauseEvent, cancellationToken);
+        if (check == false)
+        {
+          return false;
+        }
+        else
+        {
+          return true;
+        }
+      }
+      else
+      {
+        return false;
+      }
+    }
 
-
-        private bool FullBackup(JobModel job, LogService logService, StatusService statusService, ConfigFileModel configFileModel)
+    private bool FullBackup(JobModel job, LogService logService, StatusService statusService, ConfigFileModel configFileModel, ManualResetEvent pauseEvent, CancellationToken cancellationToken)
     {
       long copiedSize = 0;
       var startTime = DateTime.Now;
@@ -87,6 +72,11 @@ namespace EZSave.Core.Services
 
       foreach (string file in Directory.GetFiles(job.Source, "*", SearchOption.AllDirectories))
       {
+        if (cancellationToken.IsCancellationRequested) return false;
+        pauseEvent.WaitOne();
+        cancellationToken.ThrowIfCancellationRequested();
+
+        Thread.Sleep(4000); // Thread.Sleep pour mieux voir le pause et stop
         string relativePath = file.Substring(job.Source.Length).TrimStart(Path.DirectorySeparatorChar);
         string destinationFile = Path.Combine(job.Destination, relativePath);
         string? directoryPath = Path.GetDirectoryName(destinationFile);
@@ -97,13 +87,13 @@ namespace EZSave.Core.Services
           Directory.CreateDirectory(directoryPath);
         }
 
-                float cipheringTime = 0f;
+        float cipheringTime = 0f;
         if (Path.GetExtension(file) == ".crypto")
         {
           var crypto = new Cipher(file, "key");
-                    cipheringTime = crypto.TransformFile(file);
-                }
-                else
+          cipheringTime = crypto.TransformFile(file);
+        }
+        else
         {
           cipheringTime = 0;
         }
@@ -142,11 +132,13 @@ namespace EZSave.Core.Services
           FileTransferTime = transferTime,
           FileCipherTime = cipheringTime,
         }, configFileModel);
+
+        cancellationToken.ThrowIfCancellationRequested();
       }
       return true;
     }
 
-    private bool DifferentialBackup(JobModel job, StatusService statusService, LogService logService, ConfigFileModel configFileModel)
+    private bool DifferentialBackup(JobModel job, StatusService statusService, LogService logService, ConfigFileModel configFileModel, ManualResetEvent pauseEvent, CancellationToken cancellationToken)
     {
       long copiedSize = 0;
       var startTime = DateTime.Now;
@@ -184,6 +176,11 @@ namespace EZSave.Core.Services
         long fileSize = new FileInfo(file).Length;
         if (!File.Exists(destinationFile) || File.GetLastWriteTime(file) > File.GetLastWriteTime(destinationFile))
         {
+          pauseEvent.WaitOne();
+          cancellationToken.ThrowIfCancellationRequested();
+
+          Thread.Sleep(4000); // Thread.Sleep pour mieux voir le pause et stop
+
           string? directoryPath = Path.GetDirectoryName(destinationFile);
           if (!string.IsNullOrEmpty(directoryPath))
           {
@@ -194,13 +191,23 @@ namespace EZSave.Core.Services
           {
             var crypto = new Cipher(file, "key");
             cipheringTime = crypto.TransformFile(file);
-                    }
-                    else
+          }
+          else
           {
             cipheringTime = 0;
           }
-          File.Copy(file, destinationFile, true);
+          using (FileStream sourceStream = new FileStream(file, FileMode.Open, FileAccess.Read))
+          using (FileStream destinationStream = new FileStream(destinationFile, FileMode.Create, FileAccess.Write))
+          {
+            byte[] buffer = new byte[81920];
+            int bytesRead;
 
+            while ((bytesRead = sourceStream.Read(buffer, 0, buffer.Length)) > 0)
+            {
+              cancellationToken.ThrowIfCancellationRequested();
+              destinationStream.Write(buffer, 0, bytesRead);
+            }
+          }
           totalSize -= fileSize;
           totalFiles--;
 
@@ -234,6 +241,7 @@ namespace EZSave.Core.Services
             FileCipherTime = cipheringTime,
           }, configFileModel);
         }
+        cancellationToken.ThrowIfCancellationRequested();
       }
       return true;
     }

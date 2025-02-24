@@ -243,10 +243,10 @@
   <data name="MainOption3" xml:space="preserve">
     <value>Change language</value>
   </data>
-  <data name="PauseJob" xml:space="preserve">
+  <data name="Pause" xml:space="preserve">
     <value>Pause</value>
   </data>
-  <data name="PlayJob" xml:space="preserve">
+  <data name="Play" xml:space="preserve">
     <value>Play</value>
   </data>
   <data name="RefreshJobs" xml:space="preserve">
@@ -261,7 +261,7 @@
   <data name="StatusFilePathChanging" xml:space="preserve">
     <value>Status file path : </value>
   </data>
-  <data name="StopJob" xml:space="preserve">
+  <data name="Stop" xml:space="preserve">
     <value>Stop</value>
   </data>
   <data name="TitleListBox" xml:space="preserve">
