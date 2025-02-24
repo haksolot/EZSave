@@ -87,8 +87,8 @@ namespace EZSave.Core.Services
 
             if (!cts.Token.IsCancellationRequested)
             {
-              bool success = service.Start(job, statusService, logService, configFileModel, job.Name, pauseEvent, cts.Token);
-              if (!success)
+             bool success = service.Start(job, statusService, logService, configFileModel, job.Name, pauseEvent, cts.Token, jobStates);
+                if (!success)
               {
                 lock (obj)
                 {
@@ -113,22 +113,23 @@ namespace EZSave.Core.Services
       return !hasFailed;
     }
 
-    public bool Pause(string jobName, Dictionary<string, (Thread Thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> jobStates)
-    {
-      if (jobStates.TryGetValue(jobName, out var jobState) && jobState.Status == "Running")
-      {
-        jobState.PauseEvent.Reset();
-        jobStates[jobName] = (jobState.Thread, jobState.Cts, jobState.PauseEvent, "Paused");
-        foreach (var kvp in jobStates)
+        public bool Pause(string jobName, Dictionary<string, (Thread Thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> jobStates, bool isAutomatic = false)
         {
-          Debug.WriteLine($"Job: {kvp.Key}, Status: {kvp.Value.Status}");
-        }
-        return true;
-      }
-      return false;
-    }
+            if (jobStates.TryGetValue(jobName, out var jobState) && jobState.Status == "Running")
+            {
+                string pauseReason = isAutomatic ? "PausedByProcess" : "Paused";
+                jobState.PauseEvent.Reset();
+                jobStates[jobName] = (jobState.Thread, jobState.Cts, jobState.PauseEvent, pauseReason);
 
-    public bool Stop(string jobName, Dictionary<string, (Thread Thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> jobStates)
+                Debug.WriteLine($"[INFO] Job {jobName} mis en pause. Raison: {(isAutomatic ? "CalculatorApp détecté" : "Utilisateur")}");
+
+                return true;
+            }
+            return false;
+        }
+
+
+        public bool Stop(string jobName, Dictionary<string, (Thread Thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> jobStates)
     {
       if (jobStates.TryGetValue(jobName, out var jobState))
       {
