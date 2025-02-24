@@ -94,17 +94,12 @@ To remove a job from the selection, click the ◀︎ button or ☒ to remove all
 - Click on a "runned" job 
 - Click on the "Pause" button
 
-### 5. Resume a selected job
-
-- CLick on a "paused" job
-- Click on the "Resume" button
-
-### 6. Stop a selected job
+### 5. Stop a selected job
 
 - CLick on a "runned" job
 - Click on the "Stop" button
 
-### 7. Modifying a job
+### 6. Modifying a job
 
 - Click the "Mode Configuration" button
 - Select the job you want to modify in the tab
@@ -112,21 +107,21 @@ To remove a job from the selection, click the ◀︎ button or ☒ to remove all
 - Click the "Modifier" button
    => The job has been modified
 
-### 8. Deleting a job
+### 7. Deleting a job
 
 - Click the "Mode Configuration" button
 - Select the job you want to delete in the tab
 - Click the "Supprimer" button
    => The job has been deleted from the left tab
 
-### 9. Modifying configuration (top part of window)
+### 8. Modifying configuration (top part of window)
 
 - Click the "Mode Configuration" button
 - Modify the desired fields (configuration file path, log file path, log types, status file path)
 - Click the "Sauvegarder" button
    => The configuration changes have been saved 
 
-### 10. Changing the language
+### 9. Changing the language
 
 - To switch to French, click the "FR" button
 - To switch to English, click the "EN" button
