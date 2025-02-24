@@ -439,11 +439,38 @@ namespace EZSave.GUI.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Pause.
+        /// </summary>
+        public static string PauseJob {
+            get {
+                return ResourceManager.GetString("PauseJob", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Play.
+        /// </summary>
+        public static string PlayJob {
+            get {
+                return ResourceManager.GetString("PlayJob", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Refresh.
         /// </summary>
         public static string RefreshJobs {
             get {
                 return ResourceManager.GetString("RefreshJobs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Resume.
+        /// </summary>
+        public static string ResumeJob {
+            get {
+                return ResourceManager.GetString("ResumeJob", resourceCulture);
             }
         }
         
@@ -462,6 +489,15 @@ namespace EZSave.GUI.Properties {
         public static string StatusFilePathChanging {
             get {
                 return ResourceManager.GetString("StatusFilePathChanging", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Stop.
+        /// </summary>
+        public static string StopJob {
+            get {
+                return ResourceManager.GetString("StopJob", resourceCulture);
             }
         }
         
