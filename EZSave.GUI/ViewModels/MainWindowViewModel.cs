@@ -13,6 +13,8 @@ namespace EZSave.GUI.ViewModels
   public class MainWindowViewModel : BaseViewModel, INotifyPropertyChanged
   {
     public LanguageViewModel LanguageViewModel { get; set; }
+
+    private JobService jobService;
     public ICommand OpenConfigCommand { get; }
 
     private ConfigFileModel configFileModel { get; set; }
@@ -132,8 +134,10 @@ namespace EZSave.GUI.ViewModels
     public void RefreshJobs()
     {
       Jobs.Clear();
+            HasPendingPriorityFiles = Jobs.Any(job => jobService.HasPendingPriorityFiles(job));
+            Debug.WriteLine($"[DEBUG] Vérification fichiers .prio : {HasPendingPriorityFiles}");
 
-      if (managerModel.Jobs != null && managerModel.Jobs.Any())
+            if (managerModel.Jobs != null && managerModel.Jobs.Any())
       {
         foreach (var job in managerModel.Jobs)
         {
@@ -237,6 +241,22 @@ namespace EZSave.GUI.ViewModels
         Progression = statusService.GetProgression(ElementSelectionneList, configFileModel);
       }
     }
-  }
+
+        private bool _hasPendingPriorityFiles;
+        public bool HasPendingPriorityFiles
+        {
+            get => _hasPendingPriorityFiles;
+            set
+            {
+                if (_hasPendingPriorityFiles != value)
+                {
+                    _hasPendingPriorityFiles = value;
+                    Debug.WriteLine($"[DEBUG] Mise à jour de HasPendingPriorityFiles : {value}");
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasPendingPriorityFiles)));
+                }
+            }
+        }
+
+    }
 
 }

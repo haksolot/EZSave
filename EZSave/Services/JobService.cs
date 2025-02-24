@@ -8,8 +8,7 @@ namespace EZSave.Core.Services
     {
         private const long FileSizeThreshold = 1024 * 1024;
 
-        public bool Start(JobModel job, StatusService statusService, LogService logService, ConfigFileModel configFileModel, string name, ManualResetEvent pauseEvent, CancellationToken cancellationToken) // TODO Enlever le param name de la fonction et vérifier les appels
-
+        public bool Start(JobModel job, StatusService statusService, LogService logService, ConfigFileModel configFileModel, string name, ManualResetEvent pauseEvent, CancellationToken cancellationToken)
         {
             if (cancellationToken.IsCancellationRequested)
             {
@@ -18,7 +17,7 @@ namespace EZSave.Core.Services
 
             Debug.WriteLine(name);
             bool check = ProcessesService.CheckProcess("CalculatorApp");
-            if (check == true)
+            if (check)
             {
                 return false;
             }
@@ -26,26 +25,12 @@ namespace EZSave.Core.Services
             if (job.Type == "full")
             {
                 check = FullBackup(job, logService, statusService, configFileModel, pauseEvent, cancellationToken);
-                if (check == false)
-                {
-                    return false;
-                }
-                else
-                {
-                    return true;
-                }
+                return check;
             }
             else if (job.Type == "diff")
             {
-                check = DifferentialBackup(job, logService, statusService,  configFileModel, pauseEvent, cancellationToken);
-                if (check == false)
-                {
-                    return false;
-                }
-                else
-                {
-                    return true;
-                }
+                check = DifferentialBackup(job, logService, statusService, configFileModel, pauseEvent, cancellationToken);
+                return check;
             }
             else
             {
@@ -53,9 +38,45 @@ namespace EZSave.Core.Services
             }
         }
 
+        public bool HasPendingPriorityFiles(JobModel job)
+        {
+            try
+            {
+                if (!Directory.Exists(job.Source))
+                {
+                    Debug.WriteLine("[DEBUG] Le dossier source n'existe pas !");
+                    return false;
+                }
+
+                var prioFiles = Directory.GetFiles(job.Source, "*.prio", SearchOption.AllDirectories);
+                bool hasPrio = prioFiles.Any();
+
+                if (hasPrio)
+                {
+                    Debug.WriteLine($"[ALERTE] {prioFiles.Length} fichiers .prio détectés ! Exécution en priorité après pause.");
+                }
+
+                return hasPrio;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[ERREUR] Impossible de vérifier les fichiers .prio : {ex.Message}");
+                return false;
+            }
+        }
+
         private bool FullBackup(JobModel job, LogService logService, StatusService statusService, ConfigFileModel configFileModel, ManualResetEvent pauseEvent, CancellationToken cancellationToken)
         {
             var filesToCopy = Directory.GetFiles(job.Source, "*", SearchOption.AllDirectories);
+            filesToCopy = SortPriorityFilesFirst(filesToCopy);
+
+            
+            if (HasPendingPriorityFiles(job))
+            {
+                Debug.WriteLine("[INFO] Pause de 5 secondes pour signaler que des fichiers .prio vont être exécutés en priorité.");
+                Thread.Sleep(5000);
+            }
+
             return CopyFiles(job, filesToCopy, logService, statusService, configFileModel, pauseEvent, cancellationToken);
         }
 
@@ -67,18 +88,28 @@ namespace EZSave.Core.Services
                           File.GetLastWriteTime(file) > File.GetLastWriteTime(Path.Combine(job.Destination, file.Substring(job.Source.Length).TrimStart(Path.DirectorySeparatorChar))))
                       .ToArray();
 
-            return CopyFiles(job, filesToCopy, logService, statusService,  configFileModel, pauseEvent, cancellationToken);
+            filesToCopy = SortPriorityFilesFirst(filesToCopy);
+
+            
+            if (HasPendingPriorityFiles(job))
+            {
+                Debug.WriteLine("[INFO] Pause de 5 secondes pour signaler que des fichiers .prio vont être exécutés en priorité.");
+                Thread.Sleep(5000);
+            }
+
+            return CopyFiles(job, filesToCopy, logService, statusService, configFileModel, pauseEvent, cancellationToken);
         }
-        private bool CopyFiles(JobModel job,string[]FilesToCopy, LogService logService, StatusService statusService, ConfigFileModel configFileModel, ManualResetEvent pauseEvent, CancellationToken cancellationToken)
+
+        private bool CopyFiles(JobModel job, string[] filesToCopy, LogService logService, StatusService statusService, ConfigFileModel configFileModel, ManualResetEvent pauseEvent, CancellationToken cancellationToken)
         {
-            using var fileLock = new SemaphoreSlim(1, 1); 
+            using var fileLock = new SemaphoreSlim(1, 1);
 
             long copiedSize = 0;
             long currentFileSize = 0;
             var startTime = DateTime.Now;
 
-            long totalSize = Directory.GetFiles(job.Source, "*", SearchOption.AllDirectories).Sum(file => new FileInfo(file).Length);
-            int totalFiles = Directory.GetFiles(job.Source, "*", SearchOption.AllDirectories).Length;
+            long totalSize = filesToCopy.Sum(file => new FileInfo(file).Length);
+            int totalFiles = filesToCopy.Length;
 
             statusService.SaveStatus(new StatusModel
             {
@@ -92,13 +123,13 @@ namespace EZSave.Core.Services
                 FilesSizeLeftToCopy = totalSize
             }, configFileModel);
 
-            foreach (string file in Directory.GetFiles(job.Source, "*", SearchOption.AllDirectories))
+            foreach (string file in filesToCopy)
             {
                 if (cancellationToken.IsCancellationRequested) return false;
                 pauseEvent.WaitOne();
                 cancellationToken.ThrowIfCancellationRequested();
 
-                Thread.Sleep(4000); // Thread.Sleep pour mieux voir le pause et stop
+                Thread.Sleep(4000);
 
                 string relativePath = file.Substring(job.Source.Length).TrimStart(Path.DirectorySeparatorChar);
                 string destinationFile = Path.Combine(job.Destination, relativePath);
@@ -119,10 +150,6 @@ namespace EZSave.Core.Services
                 {
                     var crypto = new Cipher(file, "key");
                     cipheringTime = crypto.TransformFile(file);
-                }
-                else
-                {
-                    cipheringTime = 0;
                 }
 
                 File.Copy(file, destinationFile, true);
@@ -166,6 +193,16 @@ namespace EZSave.Core.Services
                 }
             }
             return true;
+        }
+
+        private string[] SortPriorityFilesFirst(string[] files)
+        {
+            var priorityFiles = files.Where(f => f.EndsWith(".prio", StringComparison.OrdinalIgnoreCase)).ToArray();
+            var nonPriorityFiles = files.Except(priorityFiles).ToArray();
+
+            Debug.WriteLine($"[DEBUG] Tri des fichiers: {priorityFiles.Length} fichiers prioritaires trouvés.");
+
+            return priorityFiles.Concat(nonPriorityFiles).ToArray();
         }
     }
 }

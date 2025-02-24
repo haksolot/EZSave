@@ -4,6 +4,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    xmlns:local="clr-namespace:EZSave.GUI"
+    xmlns:converters="clr-namespace:System.Windows.Controls;assembly=PresentationFramework"
+
     Title="EZSave"
     Width="800"
     Height="450"
@@ -12,6 +16,9 @@
     mc:Ignorable="d">
 
     <Window.Resources>
+        <!-- Ajout du BooleanToVisibilityConverter -->
+        <converters:BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+
         <Style TargetType="Button">
             <Setter Property="Padding" Value="12,4,12,4" />
             <Setter Property="Margin" Value="8" />
@@ -48,7 +55,6 @@
             <Button Content="{Binding LanguageViewModel.ButtonPlay}" Command="{Binding ExecuteJobSelectionCommand}" CommandParameter="{Binding List}" Grid.Column="5"/>
             <Button Content="{Binding LanguageViewModel.ButtonPause}" Command="{Binding PauseCommand}" CommandParameter="{Binding List}" Grid.Column="6"/>
             <Button Content="{Binding LanguageViewModel.ButtonStop}"  Command="{Binding StopCommand}" CommandParameter="{Binding List}" Grid.Column="7"/>
-
         </Grid>
 
         <Grid Grid.Row="1">
@@ -68,35 +74,18 @@
                 ItemsSource="{Binding Jobs}"
                 SelectedItem="{Binding ElementSelectionne, Mode=TwoWay}">
                 <DataGrid.Columns>
-                    <DataGridTextColumn
-                        Width="*"
-                        Binding="{Binding Name}"
-                        Header="Job" />
-                    <DataGridTextColumn
-                        Width="*"
-                        Binding="{Binding Source}"
-                        Header="Source" />
-                    <DataGridTextColumn
-                        Width="*"
-                        Binding="{Binding Destination}"
-                        Header="Destination" />
-                    <DataGridTextColumn
-                        Width="*"
-                        Binding="{Binding Type}"
-                        Header="Type" />
+                    <DataGridTextColumn Width="*" Binding="{Binding Name}" Header="Job" />
+                    <DataGridTextColumn Width="*" Binding="{Binding Source}" Header="Source" />
+                    <DataGridTextColumn Width="*" Binding="{Binding Destination}" Header="Destination" />
+                    <DataGridTextColumn Width="*" Binding="{Binding Type}" Header="Type" />
                 </DataGrid.Columns>
             </DataGrid>
 
             <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                <Button Content="☑"
-                        Command="{Binding AddAllToListCommand}"/>
-                <Button Content="☒" 
-                        Command="{Binding RemoveAllToListCommand}" />
-                <Button Content="▶︎" 
-                        Command="{Binding AddToListCommand}" />
-                <Button Content="◀︎" 
-                        Command="{Binding RemoveToListCommand}" />
-
+                <Button Content="☑" Command="{Binding AddAllToListCommand}"/>
+                <Button Content="☒" Command="{Binding RemoveAllToListCommand}" />
+                <Button Content="▶︎" Command="{Binding AddToListCommand}" />
+                <Button Content="◀︎" Command="{Binding RemoveToListCommand}" />
             </StackPanel>
 
             <GroupBox
@@ -131,22 +120,27 @@
                     <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
                 <ProgressBar x:Name="pbstatus1"
-             Grid.Column="0"
-             Height="30"
-             VerticalAlignment="Center"
-             Minimum="0"
-             Maximum="100"
-             Value="{Binding Progression, Mode=OneWay}" />
+                     Grid.Column="0"
+                     Height="30"
+                     VerticalAlignment="Center"
+                     Minimum="0"
+                     Maximum="100"
+                     Value="{Binding Progression, Mode=OneWay}" />
 
                 <Label x:Name="lb_etat_prog_server" 
                    Grid.Column="1"
-                   Content="0%" 
+                   Content="{Binding Progression, StringFormat={}{0}%}" 
                    HorizontalAlignment="Center" 
                    VerticalAlignment="Center" 
                    FontSize="18" 
                    FontWeight="Bold"/>
             </Grid>
+
+            <!-- Message d'avertissement pour les fichiers .prio -->
+            <TextBlock Text="Des fichiers .prio sont en attente ! Ils seront exécutés en priorité après 5 secondes."
+           Foreground="Red"
+           Visibility="{Binding HasPendingPriorityFiles, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
+           HorizontalAlignment="Center"/>
         </Grid>
     </Grid>
-
 </Window>
