@@ -16,7 +16,6 @@
     mc:Ignorable="d">
 
     <Window.Resources>
-        <!-- Ajout du BooleanToVisibilityConverter -->
         <converters:BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
 
         <Style TargetType="Button">
@@ -93,11 +92,15 @@
                 Padding="5"
                 Header="{Binding LanguageViewModel.JobBeingExecuted}">
                 <ListBox
+                    x:Name="listBoxJobs"
                     Height="300"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Stretch"
                     ItemsSource="{Binding List}"
-                    SelectedItem="{Binding ElementSelectionneList, Mode=TwoWay}" />
+                    SelectionMode="Single"
+                    SelectedItem="{Binding ElementSelectionneList, Mode=TwoWay}">
+                   
+                </ListBox>
             </GroupBox>
         </Grid>
 
@@ -119,28 +122,15 @@
                     <ColumnDefinition Width="3*"/>
                     <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
-                <ProgressBar x:Name="pbstatus1"
-                     Grid.Column="0"
-                     Height="30"
-                     VerticalAlignment="Center"
-                     Minimum="0"
-                     Maximum="100"
-                     Value="{Binding Progression, Mode=OneWay}" />
 
-                <Label x:Name="lb_etat_prog_server" 
-                   Grid.Column="1"
-                   Content="{Binding Progression, StringFormat={}{0}%}" 
-                   HorizontalAlignment="Center" 
-                   VerticalAlignment="Center" 
-                   FontSize="18" 
-                   FontWeight="Bold"/>
+
+                <TextBlock 
+        Text="{Binding Status.Progression, StringFormat='Progression : {0}%'}"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Top"
+        FontSize="16"
+        Margin="10"/>
             </Grid>
-
-            <!-- Message d'avertissement pour les fichiers .prio -->
-            <TextBlock Text="Des fichiers .prio sont en attente ! Ils seront exécutés en priorité après 5 secondes."
-           Foreground="Red"
-           Visibility="{Binding HasPendingPriorityFiles, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}"
-           HorizontalAlignment="Center"/>
         </Grid>
     </Grid>
 </Window>

@@ -1,7 +1,11 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 using EZSave.Core.Models;
@@ -44,7 +48,22 @@ namespace EZSave.GUI.ViewModels
       set => SetProperty(ref _elementSelectionneList, value);
     }
 
-    private string _message;
+    private bool _hasPendingPriorityFiles;
+    public bool HasPendingPriorityFiles
+    {
+        get => _hasPendingPriorityFiles;
+        set
+        {
+            if (_hasPendingPriorityFiles != value)
+            {
+                _hasPendingPriorityFiles = value;
+                Debug.WriteLine($"[DEBUG] Mise à jour de HasPendingPriorityFiles : {value}");
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasPendingPriorityFiles)));
+            }
+        }
+    }
+
+        private string _message;
 
     public string Message
     {
@@ -59,8 +78,8 @@ namespace EZSave.GUI.ViewModels
       set => SetProperty(ref progression, value);
     }
 
-
-    List<Thread> threads = new List<Thread>();
+        private readonly StatusService _statusService;
+        List<Thread> threads = new List<Thread>();
     Dictionary<string, (Thread thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> JobStates = new();
     public ObservableCollection<string> List { get; set; } = new ObservableCollection<string>();
     public ObservableCollection<JobModel> Jobs { get; set; } = new ObservableCollection<JobModel>();
@@ -78,14 +97,12 @@ namespace EZSave.GUI.ViewModels
     public ICommand StopCommand { get; set; }
 
     public event PropertyChangedEventHandler? PropertyChanged;
-
-    public MainWindowViewModel()
+        public MainWindowViewModel()
     {
       BaseViewModel.MainWindowViewModel = this;
 
       Initialize();
-
-      LanguageViewModel = new LanguageViewModel();
+            LanguageViewModel = new LanguageViewModel();
 
 
       RefreshCommand = new RelayCommand(RefreshJobs);
@@ -99,9 +116,9 @@ namespace EZSave.GUI.ViewModels
       AddAllToListCommand = new RelayCommand(AddAllToList);
       PauseCommand = new RelayCommand(Pause);
       StopCommand = new RelayCommand(Stop);
-      UpdateProgressionCommand = new RelayCommand(UpdateProgression);
+      //UpdateProgressionCommand = new RelayCommand(UpdateProgression);
       ExecuteJobSelectionCommand = new RelayCommand<ObservableCollection<string>>(ExecuteJobSelection);
-    }
+        }
 
     private void SetProperty<T>(ref T old, T @new, [CallerMemberName] string name = "")
     {
@@ -219,43 +236,24 @@ namespace EZSave.GUI.ViewModels
 
     public void Pause()
     {
-      if (ElementSelectionneList != null)
-      {
         managerService.Pause(ElementSelectionneList, JobStates);
-      }
-    }
+            ElementSelectionneList = null; 
 
-    public void Stop()
+        }
+
+        public void Stop()
     {
-      if (ElementSelectionneList != null)
-      {
+
         Debug.WriteLine($"{ElementSelectionneList} mis en arret");
         managerService.Stop(ElementSelectionneList, JobStates);
-      }
-    }
+            ElementSelectionneList = null; 
 
-    private void UpdateProgression()
-    {
-      if (ElementSelectionneList != null)
-      {
-        Progression = statusService.GetProgression(ElementSelectionneList, configFileModel);
-      }
-    }
 
-        private bool _hasPendingPriorityFiles;
-        public bool HasPendingPriorityFiles
-        {
-            get => _hasPendingPriorityFiles;
-            set
-            {
-                if (_hasPendingPriorityFiles != value)
-                {
-                    _hasPendingPriorityFiles = value;
-                    Debug.WriteLine($"[DEBUG] Mise à jour de HasPendingPriorityFiles : {value}");
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasPendingPriorityFiles)));
-                }
-            }
         }
+
+
+
+
 
     }
 
