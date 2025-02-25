@@ -166,6 +166,7 @@ namespace EZSave.Core.Services
                         var listeSelected = playJobData.selected;
                         var job2playName = playJobData.Name;
                         _managerService.ExecuteSelected(jobStates, listeSelected, _managerModel, _configFileModel, job2playName);
+                        client.Send(Encoding.UTF8.GetBytes("Success"));
                         break;
                     }
                     catch { client.Send(Encoding.UTF8.GetBytes("Error")); break; }
