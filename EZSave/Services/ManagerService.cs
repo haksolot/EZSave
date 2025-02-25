@@ -115,10 +115,17 @@ namespace EZSave.Core.Services
 
         public bool Pause(string jobName, Dictionary<string, (Thread Thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> jobStates, bool isAutomatic = false)
         {
-            if (jobStates.TryGetValue(jobName, out var jobState) && jobState.Status == "Running")
+            if (jobStates.TryGetValue(jobName, out var jobState))
             {
+                if (jobState.Status == "Paused" || jobState.Status == "PausedByProcess")
+                {
+                    Debug.WriteLine($"[INFO] Le job {jobName} est déjà en pause. (Raison: {jobState.Status})");
+                    return false;
+                }
+
                 string pauseReason = isAutomatic ? "PausedByProcess" : "Paused";
-                jobState.PauseEvent.Reset();
+
+                jobState.PauseEvent.Reset(); 
                 jobStates[jobName] = (jobState.Thread, jobState.Cts, jobState.PauseEvent, pauseReason);
 
                 Debug.WriteLine($"[INFO] Job {jobName} mis en pause. Raison: {(isAutomatic ? "CalculatorApp détecté" : "Utilisateur")}");
@@ -127,6 +134,7 @@ namespace EZSave.Core.Services
             }
             return false;
         }
+
 
 
         public bool Stop(string jobName, Dictionary<string, (Thread Thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> jobStates)
