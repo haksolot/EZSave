@@ -6,7 +6,7 @@ namespace EZSave.Core.Services
 {
     public class JobService
     {
-        private const long FileSizeThreshold = 1024 * 1024;
+        long fileSizeThreshold = JobModel.FileSizeThreshold;
 
         public bool Start(JobModel job, StatusService statusService, LogService logService, ConfigFileModel configFileModel, string name, ManualResetEvent pauseEvent, CancellationToken cancellationToken, Dictionary<string, (Thread Thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> jobStates)
         {
@@ -166,7 +166,8 @@ namespace EZSave.Core.Services
                 {
                     Directory.CreateDirectory(directoryPath);
                 }
-                if (fileSize >= FileSizeThreshold)
+                if (fileSize >= JobModel.FileSizeThreshold)
+
                 {
                     fileLock.Wait();
                 }
@@ -219,7 +220,8 @@ namespace EZSave.Core.Services
 
                 cancellationToken.ThrowIfCancellationRequested();
 
-                if (fileSize >= FileSizeThreshold)
+                if (fileSize >= JobModel.FileSizeThreshold)
+
                 {
                     fileLock.Release();
                 }

@@ -185,6 +185,17 @@ namespace EZSave.GUI.ViewModels
             RefreshJobs();
             SetStatusMessage("Configuration sauvegardée !");
         }
+        public long FileSizeThreshold
+        {
+            get => _configFileModel.FileSizeThreshold;
+            set
+            {
+                _configFileModel.FileSizeThreshold = value;
+                JobModel.FileSizeThreshold = value; 
+                OnPropertyChanged();
+            }
+        }
+
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
