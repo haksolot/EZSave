@@ -15,14 +15,15 @@ namespace EZSave.Core.Services
                 return false;
             }
 
-            Debug.WriteLine($"[INFO] Lancement du job {name}");
+            Debug.WriteLine($"Lancement du job {name}");
 
             while (ProcessesService.CheckProcess("CalculatorApp"))
             {
                 if (jobStates.TryGetValue(name, out var jobState) && jobState.Status != "Paused")
                 {
-                    Debug.WriteLine($"[ALERTE] {name} mis en pause à cause de CalculatorApp");
+                    Debug.WriteLine($"{name} mis en pause à cause de CalculatorApp");
                     jobStates[name] = (jobState.Thread, jobState.Cts, jobState.PauseEvent, "Paused");
+                   
                     jobState.PauseEvent.Reset(); 
                 }
 
@@ -30,8 +31,9 @@ namespace EZSave.Core.Services
 
             if (jobStates.TryGetValue(name, out var resumedJob) && resumedJob.Status == "Paused")
             {
-                Debug.WriteLine($"[INFO] CalculatorApp fermé, reprise du job {name}");
+                Debug.WriteLine($"CalculatorApp fermé, reprise du job {name}");
                 jobStates[name] = (resumedJob.Thread, resumedJob.Cts, resumedJob.PauseEvent, "Running");
+               
                 resumedJob.PauseEvent.Set();
             }
 
@@ -56,7 +58,7 @@ namespace EZSave.Core.Services
             {
                 if (!Directory.Exists(job.Source))
                 {
-                    Debug.WriteLine("[DEBUG] Le dossier source n'existe pas !");
+                    Debug.WriteLine("Le dossier source n'existe pas !");
                     return false;
                 }
 
@@ -65,14 +67,14 @@ namespace EZSave.Core.Services
 
                 if (hasPrio)
                 {
-                    Debug.WriteLine($"[ALERTE] {prioFiles.Length} fichiers .prio détectés ! Exécution en priorité après pause.");
+                    Debug.WriteLine($"{prioFiles.Length} fichiers .prio détectés ! Exécution en priorité après pause.");
                 }
 
                 return hasPrio;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"[ERREUR] Impossible de vérifier les fichiers .prio : {ex.Message}");
+                Debug.WriteLine($"Impossible de vérifier les fichiers .prio : {ex.Message}");
                 return false;
             }
         }
@@ -84,7 +86,7 @@ namespace EZSave.Core.Services
 
             if (HasPendingPriorityFiles(job))
             {
-                Debug.WriteLine("[INFO] Pause de 5 secondes pour signaler que des fichiers .prio vont être exécutés en priorité.");
+                Debug.WriteLine("Pause de 5 secondes pour signaler que des fichiers .prio vont être exécutés en priorité.");
                 Thread.Sleep(5000);
             }
 
@@ -104,7 +106,7 @@ namespace EZSave.Core.Services
 
             if (HasPendingPriorityFiles(job))
             {
-                Debug.WriteLine("[INFO] Pause de 5 secondes pour signaler que des fichiers .prio vont être exécutés en priorité.");
+                Debug.WriteLine("Pause de 5 secondes pour signaler que des fichiers .prio vont être exécutés en priorité.");
                 Thread.Sleep(5000);
             }
 
@@ -138,7 +140,7 @@ namespace EZSave.Core.Services
                 {
                     if (jobStates.TryGetValue(job.Name, out var jobState) && jobState.Status != "PausedByProcess")
                     {
-                        Debug.WriteLine($"[ALERTE] {job.Name} mis en pause à cause de CalculatorApp");
+                        Debug.WriteLine($"{job.Name} mis en pause à cause de CalculatorApp");
                         jobStates[job.Name] = (jobState.Thread, jobState.Cts, jobState.PauseEvent, "PausedByProcess");
                         jobState.PauseEvent.Reset();
                     }
@@ -147,7 +149,7 @@ namespace EZSave.Core.Services
 
                 if (jobStates.TryGetValue(job.Name, out var resumedJob) && resumedJob.Status == "PausedByProcess")
                 {
-                    Debug.WriteLine($"[INFO] CalculatorApp fermé, reprise du job {job.Name}");
+                    Debug.WriteLine($"CalculatorApp fermé, reprise du job {job.Name}");
                     jobStates[job.Name] = (resumedJob.Thread, resumedJob.Cts, resumedJob.PauseEvent, "Running");
                     resumedJob.PauseEvent.Set();
                 }

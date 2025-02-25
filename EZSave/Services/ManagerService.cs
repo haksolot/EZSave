@@ -117,9 +117,9 @@ namespace EZSave.Core.Services
         {
             if (jobStates.TryGetValue(jobName, out var jobState))
             {
-                if (jobState.Status == "Paused" || jobState.Status == "PausedByProcess")
+                if (jobState.Status == "Paused")
                 {
-                    Debug.WriteLine($"[INFO] Le job {jobName} est déjà en pause. (Raison: {jobState.Status})");
+                    Debug.WriteLine($"Le job {jobName} est déjà en pause. (Raison: {jobState.Status})");
                     return false;
                 }
 
@@ -128,7 +128,7 @@ namespace EZSave.Core.Services
                 jobState.PauseEvent.Reset(); 
                 jobStates[jobName] = (jobState.Thread, jobState.Cts, jobState.PauseEvent, pauseReason);
 
-                Debug.WriteLine($"[INFO] Job {jobName} mis en pause. Raison: {(isAutomatic ? "CalculatorApp détecté" : "Utilisateur")}");
+                Debug.WriteLine($"Job {jobName} mis en pause. Raison: {(isAutomatic ? "CalculatorApp détecté" : "Utilisateur")}");
 
                 return true;
             }
