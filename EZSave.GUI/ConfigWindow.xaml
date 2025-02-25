@@ -43,7 +43,11 @@
 			<TextBlock Text="{x:Static properties:Resources.EnterType}" Margin="5"/>
 			<ComboBox ItemsSource="{Binding JobTypes}" SelectedItem="{Binding SelectedJobType}" Margin="5"/>
 
-			<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
+            <TextBlock Text="{x:Static properties:Resources.FileSizeThreshold}" Margin="5"/>
+            <TextBox Text="{Binding FileSizeThreshold, UpdateSourceTrigger=PropertyChanged}" Width="200"/>
+
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
 				<Button Content="{x:Static properties:Resources.ConfigOption2}" Command="{Binding EditJobCommand}" Padding="10" Margin="5"/>
 				<Button Content="{x:Static properties:Resources.ConfigOption3}" Command="{Binding DeleteJobCommand}" Padding="10" Margin="5"/>
                 <TextBlock Text="{Binding StatusMessage}" Margin="10" FontWeight="Bold" Foreground="Green" TextAlignment="Center"/>

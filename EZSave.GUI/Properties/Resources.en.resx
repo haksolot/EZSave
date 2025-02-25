@@ -174,6 +174,9 @@
   <data name="ExecuteOneJob" xml:space="preserve">
     <value>Execute one</value>
   </data>
+  <data name="FileSizeThreshold" xml:space="preserve">
+    <value>FileSizeThreshold</value>
+  </data>
   <data name="InvalidChoiceTitle" xml:space="preserve">
     <value>Invalid choice. Try again.</value>
   </data>
