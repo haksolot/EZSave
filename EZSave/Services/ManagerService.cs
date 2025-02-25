@@ -1,4 +1,4 @@
-﻿using EZSave.Core.Models;
+using EZSave.Core.Models;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Drawing;
@@ -89,11 +89,10 @@ namespace EZSave.Core.Services
 
             if (!cts.Token.IsCancellationRequested)
             {
-                    var progression = new Progress<int>(value => updateProgressAction(job.Name, value));
+              var progression = new Progress<int>(value => updateProgressAction(job.Name, value));
 
-                    bool success = service.Start(job, statusService, logService, configFileModel, job.Name, pauseEvent, cts.Token, progression);
-
-              if (!success)
+             bool success = service.Start(job, statusService, logService, configFileModel, job.Name, pauseEvent, cts.Token, jobStates, progression);
+                if (!success)                 
               {
                 lock (obj)
                 {
@@ -117,14 +116,21 @@ namespace EZSave.Core.Services
                 thread.Start();
       }
       return !hasFailed;
-        }
+    }
         
-    public bool Pause(string jobName, Dictionary<string, (Thread Thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> jobStates)
+    public bool Pause(string jobName, Dictionary<string, (Thread Thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> jobStates,  bool isAutomatic = false)
     {
             if (jobName != null)
             {
                 if (jobStates.TryGetValue(jobName, out var jobState) && jobState.Status == "Running")
                 {
+                   if (jobState.Status == "Paused")
+                {
+                    Debug.WriteLine($"Le job {jobName} est déjà en pause. (Raison: {jobState.Status})");
+                    return false;
+                }
+
+                string pauseReason = isAutomatic ? "PausedByProcess" : "Paused";
                     jobState.PauseEvent.Reset();
                     jobStates[jobName] = (jobState.Thread, jobState.Cts, jobState.PauseEvent, "Paused");
 
@@ -156,7 +162,10 @@ namespace EZSave.Core.Services
             }
     }
 
-    public bool Stop(string jobName, Dictionary<string, (Thread Thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> jobStates)
+
+
+
+        public bool Stop(string jobName, Dictionary<string, (Thread Thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> jobStates)
     {
             if (jobName != null)
             {
