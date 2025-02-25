@@ -13,9 +13,13 @@ namespace EZSave.GUI.ViewModels
     public class ProgressViewModel : INotifyPropertyChanged
     {
         private readonly MainWindowViewModel MainWindowViewModel;
+
         public event PropertyChangedEventHandler? PropertyChanged;
-        private int progression;
+
         public string JobName { get; set; }
+
+        private int progression;
+
         public int Progression
         {
             get => progression;
@@ -32,6 +36,7 @@ namespace EZSave.GUI.ViewModels
         }
 
         private bool canExecuteButton;
+
         public bool CanExecuteButton
         {
             get => canExecuteButton;
@@ -41,6 +46,7 @@ namespace EZSave.GUI.ViewModels
                 OnPropertyChanged();
             }
         }
+
         public ICommand OkCommand { get; }
 
         public ProgressViewModel(string jobName, MainWindowViewModel mainWindowViewModel)
@@ -49,27 +55,20 @@ namespace EZSave.GUI.ViewModels
             MainWindowViewModel = mainWindowViewModel;
             OkCommand = new RelayCommand(TerminerAction);
 
-            if (MainWindowViewModel.Progressions.TryGetValue(JobName, out int initialProgress))
-            {
-                Progression = initialProgress;
-            }
-
             MainWindowViewModel.PropertyChanged += (sender, args) =>
             {
-                if (args.PropertyName == nameof(MainWindowViewModel.Progressions))
+                if (args.PropertyName == "Progression")
                 {
-                    if (MainWindowViewModel.progressions.TryGetValue(JobName, out int newProgress))
-                    {
-                        Progression = newProgress;
-                    }
+                    Progression = MainWindowViewModel.Progression;
                 }
             };
         }
 
         private void TerminerAction()
         {
-            System.Windows.MessageBox.Show("Le job est terminé !");
+            System.Windows.MessageBox.Show($"Le job '{JobName}' st terminé !");
         }
+
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
