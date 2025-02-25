@@ -7,6 +7,7 @@ namespace EZSave.Core.Services
     {
         private static readonly object obj = new object();
 
+
         public void SaveStatus(StatusModel statusmodel, ConfigFileModel configmodel)
         {
             var liststatus = new Dictionary<string, StatusModel>();
@@ -36,20 +37,11 @@ namespace EZSave.Core.Services
                 liststatus[statusmodel.Name].TargetFilePath = statusmodel.TargetFilePath;
                 liststatus[statusmodel.Name].State = statusmodel.State;
                 liststatus[statusmodel.Name].TotalFilesSize = statusmodel.TotalFilesSize;
-
+                liststatus[statusmodel.Name].Progression = statusmodel.Progression;
                 liststatus[statusmodel.Name].TotalFilesToCopy = statusmodel.TotalFilesToCopy;
                 liststatus[statusmodel.Name].FilesLeftToCopy = statusmodel.FilesLeftToCopy;
                 liststatus[statusmodel.Name].FilesSizeLeftToCopy = statusmodel.FilesSizeLeftToCopy;
-                if (statusmodel.TotalFilesSize != 0)
-                {
-                    decimal progress = (decimal)((statusmodel.TotalFilesToCopy - statusmodel.FilesLeftToCopy) / statusmodel.TotalFilesToCopy) * 100;
-                    liststatus[statusmodel.Name].Progression = (int)Math.Floor(progress);
-                }
-                else
-                {
-                    decimal progress = 0;
-                    liststatus[statusmodel.Name].Progression = (int)Math.Floor(progress);
-                }
+               
             }
             else
             {
@@ -64,25 +56,6 @@ namespace EZSave.Core.Services
         }
 
 
-        public int GetProgression(string jobName, ConfigFileModel configFileModel)
-        {
-            string statusFilePath = Path.Combine(configFileModel.StatusFileDestination, "_status.json");
-            if (!File.Exists(statusFilePath))
-                return 0;
-
-            lock (obj)
-            {
-                string json = File.ReadAllText(statusFilePath);
-                if (!string.IsNullOrWhiteSpace(json))
-                {
-                    var liststatus = JsonSerializer.Deserialize<Dictionary<string, StatusModel>>(json);
-                    if (liststatus != null && liststatus.ContainsKey(jobName))
-                    {
-                        return liststatus[jobName].Progression;
-                    }
-                }
-            }
-            return 0;
-        }
+      
     }
 }

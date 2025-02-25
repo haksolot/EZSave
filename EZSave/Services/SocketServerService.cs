@@ -24,13 +24,15 @@ namespace EZSave.Core.Services
         private ConfigService _configService = new ConfigService();
         private Dictionary<string, (Thread thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> jobStates;
         private Action _refresh;
-        public SocketServerService(Action refresh, int port = 6969, ManagerModel managerModel = null, ConfigFileModel configFileModel = null, Dictionary<string, (Thread thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> state = null)
+        private Action<string, int> _updateJobProgress;
+        public SocketServerService(Action refresh, Action<string, int> updateProgress, int port = 6969, ManagerModel managerModel = null, ConfigFileModel configFileModel = null, Dictionary<string, (Thread thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> state = null)
         {
             _port = port;
             _managerModel = managerModel;
             _configFileModel = configFileModel;
             jobStates = state;
             _refresh = refresh;
+            _updateJobProgress = updateProgress;
         }
 
         public void Start()
@@ -165,7 +167,7 @@ namespace EZSave.Core.Services
                         var playJobData = JsonSerializer.Deserialize<PlayJobModel>(command.Data);
                         var listeSelected = playJobData.selected;
                         var job2playName = playJobData.Name;
-                        _managerService.ExecuteSelected(jobStates, listeSelected, _managerModel, _configFileModel, job2playName);
+                        _managerService.ExecuteSelected(jobStates, listeSelected, _managerModel, _configFileModel, job2playName, _updateJobProgress);
                         client.Send(Encoding.UTF8.GetBytes("Success"));
                         break;
                     }

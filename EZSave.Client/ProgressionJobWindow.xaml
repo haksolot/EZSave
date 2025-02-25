@@ -1,0 +1,30 @@
+﻿<Window x:Class="EZSave.Client.ProgressionJobWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:EZSave.Client"
+        mc:Ignorable="d"
+        Title="ProgressionJobWindow" MaxHeight="200" MinHeight="200" MaxWidth="400" MinWidth="400">
+    <Grid>
+        <StackPanel Orientation="Vertical">
+            <TextBlock Text="{Binding JobName}"
+       Grid.Row="2"
+       Grid.Column="0"
+       Grid.ColumnSpan="4"
+       HorizontalAlignment="Center"
+       FontWeight="Bold"
+       Margin="16" />
+
+            <ProgressBar
+        Minimum="0"
+        Maximum="100"
+        Value="{Binding Progression}"
+        Height="25"
+        Width="300"
+            Margin="32" />
+
+            <Button Content="OK" Command="{Binding OkCommand}" IsEnabled="{Binding CanExecuteButton}" MaxWidth="100" MinWidth="100" MinHeight="30" MaxHeight="30" />
+        </StackPanel>
+    </Grid>
+</Window>

@@ -10,6 +10,7 @@ using EZSave.Core.Models;
 using EZSave.Core.Services;
 using EZSave.Client.Views;
 using System.Text.Json;
+using System.Windows;
 
 namespace EZSave.Client.ViewModels
 {
@@ -66,6 +67,17 @@ namespace EZSave.Client.ViewModels
         public ObservableCollection<string> List { get; set; } = new ObservableCollection<string>();
         public ObservableCollection<JobModel> Jobs { get; set; } = new ObservableCollection<JobModel>();
 
+        public Dictionary<string, int> progressions = new();
+
+        public Dictionary<string, int> Progressions
+        {
+            get => progressions;
+            set => SetProperty(ref progressions, value);
+        }
+
+        private Dictionary<string, ProgressViewModel> progressWindows = new();
+        public event PropertyChangedEventHandler? PropertyChanged;
+
         public ICommand UpdateProgressionCommand { get; }
         public ICommand AddToListCommand { get; }
         public ICommand RemoveToListCommand { get; }
@@ -78,7 +90,7 @@ namespace EZSave.Client.ViewModels
         public ICommand PauseCommand { get; set; }
         public ICommand StopCommand { get; set; }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
+        //public event PropertyChangedEventHandler? PropertyChanged;
 
         public MainWindowViewModel()
         {
@@ -100,7 +112,7 @@ namespace EZSave.Client.ViewModels
             AddAllToListCommand = new RelayCommand(AddAllToList);
             PauseCommand = new RelayCommand(Pause);
             StopCommand = new RelayCommand(Stop);
-            UpdateProgressionCommand = new RelayCommand(UpdateProgression);
+            //UpdateProgressionCommand = new RelayCommand(UpdateProgression);
             ExecuteJobSelectionCommand = new RelayCommand<ObservableCollection<string>>(ExecuteJobSelection);
         }
 
@@ -160,10 +172,33 @@ namespace EZSave.Client.ViewModels
             RefreshJobs();
         }
 
+        private void OpenProgressJobWindow(string jobName)
+        {
+            //var window = new ProgressionJobWindow(jobName, this);
+            //window.Show();
+
+            var window = new ProgressionJobWindow(jobName, this);
+            var progressViewModel = new ProgressViewModel(jobName, this);
+
+            window.DataContext = progressViewModel;
+
+            window.Title = jobName;
+            window.Show();
+
+            progressWindows[jobName] = progressViewModel;
+        }
+
         private void ExecuteJobSelection(ObservableCollection<string> selectedNames)
         {
             Debug.WriteLine($"element selectionné {ElementSelectionneList}");
-
+            //foreach (var jobName in selectedNames)
+            //{
+            //    if (!IsProgressJobWindowOpen(jobName))
+            //    {
+            //        OpenProgressJobWindow(jobName);
+            //    }
+            //    var progress = new Progress<int>(value => UpdateJobProgress(jobName, value));
+            //}
             //bool result = managerService.ExecuteSelected(JobStates, selectedNames, managerModel, configFileModel, ElementSelectionneList);
             var playJobData = new PlayJobModel();
             playJobData.Name = ElementSelectionneList;
@@ -256,12 +291,50 @@ namespace EZSave.Client.ViewModels
             }
         }
 
-        private void UpdateProgression()
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            if (ElementSelectionneList != null)
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public void UpdateJobProgress(string jobName, int value)
+        {
+            Debug.WriteLine($"Mise à jour du job {jobName} avec une progression de {value}%");
+
+            Application.Current.Dispatcher.Invoke(() =>
             {
-                Progression = statusService.GetProgression(ElementSelectionneList, configFileModel);
+                if (Progressions.ContainsKey(jobName))
+                {
+                    Progressions[jobName] = value;
+                }
+                else
+                {
+                    Progressions.Add(jobName, value);
+                }
+
+                OnPropertyChanged(nameof(Progressions));
+
+                if (progressWindows.ContainsKey(jobName))
+                {
+                    progressWindows[jobName].UpdateProgress(value);
+                }
+            });
+            //foreach (var kvp in progressions)
+            //{
+            //    Debug.WriteLine($"[DEBUG] {kvp.Key}: {kvp.Value}%");
+
+            //}
+        }
+
+        private bool IsProgressJobWindowOpen(string jobName)
+        {
+            foreach (Window window in Application.Current.Windows)
+            {
+                if (window is ProgressionJobWindow && window.Title == jobName)
+                {
+                    return true;
+                }
             }
+            return false;
         }
     }
 
