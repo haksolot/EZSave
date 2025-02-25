@@ -123,12 +123,7 @@
                     <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
 
-                <ProgressBar 
-    Minimum="0" 
-    Maximum="100" 
-    Value="{Binding Progression, Mode=OneWay}" 
-    Height="25" 
-    Width="300" />
+               
                
             </Grid>
         </Grid>

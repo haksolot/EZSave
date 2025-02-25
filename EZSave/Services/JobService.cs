@@ -181,7 +181,7 @@ namespace EZSave.Core.Services
                 if (cancellationToken.IsCancellationRequested) return false;
                 pauseEvent.WaitOne();
                 cancellationToken.ThrowIfCancellationRequested();
-
+                Thread.Sleep(4000); // Thread.Sleep pour mieux voir le pause et stop
 
                 string relativePath = file.Substring(job.Source.Length).TrimStart(Path.DirectorySeparatorChar);
                 statusModel.TargetFilePath = Path.Combine(job.Destination, relativePath);
