@@ -8,7 +8,11 @@ namespace EZSave.Core.Services
     {
         long fileSizeThreshold = JobModel.FileSizeThreshold;
 
-        public bool Start(JobModel job, StatusService statusService, LogService logService, ConfigFileModel configFileModel, string name, ManualResetEvent pauseEvent, CancellationToken cancellationToken, Dictionary<string, (Thread Thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> jobStates)
+
+
+
+        public bool Start(JobModel job, StatusService statusService, LogService logService, ConfigFileModel configFileModel, string name, ManualResetEvent pauseEvent, CancellationToken cancellationToken, Dictionary<string, (Thread Thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> jobStates, IProgress<int> progression)
+
         {
             if (cancellationToken.IsCancellationRequested)
             {
@@ -37,13 +41,16 @@ namespace EZSave.Core.Services
                 resumedJob.PauseEvent.Set();
             }
 
+
             if (job.Type == "full")
             {
-                return FullBackup(job, logService, statusService, configFileModel, pauseEvent, cancellationToken, jobStates);
+
+                return FullBackup(job, logService, statusService, configFileModel, pauseEvent, cancellationToken, jobStates, progression);
             }
+
             else if (job.Type == "diff")
             {
-                return DifferentialBackup(job, logService, statusService, configFileModel, pauseEvent, cancellationToken, jobStates);
+                return DifferentialBackup(job, logService, statusService, configFileModel, pauseEvent, cancellationToken, jobStates, progression);
             }
             else
             {
@@ -79,7 +86,9 @@ namespace EZSave.Core.Services
             }
         }
 
-        private bool FullBackup(JobModel job, LogService logService, StatusService statusService, ConfigFileModel configFileModel, ManualResetEvent pauseEvent, CancellationToken cancellationToken, Dictionary<string, (Thread Thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> jobStates)
+
+        private bool FullBackup(JobModel job, LogService logService, StatusService statusService, ConfigFileModel configFileModel, ManualResetEvent pauseEvent, CancellationToken cancellationToken, Dictionary<string, (Thread Thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> jobStates, IProgress<int> progression)
+
         {
             var filesToCopy = Directory.GetFiles(job.Source, "*", SearchOption.AllDirectories);
             filesToCopy = SortPriorityFilesFirst(filesToCopy);
@@ -90,17 +99,27 @@ namespace EZSave.Core.Services
                 Thread.Sleep(5000);
             }
 
-            return CopyFiles(job, filesToCopy, logService, statusService, configFileModel, pauseEvent, cancellationToken, jobStates);
+
+            return CopyFiles(job, filesToCopy, logService, statusService, configFileModel, pauseEvent, cancellationToken, jobStates, progression);
         }
 
 
-        private bool DifferentialBackup(JobModel job, LogService logService, StatusService statusService, ConfigFileModel configFileModel, ManualResetEvent pauseEvent, CancellationToken cancellationToken, Dictionary<string, (Thread Thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> jobStates)
+     
+
+        private bool DifferentialBackup(JobModel job, LogService logService, StatusService statusService, ConfigFileModel configFileModel, ManualResetEvent pauseEvent, CancellationToken cancellationToken, Dictionary<string, (Thread Thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> jobStates, IProgress<int> progression)
+
         {
             var filesToCopy = Directory.GetFiles(job.Source, "*", SearchOption.AllDirectories)
                       .Where(file =>
                           !File.Exists(Path.Combine(job.Destination, file.Substring(job.Source.Length).TrimStart(Path.DirectorySeparatorChar))) ||
                           File.GetLastWriteTime(file) > File.GetLastWriteTime(Path.Combine(job.Destination, file.Substring(job.Source.Length).TrimStart(Path.DirectorySeparatorChar))))
                       .ToArray();
+
+            Debug.WriteLine("[DEBUG] Fichiers à copier détectés par DifferentialBackup :");
+            foreach (var file in filesToCopy)
+            {
+                Debug.WriteLine(file);
+            }
 
             filesToCopy = SortPriorityFilesFirst(filesToCopy);
 
@@ -110,11 +129,15 @@ namespace EZSave.Core.Services
                 Thread.Sleep(5000);
             }
 
-            return CopyFiles(job, filesToCopy, logService, statusService, configFileModel, pauseEvent, cancellationToken, jobStates);
+
+            return CopyFiles(job, filesToCopy, logService, statusService, configFileModel, pauseEvent, cancellationToken, jobStates, progression);
         }
 
 
-        private bool CopyFiles(JobModel job, string[] filesToCopy, LogService logService, StatusService statusService, ConfigFileModel configFileModel, ManualResetEvent pauseEvent, CancellationToken cancellationToken, Dictionary<string, (Thread Thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> jobStates)
+
+
+        private bool CopyFiles(JobModel job, string[] filesToCopy, LogService logService, StatusService statusService, ConfigFileModel configFileModel, ManualResetEvent pauseEvent, CancellationToken cancellationToken, Dictionary<string, (Thread Thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> jobStates, IProgress<int> progression)
+
         {
             using var fileLock = new SemaphoreSlim(1, 1);
             StatusModel statusModel = new StatusModel();
@@ -128,11 +151,12 @@ namespace EZSave.Core.Services
             statusModel.TargetFilePath = job.Destination;
             statusModel.State = "Activate";
             statusModel.Progression = 0;
-            statusModel.TotalFilesSize = Directory.GetFiles(job.Source, "*", SearchOption.AllDirectories).Sum(file => new FileInfo(file).Length); ;
-            statusModel.TotalFilesToCopy = Directory.GetFiles(job.Source, "*", SearchOption.AllDirectories).Length;
-            statusModel.FilesLeftToCopy = Directory.GetFiles(job.Source, "*", SearchOption.AllDirectories).Length;
-            statusModel.FilesSizeLeftToCopy = Directory.GetFiles(job.Source, "*", SearchOption.AllDirectories).Sum(file => new FileInfo(file).Length);
+            statusModel.TotalFilesSize = filesToCopy.Sum(file => new FileInfo(file).Length); ;
+            statusModel.TotalFilesToCopy = filesToCopy.Length;
+            statusModel.FilesLeftToCopy = filesToCopy.Length;
+            statusModel.FilesSizeLeftToCopy = filesToCopy.Sum(file => new FileInfo(file).Length);
             statusService.SaveStatus(statusModel, configFileModel);
+            progression.Report(statusModel.Progression);
 
             foreach (string file in filesToCopy)
             {
@@ -187,15 +211,14 @@ namespace EZSave.Core.Services
                 statusModel.FilesLeftToCopy--;
                 if (statusModel.TotalFilesSize != 0)
                 {
-                    var temp1 = statusModel.TotalFilesSize - statusModel.FilesSizeLeftToCopy;
-                    var temp2 = (decimal)temp1 / statusModel.TotalFilesSize;
-                    var temp3 = temp2 * 100;
-                    decimal progression_temp = (decimal)temp3;
+                    decimal progression_temp = (((decimal)statusModel.TotalFilesSize - statusModel.FilesSizeLeftToCopy) / statusModel.TotalFilesSize)*100;
                     statusModel.Progression = (int)Math.Floor(progression_temp);
+                    progression.Report(statusModel.Progression);
                 }
                 else
                 {
                     statusModel.Progression = 100;
+                    progression.Report(statusModel.Progression);
                 }
 
                 statusModel.State = "En Cours";
@@ -244,5 +267,6 @@ namespace EZSave.Core.Services
 
             return priorityFiles.Concat(nonPriorityFiles).ToArray();
         }
+
     }
 }

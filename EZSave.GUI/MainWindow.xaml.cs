@@ -14,9 +14,6 @@ namespace EZSave.GUI
             DataContext = new MainWindowViewModel();
         }
 
-        private void Button_Click()
-        {
 
-        }
     }
 }
