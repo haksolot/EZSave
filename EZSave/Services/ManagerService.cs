@@ -40,7 +40,8 @@ namespace EZSave.Core.Services
  ObservableCollection<string> listeSelected,
  ManagerModel manager,
  ConfigFileModel configFileModel,
- string jobToResume )
+ string jobToResume,
+ IProgress<int> progression)
     {
       object obj = new object();
       bool hasFailed = false;
@@ -88,7 +89,7 @@ namespace EZSave.Core.Services
 
             if (!cts.Token.IsCancellationRequested)
             {
-              bool success = service.Start(job, statusService, logService, configFileModel, job.Name, pauseEvent, cts.Token);
+              bool success = service.Start(job, statusService, logService, configFileModel, job.Name, pauseEvent, cts.Token, progression);
               if (!success)
               {
                 lock (obj)

@@ -123,13 +123,13 @@
                     <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
 
-
-                <TextBlock 
-        Text="{Binding Status.Progression, StringFormat='Progression : {0}%'}"
-        HorizontalAlignment="Center"
-        VerticalAlignment="Top"
-        FontSize="16"
-        Margin="10"/>
+                <ProgressBar 
+    Minimum="0" 
+    Maximum="100" 
+    Value="{Binding Progression, Mode=OneWay}" 
+    Height="25" 
+    Width="300" />
+               
             </Grid>
         </Grid>
     </Grid>

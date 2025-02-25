@@ -14,247 +14,278 @@ using EZSave.GUI.Views;
 
 namespace EZSave.GUI.ViewModels
 {
-  public class MainWindowViewModel : BaseViewModel, INotifyPropertyChanged
-  {
-    public LanguageViewModel LanguageViewModel { get; set; }
-
-    private JobService jobService;
-    public ICommand OpenConfigCommand { get; }
-
-    private ConfigFileModel configFileModel { get; set; }
-
-    private ManagerService managerService;
-    private ConfigService configService;
-    private StatusService statusService;
-
-    public ManagerModel managerModel;
-
-    private JobModel _elementSelectionne;
-
-    private SocketServerService _socketServer;
-    private Thread _serverThread;
-
-    public JobModel ElementSelectionne
+    public class MainWindowViewModel : BaseViewModel, INotifyPropertyChanged
     {
-      get => _elementSelectionne;
-      set => SetProperty(ref _elementSelectionne, value);
-    }
+        public LanguageViewModel LanguageViewModel { get; set; }
 
-    private string _elementSelectionneList;
+        private JobService jobService;
+        public ICommand OpenConfigCommand { get; }
 
-    public string ElementSelectionneList
-    {
-      get => _elementSelectionneList;
-      set => SetProperty(ref _elementSelectionneList, value);
-    }
+        private ConfigFileModel configFileModel { get; set; }
 
-    private bool _hasPendingPriorityFiles;
-    public bool HasPendingPriorityFiles
-    {
-        get => _hasPendingPriorityFiles;
-        set
+        private ManagerService managerService;
+        private ConfigService configService;
+        private StatusService statusService;
+
+        public ManagerModel managerModel;
+
+        private JobModel _elementSelectionne;
+
+        private SocketServerService _socketServer;
+        private Thread _serverThread;
+
+        public JobModel ElementSelectionne
         {
-            if (_hasPendingPriorityFiles != value)
+            get => _elementSelectionne;
+            set => SetProperty(ref _elementSelectionne, value);
+        }
+
+        private string _elementSelectionneList;
+
+        public string ElementSelectionneList
+        {
+            get => _elementSelectionneList;
+            set => SetProperty(ref _elementSelectionneList, value);
+        }
+
+        private bool _hasPendingPriorityFiles;
+
+        public bool HasPendingPriorityFiles
+        {
+            get => _hasPendingPriorityFiles;
+            set
             {
-                _hasPendingPriorityFiles = value;
-                Debug.WriteLine($"[DEBUG] Mise à jour de HasPendingPriorityFiles : {value}");
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasPendingPriorityFiles)));
+                if (_hasPendingPriorityFiles != value)
+                {
+                    _hasPendingPriorityFiles = value;
+                    Debug.WriteLine($"[DEBUG] Mise à jour de HasPendingPriorityFiles : {value}");
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasPendingPriorityFiles)));
+                }
             }
         }
-    }
 
         private string _message;
 
-    public string Message
-    {
-      get => _message;
-      set => SetProperty(ref _message, value);
-    }
-
-    private int progression;
-    public int Progression
-    {
-      get => progression;
-      set => SetProperty(ref progression, value);
-    }
-
-        private readonly StatusService _statusService;
-        List<Thread> threads = new List<Thread>();
-    Dictionary<string, (Thread thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> JobStates = new();
-    public ObservableCollection<string> List { get; set; } = new ObservableCollection<string>();
-    public ObservableCollection<JobModel> Jobs { get; set; } = new ObservableCollection<JobModel>();
-
-    public ICommand UpdateProgressionCommand { get; }
-    public ICommand AddToListCommand { get; }
-    public ICommand RemoveToListCommand { get; }
-    public ICommand RemoveAllToListCommand { get; }
-    public ICommand AddAllToListCommand { get; }
-    public ICommand RefreshCommand { get; set; }
-    public ICommand ExecuteAllJobsCommand { get; set; }
-    public ICommand OpenJobWindowCommand { get; set; }
-    public ICommand ExecuteJobSelectionCommand { get; set; }
-    public ICommand PauseCommand { get; set; }
-    public ICommand StopCommand { get; set; }
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-        public MainWindowViewModel()
-    {
-      BaseViewModel.MainWindowViewModel = this;
-
-      Initialize();
-            LanguageViewModel = new LanguageViewModel();
-
-
-      RefreshCommand = new RelayCommand(RefreshJobs);
-      OpenJobWindowCommand = new RelayCommand(OpenAddJobWindow);
-
-      OpenConfigCommand = new RelayCommand(OpenConfigWindow);
-
-      AddToListCommand = new RelayCommand(AddToList);
-      RemoveToListCommand = new RelayCommand(DelFromList);
-      RemoveAllToListCommand = new RelayCommand(DelAllFromList);
-      AddAllToListCommand = new RelayCommand(AddAllToList);
-      PauseCommand = new RelayCommand(Pause);
-      StopCommand = new RelayCommand(Stop);
-      //UpdateProgressionCommand = new RelayCommand(UpdateProgression);
-      ExecuteJobSelectionCommand = new RelayCommand<ObservableCollection<string>>(ExecuteJobSelection);
+        public string Message
+        {
+            get => _message;
+            set => SetProperty(ref _message, value);
         }
 
-    private void SetProperty<T>(ref T old, T @new, [CallerMemberName] string name = "")
-    {
-      old = @new;
-      PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-    }
+        private int progression;
 
-    private void OpenConfigWindow()
-    {
-      var configWindow = new ConfigWindow(managerModel, configFileModel);
-      configWindow.ShowDialog();
-      RefreshJobs();
-    }
+        public int Progression
+        {
+            get => progression;
+            set => SetProperty(ref progression, value);
+        }
 
-    private void Initialize()
-    {
-      configFileModel = new ConfigFileModel();
-      managerModel = new ManagerModel();
-      configService = new ConfigService();
-      managerService = new ManagerService();
-      configService.SetConfigDestination("conf.json", configFileModel);
-      configService.LoadConfigFile(configFileModel);
-      managerService.Read(managerModel, configFileModel);
+        private readonly StatusService _statusService;
+        private List<Thread> threads = new List<Thread>();
+        private Dictionary<string, (Thread thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> JobStates = new();
+        public ObservableCollection<string> List { get; set; } = new ObservableCollection<string>();
+        public ObservableCollection<JobModel> Jobs { get; set; } = new ObservableCollection<JobModel>();
+        public Dictionary<string, int> progressions = new();
 
-      _socketServer = new SocketServerService(6969, managerModel, configFileModel);
-      _serverThread = new Thread(_socketServer.Start) { IsBackground = true };
-      _serverThread.Start();
-    }
+        public Dictionary<string, int> Progressions
+        {
+            get => progressions;
+            set => SetProperty(ref progressions, value);
+        }
+        public ICommand UpdateProgressionCommand { get; }
+        public ICommand AddToListCommand { get; }
+        public ICommand RemoveToListCommand { get; }
+        public ICommand RemoveAllToListCommand { get; }
+        public ICommand AddAllToListCommand { get; }
+        public ICommand RefreshCommand { get; set; }
+        public ICommand ExecuteAllJobsCommand { get; set; }
+        public ICommand OpenJobWindowCommand { get; set; }
+        public ICommand ExecuteJobSelectionCommand { get; set; }
+        public ICommand PauseCommand { get; set; }
+        public ICommand StopCommand { get; set; }
 
-    public void RefreshJobs()
-    {
-      Jobs.Clear();
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        public MainWindowViewModel()
+        {
+            BaseViewModel.MainWindowViewModel = this;
+
+            Initialize();
+            LanguageViewModel = new LanguageViewModel();
+
+            RefreshCommand = new RelayCommand(RefreshJobs);
+            OpenJobWindowCommand = new RelayCommand(OpenAddJobWindow);
+
+            OpenConfigCommand = new RelayCommand(OpenConfigWindow);
+
+            AddToListCommand = new RelayCommand(AddToList);
+            RemoveToListCommand = new RelayCommand(DelFromList);
+            RemoveAllToListCommand = new RelayCommand(DelAllFromList);
+            AddAllToListCommand = new RelayCommand(AddAllToList);
+            PauseCommand = new RelayCommand(Pause);
+            StopCommand = new RelayCommand(Stop);
+            ExecuteJobSelectionCommand = new RelayCommand<ObservableCollection<string>>(ExecuteJobSelection);
+        }
+
+        private void SetProperty<T>(ref T old, T @new, [CallerMemberName] string name = "")
+        {
+            old = @new;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        }
+
+        private void OpenConfigWindow()
+        {
+            var configWindow = new ConfigWindow(managerModel, configFileModel);
+            configWindow.ShowDialog();
+            RefreshJobs();
+        }
+
+        private void Initialize()
+        {
+            configFileModel = new ConfigFileModel();
+            managerModel = new ManagerModel();
+            configService = new ConfigService();
+            managerService = new ManagerService();
+            configService.SetConfigDestination("conf.json", configFileModel);
+            configService.LoadConfigFile(configFileModel);
+            managerService.Read(managerModel, configFileModel);
+
+            _socketServer = new SocketServerService(6969, managerModel, configFileModel);
+            _serverThread = new Thread(_socketServer.Start) { IsBackground = true };
+            _serverThread.Start();
+        }
+
+        public void RefreshJobs()
+        {
+            Jobs.Clear();
             HasPendingPriorityFiles = Jobs.Any(job => jobService.HasPendingPriorityFiles(job));
             Debug.WriteLine($"[DEBUG] Vérification fichiers .prio : {HasPendingPriorityFiles}");
 
             if (managerModel.Jobs != null && managerModel.Jobs.Any())
-      {
-        foreach (var job in managerModel.Jobs)
-        {
-          Jobs.Add(job);
+            {
+                foreach (var job in managerModel.Jobs)
+                {
+                    Jobs.Add(job);
+                }
+            }
+            else
+            {
+                Debug.WriteLine("Aucun job à changer dans les listes.");
+            }
         }
-      }
-      else
-      {
-        Debug.WriteLine("Aucun job à changer dans les listes.");
-      }
-    }
 
-    private void OpenAddJobWindow()
-    {
-      var window = new AddJobWindow(managerModel, configFileModel);
-      window.ShowDialog();
-      RefreshJobs();
-    }
-
-    private void ExecuteJobSelection(ObservableCollection<string> selectedNames)
-    {
-      Debug.WriteLine($"element selectionné {ElementSelectionneList}");
-
-      bool result = managerService.ExecuteSelected(JobStates, selectedNames, managerModel, configFileModel, ElementSelectionneList);
-      if (result)
-      {
-        Message = Properties.Resources.JobsExecutedSuccess;
-      }
-      else
-      {
-        Message = Properties.Resources.JobsExecutedFail;
-      }
-    }
-
-    private void AddToList()
-    {
-      if (ElementSelectionne != null && !List.Contains(ElementSelectionne.Name))
-      {
-        var valeur = ElementSelectionne.Name;
-        List.Add(valeur);
-      }
-    }
-
-    private void AddAllToList()
-    {
-      if (managerModel.Jobs.Count != 0)
-      {
-        foreach (var item in managerModel.Jobs)
+        private void OpenAddJobWindow()
         {
-          if (!List.Contains(item.Name))
-          {
-            List.Add(item.Name);
-          }
+            var window = new AddJobWindow(managerModel, configFileModel);
+            window.ShowDialog();
+            RefreshJobs();
         }
-      }
 
-    }
+        private void OpenProgressJobWindow(string jobName)
+        {
+            var window = new ProgressionJobWindow(jobName, this);
+            window.Show();
+        }
 
-    public void DelFromList()
-    {
-      if (ElementSelectionneList != null)
-      {
-        List.Remove(ElementSelectionneList);
-      }
+        private void ExecuteJobSelection(ObservableCollection<string> selectedNames)
+        {
+            Debug.WriteLine($"element selectionné {ElementSelectionneList}");
+            
+            foreach (var jobName in selectedNames)
+            {
+                var progress = new Progress<int>(value => UpdateJobProgress(jobName, value));
+                OpenProgressJobWindow(jobName);
+               
+            }
+                
+            bool result = managerService.ExecuteSelected(JobStates, selectedNames, managerModel, configFileModel, ElementSelectionneList, new Progress<int>(value => Progression = value));
+            if (result)
+            {
+               
+                Message = Properties.Resources.JobsExecutedSuccess;
+            }
+            else
+            {
+                Message = Properties.Resources.JobsExecutedFail;
+            }
+        }
 
-      foreach (var item in List)
-      {
-        Debug.WriteLine(item);
-      }
-    }
+        private void AddToList()
+        {
+            if (ElementSelectionne != null && !List.Contains(ElementSelectionne.Name))
+            {
+                var valeur = ElementSelectionne.Name;
+                List.Add(valeur);
+            }
+        }
 
-    public void DelAllFromList()
-    {
-      if (List.Count != 0)
-      {
-        List.Clear();
-      }
-    }
+        private void AddAllToList()
+        {
+            if (managerModel.Jobs.Count != 0)
+            {
+                foreach (var item in managerModel.Jobs)
+                {
+                    if (!List.Contains(item.Name))
+                    {
+                        List.Add(item.Name);
+                    }
+                }
+            }
+        }
 
-    public void Pause()
-    {
-        managerService.Pause(ElementSelectionneList, JobStates);
-            ElementSelectionneList = null; 
+        public void DelFromList()
+        {
+            if (ElementSelectionneList != null)
+            {
+                List.Remove(ElementSelectionneList);
+            }
 
+            foreach (var item in List)
+            {
+                Debug.WriteLine(item);
+            }
+        }
+
+        public void DelAllFromList()
+        {
+            if (List.Count != 0)
+            {
+                List.Clear();
+            }
+        }
+
+        public void Pause()
+        {
+            managerService.Pause(ElementSelectionneList, JobStates);
+            ElementSelectionneList = null;
         }
 
         public void Stop()
-    {
+        {
+            Debug.WriteLine($"{ElementSelectionneList} mis en arret");
+            managerService.Stop(ElementSelectionneList, JobStates);
+            ElementSelectionneList = null;
+        }
 
-        Debug.WriteLine($"{ElementSelectionneList} mis en arret");
-        managerService.Stop(ElementSelectionneList, JobStates);
-            ElementSelectionneList = null; 
+        public void UpdateJobProgress(string jobName, int value)
+        {
+                Debug.WriteLine($"Mise à jour du job {{jobName}} avec une progression de {{value}}%");
+            if (progressions.ContainsKey(jobName))
+            {
+                progressions[jobName] = value;
+            }
+            else
+            {
+                progressions.Add(jobName, value);
+            }
 
+            foreach (var kvp in progressions)
+            {
+                Debug.WriteLine($"[DEBUG] {kvp.Key}: {kvp.Value}%");
 
+            }
         }
 
 
-
-
-
     }
-
 }
