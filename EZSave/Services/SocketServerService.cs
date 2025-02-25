@@ -104,6 +104,38 @@ namespace EZSave.Core.Services
                         break;
                     }
 
+                case "deljob":
+                    try
+                    {
+                        JobModel? job = JsonSerializer.Deserialize<JobModel>(command.Data);
+                        _managerService.RemoveJob(job, _managerModel);
+                        _configService.SaveConfigFile(_configFileModel);
+                        client.Send(Encoding.UTF8.GetBytes("Success"));
+                        _refresh();
+                        break;
+                    }
+                    catch
+                    {
+                        client.Send(Encoding.UTF8.GetBytes("Error"));
+                        break;
+                    }
+
+                case "editjob":
+                    try
+                    {
+                        JobModel? job = JsonSerializer.Deserialize<JobModel>(command.Data);
+                        _configFileModel.Jobs[job.Name] = job;
+                        _configService.SaveConfigFile(_configFileModel);
+                        client.Send(Encoding.UTF8.GetBytes("Success"));
+                        _refresh();
+                        break;
+                    }
+                    catch
+                    {
+                        client.Send(Encoding.UTF8.GetBytes("Error"));
+                        break;
+                    }
+
                 case "getconf":
                     string jsonConf = JsonSerializer.Serialize(_configFileModel);
                     client.Send(Encoding.UTF8.GetBytes(jsonConf));
@@ -130,7 +162,7 @@ namespace EZSave.Core.Services
                 case "playjob":
                     try
                     {
-                        var playJobData = JsonSerializer.Deserialize<playJobModel>(command.Data);
+                        var playJobData = JsonSerializer.Deserialize<PlayJobModel>(command.Data);
                         var listeSelected = playJobData.selected;
                         var job2playName = playJobData.Name;
                         _managerService.ExecuteSelected(jobStates, listeSelected, _managerModel, _configFileModel, job2playName);
@@ -141,7 +173,8 @@ namespace EZSave.Core.Services
                 case "pausejob":
                     try
                     {
-                        string job2pauseName = command.Data;
+                        var job2pauseData = JsonSerializer.Deserialize<JobControlModel>(command.Data);
+                        string job2pauseName = job2pauseData.Name;
                         _managerService.Pause(job2pauseName, jobStates);
                         client.Send(Encoding.UTF8.GetBytes("Success"));
                         break;
@@ -151,8 +184,10 @@ namespace EZSave.Core.Services
                 case "stopjob":
                     try
                     {
-                        string job2stopName = command.Data;
-                        _managerService.Pause(job2stopName, jobStates);
+                        var job2StopData = JsonSerializer.Deserialize<JobControlModel>(command.Data);
+                        string job2StopName = job2StopData.Name;
+                        _managerService.Pause(job2StopName, jobStates);
+                        client.Send(Encoding.UTF8.GetBytes("Success"));
                         break;
                     }
                     catch { client.Send(Encoding.UTF8.GetBytes("Error")); break; }
@@ -162,12 +197,6 @@ namespace EZSave.Core.Services
                     client.Dispose();
                     break;
             }
-        }
-
-        public class playJobModel
-        {
-            public string Name { get; set; }
-            public ObservableCollection<string> selected { get; set; }
         }
     }
 }

@@ -112,7 +112,7 @@ namespace EZSave.Client.ViewModels
 
         private void OpenConfigWindow()
         {
-            var configWindow = new ConfigWindow(managerModel, configFileModel);
+            var configWindow = new ConfigWindow(managerModel, configFileModel, _socketClient);
             configWindow.ShowDialog();
             RefreshJobs();
         }
@@ -130,6 +130,10 @@ namespace EZSave.Client.ViewModels
             var result = _socketClient.SendCommand("getjoblist");
             managerModel.Jobs = JsonSerializer.Deserialize<ObservableCollection<JobModel>>(result);
             RefreshJobs();
+
+            result = _socketClient.SendCommand("getconf");
+            ConfigFileModel newConfFile = JsonSerializer.Deserialize<ConfigFileModel>(result);
+            configFileModel = newConfFile;
         }
 
         public void RefreshJobs()
@@ -160,14 +164,23 @@ namespace EZSave.Client.ViewModels
         {
             Debug.WriteLine($"element selectionné {ElementSelectionneList}");
 
-            bool result = managerService.ExecuteSelected(JobStates, selectedNames, managerModel, configFileModel, ElementSelectionneList);
-            if (result)
+            //bool result = managerService.ExecuteSelected(JobStates, selectedNames, managerModel, configFileModel, ElementSelectionneList);
+            var playJobData = new PlayJobModel();
+            playJobData.Name = ElementSelectionneList;
+            playJobData.selected = selectedNames;
+            var jsonData = JsonSerializer.Serialize(playJobData);
+            var result = _socketClient.SendCommand("playjob", jsonData);
+            if (result == "Success")
             {
                 Message = Properties.Resources.JobsExecutedSuccess;
             }
-            else
+            else if (result == "Error")
             {
                 Message = Properties.Resources.JobsExecutedFail;
+            }
+            else
+            {
+                Message = "Problem";
             }
         }
 
@@ -220,7 +233,12 @@ namespace EZSave.Client.ViewModels
         {
             if (ElementSelectionneList != null)
             {
-                managerService.Pause(ElementSelectionneList, JobStates);
+                var jop2pauseControll = new JobControlModel();
+                jop2pauseControll.Name = ElementSelectionneList;
+                jop2pauseControll.selected = JobStates;
+                var jsonJob2Pause = JsonSerializer.Serialize(jop2pauseControll);
+                _socketClient.SendCommand("pausejob", jsonJob2Pause);
+                //managerService.Pause(ElementSelectionneList, JobStates);
             }
         }
 
@@ -228,8 +246,13 @@ namespace EZSave.Client.ViewModels
         {
             if (ElementSelectionneList != null)
             {
-                Debug.WriteLine($"{ElementSelectionneList} mis en arret");
-                managerService.Stop(ElementSelectionneList, JobStates);
+                //Debug.WriteLine($"{ElementSelectionneList} mis en arret");
+                //managerService.Stop(ElementSelectionneList, JobStates);
+                var jop2stopControll = new JobControlModel();
+                jop2stopControll.Name = ElementSelectionneList;
+                jop2stopControll.selected = JobStates;
+                var jsonJob2Stop = JsonSerializer.Serialize(jop2stopControll);
+                _socketClient.SendCommand("stopjob", jsonJob2Stop);
             }
         }
 
