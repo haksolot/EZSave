@@ -85,6 +85,8 @@ namespace EZSave.GUI.ViewModels
         private Dictionary<string, (Thread thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> JobStates = new();
         public ObservableCollection<string> List { get; set; } = new ObservableCollection<string>();
         public ObservableCollection<JobModel> Jobs { get; set; } = new ObservableCollection<JobModel>();
+
+        //A supprimer si autre methode fonctionne
         public Dictionary<string, int> progressions = new();
 
         public Dictionary<string, int> Progressions
@@ -92,6 +94,11 @@ namespace EZSave.GUI.ViewModels
             get => progressions;
             set => SetProperty(ref progressions, value);
         }
+
+        //nouvel methode 
+        private Dictionary<string, ProgressViewModel> progressWindows = new();
+        public event PropertyChangedEventHandler? PropertyChanged;
+
         public ICommand UpdateProgressionCommand { get; }
         public ICommand AddToListCommand { get; }
         public ICommand RemoveToListCommand { get; }
@@ -103,8 +110,6 @@ namespace EZSave.GUI.ViewModels
         public ICommand ExecuteJobSelectionCommand { get; set; }
         public ICommand PauseCommand { get; set; }
         public ICommand StopCommand { get; set; }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
 
         public MainWindowViewModel()
         {
@@ -183,8 +188,16 @@ namespace EZSave.GUI.ViewModels
 
         private void OpenProgressJobWindow(string jobName)
         {
+            //var window = new ProgressionJobWindow(jobName, this);
+            //window.Show();
+
             var window = new ProgressionJobWindow(jobName, this);
+            var progressViewModel = new ProgressViewModel(jobName, this);
+
+            window.DataContext = progressViewModel;
             window.Show();
+
+            progressWindows[jobName] = progressViewModel;
         }
 
         private void ExecuteJobSelection(ObservableCollection<string> selectedNames)
@@ -193,12 +206,19 @@ namespace EZSave.GUI.ViewModels
             
             foreach (var jobName in selectedNames)
             {
-                var progress = new Progress<int>(value => UpdateJobProgress(jobName, value));
                 OpenProgressJobWindow(jobName);
-               
+                var progress = new Progress<int>(value => UpdateJobProgress(jobName, value));
+                
             }
                 
-            bool result = managerService.ExecuteSelected(JobStates, selectedNames, managerModel, configFileModel, ElementSelectionneList, new Progress<int>(value => Progression = value));
+            bool result = managerService.ExecuteSelected(
+                JobStates, 
+                selectedNames, 
+                managerModel, 
+                configFileModel, 
+                ElementSelectionneList, 
+                UpdateJobProgress);
+
             if (result)
             {
                
@@ -267,23 +287,38 @@ namespace EZSave.GUI.ViewModels
             ElementSelectionneList = null;
         }
 
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         public void UpdateJobProgress(string jobName, int value)
         {
-                Debug.WriteLine($"Mise à jour du job {{jobName}} avec une progression de {{value}}%");
-            if (progressions.ContainsKey(jobName))
-            {
-                progressions[jobName] = value;
-            }
-            else
-            {
-                progressions.Add(jobName, value);
-            }
+            Debug.WriteLine($"Mise à jour du job {jobName} avec une progression de {value}%");
 
-            foreach (var kvp in progressions)
+            Application.Current.Dispatcher.Invoke(() =>
             {
-                Debug.WriteLine($"[DEBUG] {kvp.Key}: {kvp.Value}%");
+                if (Progressions.ContainsKey(jobName))
+                {
+                    Progressions[jobName] = value;
+                }
+                else
+                {
+                    Progressions.Add(jobName, value);
+                }
 
-            }
+                OnPropertyChanged(nameof(Progressions));
+
+                if (progressWindows.ContainsKey(jobName))
+                {
+                    progressWindows[jobName].UpdateProgress(value);
+                }
+            });
+            //foreach (var kvp in progressions)
+            //{
+            //    Debug.WriteLine($"[DEBUG] {kvp.Key}: {kvp.Value}%");
+
+            //}
         }
 
 

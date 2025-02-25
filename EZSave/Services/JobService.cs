@@ -88,6 +88,12 @@ namespace EZSave.Core.Services
                           File.GetLastWriteTime(file) > File.GetLastWriteTime(Path.Combine(job.Destination, file.Substring(job.Source.Length).TrimStart(Path.DirectorySeparatorChar))))
                       .ToArray();
 
+            Debug.WriteLine("[DEBUG] Fichiers à copier détectés par DifferentialBackup :");
+            foreach (var file in filesToCopy)
+            {
+                Debug.WriteLine(file);
+            }
+
             filesToCopy = SortPriorityFilesFirst(filesToCopy);
 
             
@@ -114,10 +120,10 @@ namespace EZSave.Core.Services
             statusModel.TargetFilePath = job.Destination;
             statusModel.State = "Activate";
             statusModel.Progression = 0;
-            statusModel.TotalFilesSize = Directory.GetFiles(job.Source, "*", SearchOption.AllDirectories).Sum(file => new FileInfo(file).Length); ;
-            statusModel.TotalFilesToCopy = Directory.GetFiles(job.Source, "*", SearchOption.AllDirectories).Length;
-            statusModel.FilesLeftToCopy = Directory.GetFiles(job.Source, "*", SearchOption.AllDirectories).Length;
-            statusModel.FilesSizeLeftToCopy = Directory.GetFiles(job.Source, "*", SearchOption.AllDirectories).Sum(file => new FileInfo(file).Length);
+            statusModel.TotalFilesSize = filesToCopy.Sum(file => new FileInfo(file).Length); ;
+            statusModel.TotalFilesToCopy = filesToCopy.Length;
+            statusModel.FilesLeftToCopy = filesToCopy.Length;
+            statusModel.FilesSizeLeftToCopy = filesToCopy.Sum(file => new FileInfo(file).Length);
             statusService.SaveStatus(statusModel, configFileModel);
             progression.Report(statusModel.Progression);
 

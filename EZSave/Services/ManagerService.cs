@@ -41,7 +41,7 @@ namespace EZSave.Core.Services
  ManagerModel manager,
  ConfigFileModel configFileModel,
  string jobToResume,
- IProgress<int> progression)
+ Action<string, int> updateProgressAction)
     {
       object obj = new object();
       bool hasFailed = false;
@@ -89,7 +89,10 @@ namespace EZSave.Core.Services
 
             if (!cts.Token.IsCancellationRequested)
             {
-              bool success = service.Start(job, statusService, logService, configFileModel, job.Name, pauseEvent, cts.Token, progression);
+                    var progression = new Progress<int>(value => updateProgressAction(job.Name, value));
+
+                    bool success = service.Start(job, statusService, logService, configFileModel, job.Name, pauseEvent, cts.Token, progression);
+
               if (!success)
               {
                 lock (obj)

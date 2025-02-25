@@ -23,7 +23,6 @@ namespace EZSave.GUI
         public ProgressionJobWindow(string jobName, MainWindowViewModel MainViewModel)
         {
             InitializeComponent();
-            DataContext = new ProgressViewModel(jobName, MainViewModel);
 
         }
     }

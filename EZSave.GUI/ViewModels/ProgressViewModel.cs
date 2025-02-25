@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace EZSave.GUI.ViewModels
@@ -31,6 +32,10 @@ namespace EZSave.GUI.ViewModels
                     progression = value;
                     OnPropertyChanged();
                     CanExecuteButton = (progression == 100);
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        CanExecuteButton = (progression == 100);
+                    });
                 }
             }
         }
@@ -55,14 +60,26 @@ namespace EZSave.GUI.ViewModels
             MainWindowViewModel = mainWindowViewModel;
             OkCommand = new RelayCommand(TerminerAction);
 
-            MainWindowViewModel.PropertyChanged += (sender, args) =>
+            if (MainWindowViewModel.Progressions.ContainsKey(JobName))
             {
-                if (args.PropertyName == "Progression")
-                {
-                    Progression = MainWindowViewModel.Progression;
-                }
-            };
+                Progression = MainWindowViewModel.Progressions[JobName];
+            }
+            //MainWindowViewModel.PropertyChanged += (sender, args) =>
+            //{
+            //    if (args.PropertyName == "Progression")
+            //    {
+            //        Progression = MainWindowViewModel.Progression;
+            //    }
+            //};
         }
+        public void UpdateProgress(int value)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                Progression = value;
+            });
+        }
+
 
         private void TerminerAction()
         {
