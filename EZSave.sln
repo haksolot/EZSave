@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CryptoSoft", "CryptoSoft\Cr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "testRemoteClient", "testRemoteClient\testRemoteClient.csproj", "{9219A3F8-E03A-4292-9277-3188B11F68DC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EZSave.Client", "EZSave.Client\EZSave.Client.csproj", "{2E2E91EB-A7A0-4BE4-99D5-720BCB6F3A54}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{9219A3F8-E03A-4292-9277-3188B11F68DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9219A3F8-E03A-4292-9277-3188B11F68DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9219A3F8-E03A-4292-9277-3188B11F68DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E2E91EB-A7A0-4BE4-99D5-720BCB6F3A54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E2E91EB-A7A0-4BE4-99D5-720BCB6F3A54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E2E91EB-A7A0-4BE4-99D5-720BCB6F3A54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E2E91EB-A7A0-4BE4-99D5-720BCB6F3A54}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

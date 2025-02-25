@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
@@ -20,11 +22,15 @@ namespace EZSave.Core.Services
         private ManagerService _managerService = new ManagerService();
         private ConfigFileModel _configFileModel;
         private ConfigService _configService = new ConfigService();
-        public SocketServerService(int port = 6969, ManagerModel managerModel = null, ConfigFileModel configFileModel = null)
+        private Dictionary<string, (Thread thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> jobStates;
+        private Action _refresh;
+        public SocketServerService(Action refresh, int port = 6969, ManagerModel managerModel = null, ConfigFileModel configFileModel = null, Dictionary<string, (Thread thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> state = null)
         {
             _port = port;
             _managerModel = managerModel;
             _configFileModel = configFileModel;
+            jobStates = state;
+            _refresh = refresh;
         }
 
         public void Start()
@@ -83,13 +89,20 @@ namespace EZSave.Core.Services
                     break;
 
                 case "addjob":
-                    JobModel? job = JsonSerializer.Deserialize<JobModel>(command.Data);
-                    var state = addJob(job.Name, job.Source, job.Destination, job.Type);
-                    if (state)
+                    try
+                    {
+                        JobModel? job = JsonSerializer.Deserialize<JobModel>(command.Data);
+                        _managerService.Add(job, _managerModel);
+                        _configService.SaveJob(job, _configFileModel);
                         client.Send(Encoding.UTF8.GetBytes("Success"));
-                    else
+                        _refresh();
+                        break;
+                    }
+                    catch
+                    {
                         client.Send(Encoding.UTF8.GetBytes("Error"));
-                    break;
+                        break;
+                    }
 
                 case "getconf":
                     string jsonConf = JsonSerializer.Serialize(_configFileModel);
@@ -112,15 +125,37 @@ namespace EZSave.Core.Services
                             break;
                         }
                     }
-                    catch
-                    {
-                        client.Send(Encoding.UTF8.GetBytes("Error"));
-                        break;
-                    }
+                    catch { client.Send(Encoding.UTF8.GetBytes("Error")); break; }
 
                 case "playjob":
+                    try
+                    {
+                        var playJobData = JsonSerializer.Deserialize<playJobModel>(command.Data);
+                        var listeSelected = playJobData.selected;
+                        var job2playName = playJobData.Name;
+                        _managerService.ExecuteSelected(jobStates, listeSelected, _managerModel, _configFileModel, job2playName);
+                        break;
+                    }
+                    catch { client.Send(Encoding.UTF8.GetBytes("Error")); break; }
 
                 case "pausejob":
+                    try
+                    {
+                        string job2pauseName = command.Data;
+                        _managerService.Pause(job2pauseName, jobStates);
+                        client.Send(Encoding.UTF8.GetBytes("Success"));
+                        break;
+                    }
+                    catch { client.Send(Encoding.UTF8.GetBytes("Error")); break; }
+
+                case "stopjob":
+                    try
+                    {
+                        string job2stopName = command.Data;
+                        _managerService.Pause(job2stopName, jobStates);
+                        break;
+                    }
+                    catch { client.Send(Encoding.UTF8.GetBytes("Error")); break; }
 
                 default:
                     client.Send(Encoding.UTF8.GetBytes("Unknown"));
@@ -129,25 +164,10 @@ namespace EZSave.Core.Services
             }
         }
 
-        private bool addJob(string name, string source, string destination, string type)
+        public class playJobModel
         {
-            try
-            {
-                var job = new JobModel();
-                job.Name = name;
-                job.Source = source;
-                job.Destination = destination;
-                job.Type = type;
-                _managerService.Add(job, _managerModel);
-                _configService.SaveJob(job, _configFileModel);
-
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            public string Name { get; set; }
+            public ObservableCollection<string> selected { get; set; }
         }
-
     }
 }

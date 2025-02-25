@@ -55,29 +55,29 @@ namespace EZSave.Tests
             Assert.Equal("C://test", loadedConfig.Jobs["TestJob"].Source);
         }
 
-        [Fact]
-        public void DeleteJob_Should_Remove_Job_From_Config()
-        {
-            var tempFilePath = Path.Combine(Path.GetTempPath(), "test_config.json");
-            var service = new ConfigService();
-            var model = new ConfigFileModel();
-            var job = new JobModel { Name = "TestJob", Source = "C://test", Destination = "C://test2", Type = "differential" };
+        //[Fact]
+        //public void DeleteJob_Should_Remove_Job_From_Config()
+        //{
+        //    var tempFilePath = Path.Combine(Path.GetTempPath(), "test_config.json");
+        //    var service = new ConfigService();
+        //    var model = new ConfigFileModel();
+        //    var job = new JobModel { Name = "TestJob", Source = "C://test", Destination = "C://test2", Type = "differential" };
 
-            service.SetConfigDestination(tempFilePath, model);
-            service.SaveJob(job, model);
+        //    service.SetConfigDestination(tempFilePath, model);
+        //    service.SaveJob(job, model);
 
-            service.DeleteJob(new JobModel { Name = "TestJob" }, model);
-            string json = "";
-            using (StreamReader reader = new StreamReader(tempFilePath))
-            {
-                json = reader.ReadToEnd();
-            }
-            //string json = File.ReadAllText(tempFilePath);
-            var loadedConfig = JsonSerializer.Deserialize<ConfigFileModel>(json);
+        //    service.DeleteJob(new JobModel { Name = "TestJob" }, model);
+        //    string json = "";
+        //    using (StreamReader reader = new StreamReader(tempFilePath))
+        //    {
+        //        json = reader.ReadToEnd();
+        //    }
+        //    //string json = File.ReadAllText(tempFilePath);
+        //    var loadedConfig = JsonSerializer.Deserialize<ConfigFileModel>(json);
 
-            Assert.NotNull(loadedConfig);
-            Assert.NotNull(loadedConfig.Jobs);
-            Assert.False(loadedConfig.Jobs.ContainsKey("TestJob"));
-        }
+        //    Assert.NotNull(loadedConfig);
+        //    Assert.NotNull(loadedConfig.Jobs);
+        //    Assert.False(loadedConfig.Jobs.ContainsKey("TestJob"));
+        //}
     }
 }

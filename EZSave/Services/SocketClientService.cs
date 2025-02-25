@@ -1,57 +1,50 @@
-﻿using System;
+﻿using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
+using EZSave.Core.Models;
 
 namespace EZSave.Core.Services
 {
     public class SocketClientService
     {
-        private TcpClient _client;
-        private NetworkStream _stream;
+        private readonly string _serverIp;
+        private readonly int _port;
 
-        public async Task ConnectAsync(string ip, int port)
+        public SocketClientService(string serverIp = "127.0.0.1", int port = 6969)
         {
-            _client = new TcpClient();
-            await _client.ConnectAsync(ip, port);
-            Console.WriteLine("✅ Connecté au serveur !");
-            _stream = _client.GetStream();
+            _serverIp = serverIp;
+            _port = port;
         }
 
-        public async Task SendMessageAsync(object message)
+        public string SendCommand(string command, string data = "")
         {
-            if (_stream == null) return;
-
-            string json = JsonSerializer.Serialize(message);
-            byte[] buffer = Encoding.UTF8.GetBytes(json);
-
-            await _stream.WriteAsync(buffer, 0, buffer.Length);
-            Console.WriteLine($"📤 Envoyé : {json}");
-        }
-
-        public async Task ListenForMessagesAsync()
-        {
-            byte[] buffer = new byte[1024];
-
             try
             {
-                while (_client.Connected)
+                using (Socket client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
                 {
-                    int bytesRead = await _stream.ReadAsync(buffer, 0, buffer.Length);
-                    if (bytesRead == 0) break;
+                    client.Connect(new IPEndPoint(IPAddress.Parse(_serverIp), _port));
 
-                    string jsonMessage = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-                    Console.WriteLine($"📥 Reçu du serveur : {jsonMessage}");
+                    // Création de l'objet JSON à envoyer
+                    var commandObject = new CommandModel { Command = command, Data = data };
+                    string jsonCommand = JsonSerializer.Serialize(commandObject);
+
+                    // Envoi de la requête
+                    byte[] requestBytes = Encoding.UTF8.GetBytes(jsonCommand);
+                    client.Send(requestBytes);
+
+                    // Réception de la réponse
+                    byte[] buffer = new byte[4096]; // Taille du buffer ajustée
+                    int receivedBytes = client.Receive(buffer);
+
+                    // Décodage de la réponse
+                    string response = Encoding.UTF8.GetString(buffer, 0, receivedBytes);
+                    return response;
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"⚠️ Erreur réception : {ex.Message}");
-            }
-            finally
-            {
-                Console.WriteLine("🔴 Déconnecté du serveur.");
+                return $"Error: {ex.Message}";
             }
         }
     }
