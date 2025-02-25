@@ -86,7 +86,6 @@ namespace EZSave.GUI.ViewModels
         public ObservableCollection<string> List { get; set; } = new ObservableCollection<string>();
         public ObservableCollection<JobModel> Jobs { get; set; } = new ObservableCollection<JobModel>();
 
-        //A supprimer si autre methode fonctionne
         public Dictionary<string, int> progressions = new();
 
         public Dictionary<string, int> Progressions
@@ -195,10 +194,13 @@ namespace EZSave.GUI.ViewModels
             var progressViewModel = new ProgressViewModel(jobName, this);
 
             window.DataContext = progressViewModel;
+            
+            window.Title = jobName;
             window.Show();
 
             progressWindows[jobName] = progressViewModel;
         }
+
 
         private void ExecuteJobSelection(ObservableCollection<string> selectedNames)
         {
@@ -206,9 +208,13 @@ namespace EZSave.GUI.ViewModels
             
             foreach (var jobName in selectedNames)
             {
-                OpenProgressJobWindow(jobName);
+                if (!IsProgressJobWindowOpen(jobName))
+                {
+                    OpenProgressJobWindow(jobName);
+                    
+
+                }
                 var progress = new Progress<int>(value => UpdateJobProgress(jobName, value));
-                
             }
                 
             bool result = managerService.ExecuteSelected(
@@ -321,6 +327,16 @@ namespace EZSave.GUI.ViewModels
             //}
         }
 
-
+        private bool IsProgressJobWindowOpen(string jobName)
+        {
+            foreach (Window window in Application.Current.Windows)
+            {
+                if (window is ProgressionJobWindow && window.Title == jobName)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }
