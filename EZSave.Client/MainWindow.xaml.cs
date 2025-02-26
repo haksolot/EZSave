@@ -1,7 +1,7 @@
-﻿using EZSave.GUI.ViewModels;
+﻿using EZSave.Client.ViewModels;
 using System.Windows;
 
-namespace EZSave.GUI
+namespace EZSave.Client
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -14,6 +14,9 @@ namespace EZSave.GUI
             DataContext = new MainWindowViewModel();
         }
 
+        private void Button_Click()
+        {
 
+        }
     }
 }

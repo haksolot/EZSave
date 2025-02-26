@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ChoiceTitle" xml:space="preserve">
-    <value>Your choice :</value>
+    <value>Your choice : </value>
   </data>
   <data name="ChooseChoiceTitle" xml:space="preserve">
     <value>Press any key to continue ...</value>
@@ -133,7 +133,7 @@
     <value>Update</value>
   </data>
   <data name="ConfigOption3" xml:space="preserve">
-    <value>Delete a job</value>
+    <value>Delete</value>
   </data>
   <data name="ConfigOption4" xml:space="preserve">
     <value>Change log destination path</value>
@@ -174,9 +174,6 @@
   <data name="ExecuteOneJob" xml:space="preserve">
     <value>Execute one</value>
   </data>
-  <data name="FileSizeThreshold" xml:space="preserve">
-    <value>File Size to upload</value>
-  </data>
   <data name="InvalidChoiceTitle" xml:space="preserve">
     <value>Invalid choice. Try again.</value>
   </data>
@@ -190,7 +187,7 @@
     <value>Destination</value>
   </data>
   <data name="JobEdited" xml:space="preserve">
-    <value>The job has been edited !</value>
+    <value>The job has been edited ! </value>
   </data>
   <data name="JobEdition" xml:space="preserve">
     <value>Job edition space : </value>
@@ -205,7 +202,7 @@
     <value>The job has not been deleted !</value>
   </data>
   <data name="JobsExecutedFail" xml:space="preserve">
-    <value>Jobs execution failed !</value>
+    <value>Job execution failed ! </value>
   </data>
   <data name="JobsExecutedSuccess" xml:space="preserve">
     <value>Jobs executed with success !</value>
@@ -226,16 +223,16 @@
     <value>Jobs that can be deleted : </value>
   </data>
   <data name="ListJobsPossibleModify" xml:space="preserve">
-    <value>Jobs thtat can be modified : </value>
+    <value>Jobs that can be modified : </value>
   </data>
   <data name="LogPathChanging" xml:space="preserve">
     <value>Logs path : </value>
   </data>
   <data name="LogTypeChanging" xml:space="preserve">
-    <value>Log type (xml/json) :</value>
+    <value>Log type (xml/json) : </value>
   </data>
   <data name="MainMenuTitle" xml:space="preserve">
-    <value>Main menu :</value>
+    <value>Main menu : </value>
   </data>
   <data name="MainOption1" xml:space="preserve">
     <value>Execute jobs</value>
@@ -268,7 +265,7 @@
     <value>Stop</value>
   </data>
   <data name="TitleListBox" xml:space="preserve">
-    <value>Jobs ready to be executed : </value>
+    <value>Jobs ready to be executed :</value>
   </data>
   <data name="Validate" xml:space="preserve">
     <value>Validate</value>

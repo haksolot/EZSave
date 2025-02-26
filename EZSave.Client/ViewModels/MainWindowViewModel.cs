@@ -1,24 +1,22 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
 using System.Runtime.CompilerServices;
-using System.Text.Json;
-using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
+using EZSave.Client.ViewModels;
+using EZSave.Client;
 using EZSave.Core.Models;
 using EZSave.Core.Services;
-using EZSave.GUI.Views;
+using EZSave.Client.Views;
+using System.Text.Json;
+using System.Windows;
 
-namespace EZSave.GUI.ViewModels
+namespace EZSave.Client.ViewModels
 {
     public class MainWindowViewModel : BaseViewModel, INotifyPropertyChanged
     {
         public LanguageViewModel LanguageViewModel { get; set; }
-
-        private JobService jobService;
         public ICommand OpenConfigCommand { get; }
 
         private ConfigFileModel configFileModel { get; set; }
@@ -31,8 +29,9 @@ namespace EZSave.GUI.ViewModels
 
         private JobModel _elementSelectionne;
 
-        private SocketServerService _socketServer;
+        private SocketClientService _socketClient = new SocketClientService();
         private Thread _serverThread;
+
         public JobModel ElementSelectionne
         {
             get => _elementSelectionne;
@@ -47,22 +46,6 @@ namespace EZSave.GUI.ViewModels
             set => SetProperty(ref _elementSelectionneList, value);
         }
 
-        private bool _hasPendingPriorityFiles;
-
-        public bool HasPendingPriorityFiles
-        {
-            get => _hasPendingPriorityFiles;
-            set
-            {
-                if (_hasPendingPriorityFiles != value)
-                {
-                    _hasPendingPriorityFiles = value;
-                    Debug.WriteLine($"[DEBUG] Mise à jour de HasPendingPriorityFiles : {value}");
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasPendingPriorityFiles)));
-                }
-            }
-        }
-
         private string _message;
 
         public string Message
@@ -72,16 +55,15 @@ namespace EZSave.GUI.ViewModels
         }
 
         private int progression;
-
         public int Progression
         {
             get => progression;
             set => SetProperty(ref progression, value);
         }
 
-        private readonly StatusService _statusService;
-        private List<Thread> threads = new List<Thread>();
-        private Dictionary<string, (Thread thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> JobStates = new();
+
+        List<Thread> threads = new List<Thread>();
+        Dictionary<string, (Thread thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> JobStates = new();
         public ObservableCollection<string> List { get; set; } = new ObservableCollection<string>();
         public ObservableCollection<JobModel> Jobs { get; set; } = new ObservableCollection<JobModel>();
 
@@ -93,7 +75,6 @@ namespace EZSave.GUI.ViewModels
             set => SetProperty(ref progressions, value);
         }
 
-        //nouvel methode 
         private Dictionary<string, ProgressViewModel> progressWindows = new();
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -109,12 +90,16 @@ namespace EZSave.GUI.ViewModels
         public ICommand PauseCommand { get; set; }
         public ICommand StopCommand { get; set; }
 
+        //public event PropertyChangedEventHandler? PropertyChanged;
+
         public MainWindowViewModel()
         {
             BaseViewModel.MainWindowViewModel = this;
 
             Initialize();
+
             LanguageViewModel = new LanguageViewModel();
+
 
             RefreshCommand = new RelayCommand(RefreshJobs);
             OpenJobWindowCommand = new RelayCommand(OpenAddJobWindow);
@@ -127,6 +112,7 @@ namespace EZSave.GUI.ViewModels
             AddAllToListCommand = new RelayCommand(AddAllToList);
             PauseCommand = new RelayCommand(Pause);
             StopCommand = new RelayCommand(Stop);
+            //UpdateProgressionCommand = new RelayCommand(UpdateProgression);
             ExecuteJobSelectionCommand = new RelayCommand<ObservableCollection<string>>(ExecuteJobSelection);
         }
 
@@ -138,7 +124,7 @@ namespace EZSave.GUI.ViewModels
 
         private void OpenConfigWindow()
         {
-            var configWindow = new ConfigWindow(managerModel, configFileModel);
+            var configWindow = new ConfigWindow(managerModel, configFileModel, _socketClient);
             configWindow.ShowDialog();
             RefreshJobs();
         }
@@ -153,16 +139,18 @@ namespace EZSave.GUI.ViewModels
             configService.LoadConfigFile(configFileModel);
             managerService.Read(managerModel, configFileModel);
 
-            _socketServer = new SocketServerService(RefreshJobs, UpdateJobProgress, 6969, managerModel, configFileModel);
-            _serverThread = new Thread(_socketServer.Start) { IsBackground = true };
-            _serverThread.Start();
+            var result = _socketClient.SendCommand("getjoblist");
+            managerModel.Jobs = JsonSerializer.Deserialize<ObservableCollection<JobModel>>(result);
+            RefreshJobs();
+
+            result = _socketClient.SendCommand("getconf");
+            ConfigFileModel newConfFile = JsonSerializer.Deserialize<ConfigFileModel>(result);
+            configFileModel = newConfFile;
         }
 
         public void RefreshJobs()
         {
             Jobs.Clear();
-            HasPendingPriorityFiles = Jobs.Any(job => jobService.HasPendingPriorityFiles(job));
-            Debug.WriteLine($"[DEBUG] Vérification fichiers .prio : {HasPendingPriorityFiles}");
 
             if (managerModel.Jobs != null && managerModel.Jobs.Any())
             {
@@ -179,7 +167,7 @@ namespace EZSave.GUI.ViewModels
 
         private void OpenAddJobWindow()
         {
-            var window = new AddJobWindow(managerModel, configFileModel);
+            var window = new AddJobWindow(managerModel, configFileModel, _socketClient);
             window.ShowDialog();
             RefreshJobs();
         }
@@ -193,43 +181,41 @@ namespace EZSave.GUI.ViewModels
             var progressViewModel = new ProgressViewModel(jobName, this);
 
             window.DataContext = progressViewModel;
-            
+
             window.Title = jobName;
             window.Show();
 
             progressWindows[jobName] = progressViewModel;
         }
 
-
         private void ExecuteJobSelection(ObservableCollection<string> selectedNames)
         {
             Debug.WriteLine($"element selectionné {ElementSelectionneList}");
-            
-            foreach (var jobName in selectedNames)
+            //foreach (var jobName in selectedNames)
+            //{
+            //    if (!IsProgressJobWindowOpen(jobName))
+            //    {
+            //        OpenProgressJobWindow(jobName);
+            //    }
+            //    var progress = new Progress<int>(value => UpdateJobProgress(jobName, value));
+            //}
+            //bool result = managerService.ExecuteSelected(JobStates, selectedNames, managerModel, configFileModel, ElementSelectionneList);
+            var playJobData = new PlayJobModel();
+            playJobData.Name = ElementSelectionneList;
+            playJobData.selected = selectedNames;
+            var jsonData = JsonSerializer.Serialize(playJobData);
+            var result = _socketClient.SendCommand("playjob", jsonData);
+            if (result == "Success")
             {
-                if (!IsProgressJobWindowOpen(jobName))
-                {
-                    OpenProgressJobWindow(jobName);
-                }
-                var progress = new Progress<int>(value => UpdateJobProgress(jobName, value));
-            }
-                
-            bool result = managerService.ExecuteSelected(
-                JobStates, 
-                selectedNames, 
-                managerModel, 
-                configFileModel, 
-                ElementSelectionneList, 
-                UpdateJobProgress);
-
-            if (result)
-            {
-               
                 Message = Properties.Resources.JobsExecutedSuccess;
+            }
+            else if (result == "Error")
+            {
+                Message = Properties.Resources.JobsExecutedFail;
             }
             else
             {
-                Message = Properties.Resources.JobsExecutedFail;
+                Message = "Problem";
             }
         }
 
@@ -254,6 +240,7 @@ namespace EZSave.GUI.ViewModels
                     }
                 }
             }
+
         }
 
         public void DelFromList()
@@ -279,15 +266,29 @@ namespace EZSave.GUI.ViewModels
 
         public void Pause()
         {
-            managerService.Pause(ElementSelectionneList, JobStates);
-            ElementSelectionneList = null;
+            if (ElementSelectionneList != null)
+            {
+                var jop2pauseControll = new JobControlModel();
+                jop2pauseControll.Name = ElementSelectionneList;
+                jop2pauseControll.selected = JobStates;
+                var jsonJob2Pause = JsonSerializer.Serialize(jop2pauseControll);
+                _socketClient.SendCommand("pausejob", jsonJob2Pause);
+                //managerService.Pause(ElementSelectionneList, JobStates);
+            }
         }
 
         public void Stop()
         {
-            Debug.WriteLine($"{ElementSelectionneList} mis en arret");
-            managerService.Stop(ElementSelectionneList, JobStates);
-            ElementSelectionneList = null;
+            if (ElementSelectionneList != null)
+            {
+                //Debug.WriteLine($"{ElementSelectionneList} mis en arret");
+                //managerService.Stop(ElementSelectionneList, JobStates);
+                var jop2stopControll = new JobControlModel();
+                jop2stopControll.Name = ElementSelectionneList;
+                jop2stopControll.selected = JobStates;
+                var jsonJob2Stop = JsonSerializer.Serialize(jop2stopControll);
+                _socketClient.SendCommand("stopjob", jsonJob2Stop);
+            }
         }
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -336,4 +337,5 @@ namespace EZSave.GUI.ViewModels
             return false;
         }
     }
+
 }

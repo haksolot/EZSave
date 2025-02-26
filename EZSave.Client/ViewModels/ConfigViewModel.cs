@@ -4,9 +4,10 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 using System.Windows.Input;
 
-namespace EZSave.GUI.ViewModels
+namespace EZSave.Client.ViewModels
 {
     public class ConfigViewModel : INotifyPropertyChanged
     {
@@ -14,13 +15,14 @@ namespace EZSave.GUI.ViewModels
         private readonly ManagerModel _managerModel;
         private readonly ManagerService _managerService;
         private ConfigFileModel _configFileModel;
+        private SocketClientService _socketService;
 
         public ICommand SaveConfigCommand { get; }
         public ICommand EditJobCommand { get; }
         public ICommand DeleteJobCommand { get; }
         public ICommand RefreshJobsCommand { get; }
 
-        public ConfigViewModel(ConfigFileModel config, ManagerModel managerModel)
+        public ConfigViewModel(ConfigFileModel config, ManagerModel managerModel, SocketClientService socket)
         {
             _configService = new ConfigService();
             _managerModel = managerModel;
@@ -32,6 +34,7 @@ namespace EZSave.GUI.ViewModels
             RefreshJobsCommand = new RelayCommand(RefreshJobs);
 
             _configService.LoadConfigFile(_configFileModel);
+            _socketService = socket;
             RefreshJobs();
         }
 
@@ -147,7 +150,9 @@ namespace EZSave.GUI.ViewModels
             if (SelectedJob != null)
             {
                 _configFileModel.Jobs[SelectedJob.Name] = SelectedJob;
-                _configService.SaveConfigFile(_configFileModel);
+                //_configService.SaveConfigFile(_configFileModel);
+                var selectedJob = JsonSerializer.Serialize(SelectedJob);
+                _socketService.SendCommand("editjob", selectedJob);
                 RefreshJobs();
                 SetStatusMessage("Job modifié avec succès !");
             }
@@ -172,30 +177,29 @@ namespace EZSave.GUI.ViewModels
             {
                 _managerService.RemoveJob(SelectedJob, _managerModel);
                 _configService.SaveConfigFile(_configFileModel);
+                var job2del = JsonSerializer.Serialize(SelectedJob);
+                var result = _socketService.SendCommand("deljob", job2del);
                 RefreshJobs();
-                SetStatusMessage("Job supprimé avec succès !");
-
+                if (result == "Success")
+                {
+                    SetStatusMessage("Job supprimé avec succès !");
+                }
+                else
+                {
+                    SetStatusMessage(result);
+                }
                 //DelFromSelectedList(SelectedJob.Name, BaseViewModel.MainWindowViewModel.List);
             }
         }
 
         private void SaveConfig()
         {
-            _configService.SaveConfigFile(_configFileModel);
+            var confFile = JsonSerializer.Serialize(_configFileModel);
+            _socketService.SendCommand("saveconf", confFile);
+            //_configService.SaveConfigFile(_configFileModel);
             RefreshJobs();
             SetStatusMessage("Configuration sauvegardée !");
         }
-        public long FileSizeThreshold
-        {
-            get => _configFileModel.FileSizeThreshold;
-            set
-            {
-                _configFileModel.FileSizeThreshold = value;
-                JobModel.FileSizeThreshold = value; 
-                OnPropertyChanged();
-            }
-        }
-
 
         public event PropertyChangedEventHandler? PropertyChanged;
 

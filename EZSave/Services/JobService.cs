@@ -1,223 +1,272 @@
-using System.Diagnostics;
-using EZSave.Core.Models;
-using EZSave.Core.Services;
 using CryptoSoft;
-using System.Runtime.InteropServices;
-
+using EZSave.Core.Models;
+using System.Diagnostics;
 
 namespace EZSave.Core.Services
 {
-  public class JobService
-  {
-    public bool Start(JobModel job, StatusService statusService, LogService logService, ConfigFileModel configFileModel)
+    public class JobService
     {
-      bool check = ProcessesService.CheckProcess("CalculatorApp");
-      if (check == true)
-      {
-        return false;
-      }
+        long fileSizeThreshold = JobModel.FileSizeThreshold;
 
-      if (job.Type == "full")
-      {
-        check = FullBackup(job, logService, statusService, configFileModel);
-        if (check == false)
-        {
-          return false;
-        }
-        else
-        {
-          return true;
-        }
-      }
-      else if (job.Type == "diff")
-      {
-        check = DifferentialBackup(job, statusService, logService, configFileModel);
-        if (check == false)
-        {
-          return false;
-        }
-        else
-        {
-          return true;
-        }
-      }
-      else
-      {
-        return false;
-      }
-    }
 
-    private bool FullBackup(JobModel job, LogService logService, StatusService statusService, ConfigFileModel configFileModel)
-    {
-      long copiedSize = 0;
-      var startTime = DateTime.Now;
-      long currentFileSize = 0;
-      long totalSize = Directory.GetFiles(job.Source, "*", SearchOption.AllDirectories).Sum(file => new FileInfo(file).Length);
-      int totalFiles = Directory.GetFiles(job.Source, "*", SearchOption.AllDirectories).Length;
 
-      statusService.SaveStatus(new StatusModel
-      {
-        Name = job.Name,
-        SourceFilePath = job.Source,
-        TargetFilePath = job.Destination,
-        State = "Activate",
-        TotalFilesSize = totalSize,
-        TotalFilesToCopy = totalFiles,
-        FilesLeftToCopy = totalFiles,
-        FilesSizeLeftToCopy = totalSize
-      }, configFileModel);
 
-      foreach (string file in Directory.GetFiles(job.Source, "*", SearchOption.AllDirectories))
-      {
-        string relativePath = file.Substring(job.Source.Length).TrimStart(Path.DirectorySeparatorChar);
-        string destinationFile = Path.Combine(job.Destination, relativePath);
-        string? directoryPath = Path.GetDirectoryName(destinationFile);
-        long fileSize = new FileInfo(file).Length;
+        public bool Start(JobModel job, StatusService statusService, LogService logService, ConfigFileModel configFileModel, string name, ManualResetEvent pauseEvent, CancellationToken cancellationToken, Dictionary<string, (Thread Thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> jobStates, IProgress<int> progression)
 
-        if (!string.IsNullOrEmpty(directoryPath))
         {
-          Directory.CreateDirectory(directoryPath);
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return false;
+            }
+
+            Debug.WriteLine($"Lancement du job {name}");
+
+            while (ProcessesService.CheckProcess("CalculatorApp"))
+            {
+                if (jobStates.TryGetValue(name, out var jobState) && jobState.Status != "Paused")
+                {
+                    Debug.WriteLine($"{name} mis en pause à cause de CalculatorApp");
+                    jobStates[name] = (jobState.Thread, jobState.Cts, jobState.PauseEvent, "Paused");
+                   
+                    jobState.PauseEvent.Reset(); 
+                }
+
+            }
+
+            if (jobStates.TryGetValue(name, out var resumedJob) && resumedJob.Status == "Paused")
+            {
+                Debug.WriteLine($"CalculatorApp fermé, reprise du job {name}");
+                jobStates[name] = (resumedJob.Thread, resumedJob.Cts, resumedJob.PauseEvent, "Running");
+               
+                resumedJob.PauseEvent.Set();
+            }
+
+
+            if (job.Type == "full")
+            {
+
+                return FullBackup(job, logService, statusService, configFileModel, pauseEvent, cancellationToken, jobStates, progression);
+            }
+
+            else if (job.Type == "diff")
+            {
+                return DifferentialBackup(job, logService, statusService, configFileModel, pauseEvent, cancellationToken, jobStates, progression);
+            }
+            else
+            {
+                return false;
+            }
         }
+
+
+        public bool HasPendingPriorityFiles(JobModel job)
+        {
+            try
+            {
+                if (!Directory.Exists(job.Source))
+                {
+                    Debug.WriteLine("Le dossier source n'existe pas !");
+                    return false;
+                }
+
+                var prioFiles = Directory.GetFiles(job.Source, "*.prio", SearchOption.AllDirectories);
+                bool hasPrio = prioFiles.Any();
+
+                if (hasPrio)
+                {
+                    Debug.WriteLine($"{prioFiles.Length} fichiers .prio détectés ! Exécution en priorité après pause.");
+                }
+
+                return hasPrio;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Impossible de vérifier les fichiers .prio : {ex.Message}");
+                return false;
+            }
+        }
+
+
+        private bool FullBackup(JobModel job, LogService logService, StatusService statusService, ConfigFileModel configFileModel, ManualResetEvent pauseEvent, CancellationToken cancellationToken, Dictionary<string, (Thread Thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> jobStates, IProgress<int> progression)
+
+        {
+            var filesToCopy = Directory.GetFiles(job.Source, "*", SearchOption.AllDirectories);
+            filesToCopy = SortPriorityFilesFirst(filesToCopy);
+
+            if (HasPendingPriorityFiles(job))
+            {
+                Debug.WriteLine("Pause de 5 secondes pour signaler que des fichiers .prio vont être exécutés en priorité.");
+                Thread.Sleep(5000);
+            }
+
+
+            return CopyFiles(job, filesToCopy, logService, statusService, configFileModel, pauseEvent, cancellationToken, jobStates, progression);
+        }
+
+
+     
+
+        private bool DifferentialBackup(JobModel job, LogService logService, StatusService statusService, ConfigFileModel configFileModel, ManualResetEvent pauseEvent, CancellationToken cancellationToken, Dictionary<string, (Thread Thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> jobStates, IProgress<int> progression)
+
+        {
+            var filesToCopy = Directory.GetFiles(job.Source, "*", SearchOption.AllDirectories)
+                      .Where(file =>
+                          !File.Exists(Path.Combine(job.Destination, file.Substring(job.Source.Length).TrimStart(Path.DirectorySeparatorChar))) ||
+                          File.GetLastWriteTime(file) > File.GetLastWriteTime(Path.Combine(job.Destination, file.Substring(job.Source.Length).TrimStart(Path.DirectorySeparatorChar))))
+                      .ToArray();
+
+            Debug.WriteLine("[DEBUG] Fichiers à copier détectés par DifferentialBackup :");
+            foreach (var file in filesToCopy)
+            {
+                Debug.WriteLine(file);
+            }
+
+            filesToCopy = SortPriorityFilesFirst(filesToCopy);
+
+            if (HasPendingPriorityFiles(job))
+            {
+                Debug.WriteLine("Pause de 5 secondes pour signaler que des fichiers .prio vont être exécutés en priorité.");
+                Thread.Sleep(5000);
+            }
+
+
+            return CopyFiles(job, filesToCopy, logService, statusService, configFileModel, pauseEvent, cancellationToken, jobStates, progression);
+        }
+
+
+
+
+        private bool CopyFiles(JobModel job, string[] filesToCopy, LogService logService, StatusService statusService, ConfigFileModel configFileModel, ManualResetEvent pauseEvent, CancellationToken cancellationToken, Dictionary<string, (Thread Thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> jobStates, IProgress<int> progression)
+
+        {
+            using var fileLock = new SemaphoreSlim(1, 1);
+            StatusModel statusModel = new StatusModel();
+
+            long copiedSize = 0;
+            long currentFileSize = 0;
+            var startTime = DateTime.Now;
+
+            statusModel.Name = job.Name;
+            statusModel.SourceFilePath = job.Source;
+            statusModel.TargetFilePath = job.Destination;
+            statusModel.State = "Activate";
+            statusModel.Progression = 0;
+            statusModel.TotalFilesSize = filesToCopy.Sum(file => new FileInfo(file).Length); ;
+            statusModel.TotalFilesToCopy = filesToCopy.Length;
+            statusModel.FilesLeftToCopy = filesToCopy.Length;
+            statusModel.FilesSizeLeftToCopy = filesToCopy.Sum(file => new FileInfo(file).Length);
+            statusService.SaveStatus(statusModel, configFileModel);
+            progression.Report(statusModel.Progression);
+
+            foreach (string file in filesToCopy)
+            {
+                while (ProcessesService.CheckProcess("CalculatorApp"))
+                {
+                    if (jobStates.TryGetValue(job.Name, out var jobState) && jobState.Status != "PausedByProcess")
+                    {
+                        Debug.WriteLine($"{job.Name} mis en pause à cause de CalculatorApp");
+                        jobStates[job.Name] = (jobState.Thread, jobState.Cts, jobState.PauseEvent, "PausedByProcess");
+                        jobState.PauseEvent.Reset();
+                    }
+  
+                }
+
+                if (jobStates.TryGetValue(job.Name, out var resumedJob) && resumedJob.Status == "PausedByProcess")
+                {
+                    Debug.WriteLine($"CalculatorApp fermé, reprise du job {job.Name}");
+                    jobStates[job.Name] = (resumedJob.Thread, resumedJob.Cts, resumedJob.PauseEvent, "Running");
+                    resumedJob.PauseEvent.Set();
+                }
+
+                if (cancellationToken.IsCancellationRequested) return false;
+                pauseEvent.WaitOne();
+                cancellationToken.ThrowIfCancellationRequested();
+                Thread.Sleep(4000); // Thread.Sleep pour mieux voir le pause et stop
+
+                string relativePath = file.Substring(job.Source.Length).TrimStart(Path.DirectorySeparatorChar);
+                statusModel.TargetFilePath = Path.Combine(job.Destination, relativePath);
+                string? directoryPath = Path.GetDirectoryName(statusModel.TargetFilePath);
+                long fileSize = new FileInfo(file).Length;
+
+                if (!string.IsNullOrEmpty(directoryPath))
+                {
+                    Directory.CreateDirectory(directoryPath);
+                }
+                if (fileSize >= JobModel.FileSizeThreshold)
+
+                {
+                    fileLock.Wait();
+                }
 
                 float cipheringTime = 0f;
-        if (Path.GetExtension(file) == ".crypto")
-        {
-          var crypto = new Cipher(file, "key");
+                if (Path.GetExtension(file) == ".crypto")
+                {
+                    var crypto = new Cipher(file, "key");
                     cipheringTime = crypto.TransformFile(file);
                 }
+
+                File.Copy(file, statusModel.TargetFilePath, true);
+
+                statusModel.FilesSizeLeftToCopy -= fileSize;
+                statusModel.FilesLeftToCopy--;
+                if (statusModel.TotalFilesSize != 0)
+                {
+                    decimal progression_temp = (((decimal)statusModel.TotalFilesSize - statusModel.FilesSizeLeftToCopy) / statusModel.TotalFilesSize)*100;
+                    statusModel.Progression = (int)Math.Floor(progression_temp);
+                    progression.Report(statusModel.Progression);
+                }
                 else
-        {
-          cipheringTime = 0;
+                {
+                    statusModel.Progression = 100;
+                    progression.Report(statusModel.Progression);
+                }
+
+                statusModel.State = "En Cours";
+
+                statusService.SaveStatus(statusModel, configFileModel);
+
+                var endTime = DateTime.Now;
+                float transferTime = (float)(endTime - startTime).TotalSeconds;
+                currentFileSize = new FileInfo(statusModel.TargetFilePath).Length;
+                copiedSize += currentFileSize;
+
+              
+
+                logService.Write(new LogModel
+                {
+                    Name = job.Name,
+                    Timestamp = DateTime.Now,
+                    FileSource = file,
+                    FileDestination = statusModel.TargetFilePath,
+                    FileSize = currentFileSize,
+                    FileTransferTime = transferTime,
+                    FileCipherTime = cipheringTime,
+                }, configFileModel);
+
+                cancellationToken.ThrowIfCancellationRequested();
+
+                if (fileSize >= JobModel.FileSizeThreshold)
+
+                {
+                    fileLock.Release();
+                }
+            }
+
+            statusModel.State = "End";
+            statusService.SaveStatus(statusModel, configFileModel);
+            return true;
         }
-        File.Copy(file, destinationFile, true);
 
-        totalSize -= fileSize;
-        totalFiles--;
 
-        statusService.SaveStatus(new StatusModel
+        private string[] SortPriorityFilesFirst(string[] files)
         {
-          Name = job.Name,
-          SourceFilePath = job.Source,
-          TargetFilePath = job.Destination,
-          State = "End",
-          TotalFilesSize = totalSize + fileSize,
-          TotalFilesToCopy = totalFiles + 1,
-          FilesLeftToCopy = totalFiles,
-          FilesSizeLeftToCopy = totalSize
-        }, configFileModel);
+            var priorityFiles = files.Where(f => f.EndsWith(".prio", StringComparison.OrdinalIgnoreCase)).ToArray();
+            var nonPriorityFiles = files.Except(priorityFiles).ToArray();
 
-        var endTime = DateTime.Now;
+            Debug.WriteLine($"[DEBUG] Tri des fichiers: {priorityFiles.Length} fichiers prioritaires trouvés.");
 
-        float transferTime = (float)(endTime - startTime).TotalSeconds;
-
-        currentFileSize = new FileInfo(destinationFile).Length;
-
-        copiedSize += currentFileSize;
-
-        logService.Write(new LogModel
-        {
-          Name = job.Name,
-          Timestamp = DateTime.Now,
-          FileSource = file,
-          FileDestination = destinationFile,
-          FileSize = currentFileSize,
-          FileTransferTime = transferTime,
-          FileCipherTime = cipheringTime,
-        }, configFileModel);
-      }
-      return true;
-    }
-
-    private bool DifferentialBackup(JobModel job, StatusService statusService, LogService logService, ConfigFileModel configFileModel)
-    {
-      long copiedSize = 0;
-      var startTime = DateTime.Now;
-      long currentFileSize = 0;
-
-      var filesToCopy = Directory.GetFiles(job.Source, "*", SearchOption.AllDirectories)
-          .Select(file => new
-          {
-            SourceFile = file,
-            DestinationFile = Path.Combine(job.Destination, file.Substring(job.Source.Length).TrimStart(Path.DirectorySeparatorChar))
-          }).Where(f => !File.Exists(f.DestinationFile) || File.GetLastWriteTime(f.SourceFile) > File.GetLastWriteTime(f.DestinationFile))
-          .Select(f => f.SourceFile)
-          .ToList();
-
-      long totalSize = filesToCopy.Sum(file => new FileInfo(file).Length);
-
-      int totalFiles = filesToCopy.Count;
-
-      statusService.SaveStatus(new StatusModel
-      {
-        Name = job.Name,
-        SourceFilePath = job.Source,
-        TargetFilePath = job.Destination,
-        State = "Activate",
-        TotalFilesSize = totalSize,
-        TotalFilesToCopy = totalFiles,
-        FilesLeftToCopy = totalFiles,
-        FilesSizeLeftToCopy = totalSize
-      }, configFileModel);
-
-      foreach (string file in Directory.GetFiles(job.Source, "*", SearchOption.AllDirectories))
-      {
-        string relativePath = file.Substring(job.Source.Length).TrimStart(Path.DirectorySeparatorChar);
-        string destinationFile = Path.Combine(job.Destination, relativePath);
-        long fileSize = new FileInfo(file).Length;
-        if (!File.Exists(destinationFile) || File.GetLastWriteTime(file) > File.GetLastWriteTime(destinationFile))
-        {
-          string? directoryPath = Path.GetDirectoryName(destinationFile);
-          if (!string.IsNullOrEmpty(directoryPath))
-          {
-            Directory.CreateDirectory(directoryPath);
-          }
-          float cipheringTime = 0f;
-          if (Path.GetExtension(file) == ".crypto")
-          {
-            var crypto = new Cipher(file, "key");
-            cipheringTime = crypto.TransformFile(file);
-                    }
-                    else
-          {
-            cipheringTime = 0;
-          }
-          File.Copy(file, destinationFile, true);
-
-          totalSize -= fileSize;
-          totalFiles--;
-
-          statusService.SaveStatus(new StatusModel
-          {
-            Name = job.Name,
-            SourceFilePath = job.Source,
-            TargetFilePath = job.Destination,
-            State = "End",
-            TotalFilesSize = totalSize + fileSize,
-            TotalFilesToCopy = totalFiles + 1,
-            FilesLeftToCopy = totalFiles,
-            FilesSizeLeftToCopy = totalSize
-          }, configFileModel);
-
-          var endTime = DateTime.Now;
-
-          float transferTime = (float)(endTime - startTime).TotalSeconds;
-          currentFileSize = new FileInfo(destinationFile).Length;
-
-          copiedSize += currentFileSize;
-
-          logService.Write(new LogModel
-          {
-            Name = job.Name,
-            Timestamp = DateTime.Now,
-            FileSource = file,
-            FileDestination = destinationFile,
-            FileSize = currentFileSize,
-            FileTransferTime = transferTime,
-            FileCipherTime = cipheringTime,
-          }, configFileModel);
+            return priorityFiles.Concat(nonPriorityFiles).ToArray();
         }
-      }
-      return true;
+
     }
-  }
 }

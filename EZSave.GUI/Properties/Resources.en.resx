@@ -174,6 +174,9 @@
   <data name="ExecuteOneJob" xml:space="preserve">
     <value>Execute one</value>
   </data>
+  <data name="FileSizeThreshold" xml:space="preserve">
+    <value>FileSizeThreshold</value>
+  </data>
   <data name="InvalidChoiceTitle" xml:space="preserve">
     <value>Invalid choice. Try again.</value>
   </data>
@@ -243,14 +246,26 @@
   <data name="MainOption3" xml:space="preserve">
     <value>Change language</value>
   </data>
+  <data name="Pause" xml:space="preserve">
+    <value>Pause</value>
+  </data>
+  <data name="Play" xml:space="preserve">
+    <value>Play</value>
+  </data>
   <data name="RefreshJobs" xml:space="preserve">
     <value>Refresh</value>
+  </data>
+  <data name="ResumeJob" xml:space="preserve">
+    <value>Resume</value>
   </data>
   <data name="Save" xml:space="preserve">
     <value>Save</value>
   </data>
   <data name="StatusFilePathChanging" xml:space="preserve">
     <value>Status file path : </value>
+  </data>
+  <data name="Stop" xml:space="preserve">
+    <value>Stop</value>
   </data>
   <data name="TitleListBox" xml:space="preserve">
     <value>Jobs ready to be executed :</value>
