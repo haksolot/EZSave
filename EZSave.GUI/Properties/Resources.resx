@@ -150,6 +150,9 @@
   <data name="ConfModeTitle" xml:space="preserve">
     <value>Configuration mode</value>
   </data>
+  <data name="CryptoKey" xml:space="preserve">
+    <value>CryptoKey</value>
+  </data>
   <data name="EnterDeletedJob" xml:space="preserve">
     <value>Enter the job to delete : </value>
   </data>
