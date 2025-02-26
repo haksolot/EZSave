@@ -29,7 +29,7 @@ namespace EZSave.Client.ViewModels
 
         private JobModel _elementSelectionne;
 
-        private SocketClientService _socketClient = new SocketClientService();
+        private SocketClientService _socketClient;
         private Thread _serverThread;
 
         public JobModel ElementSelectionne
@@ -61,6 +61,12 @@ namespace EZSave.Client.ViewModels
             set => SetProperty(ref progression, value);
         }
 
+        private string IPinput;
+        public string IPInput
+        {
+            get => IPinput;
+            set => SetProperty(ref IPinput, value);
+        }
 
         List<Thread> threads = new List<Thread>();
         Dictionary<string, (Thread thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> JobStates = new();
@@ -89,6 +95,7 @@ namespace EZSave.Client.ViewModels
         public ICommand ExecuteJobSelectionCommand { get; set; }
         public ICommand PauseCommand { get; set; }
         public ICommand StopCommand { get; set; }
+        public ICommand ConnectionServerCommand { get; set; }
 
         //public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -112,7 +119,7 @@ namespace EZSave.Client.ViewModels
             AddAllToListCommand = new RelayCommand(AddAllToList);
             PauseCommand = new RelayCommand(Pause);
             StopCommand = new RelayCommand(Stop);
-            //UpdateProgressionCommand = new RelayCommand(UpdateProgression);
+            ConnectionServerCommand = new RelayCommand(ConnectionServer);
             ExecuteJobSelectionCommand = new RelayCommand<ObservableCollection<string>>(ExecuteJobSelection);
         }
 
@@ -139,6 +146,12 @@ namespace EZSave.Client.ViewModels
             configService.LoadConfigFile(configFileModel);
             managerService.Read(managerModel, configFileModel);
 
+            
+        }
+
+        private void ConnectionServer()
+        {
+            _socketClient = new SocketClientService(IPInput);
             var result = _socketClient.SendCommand("getjoblist");
             managerModel.Jobs = JsonSerializer.Deserialize<ObservableCollection<JobModel>>(result);
             RefreshJobs();

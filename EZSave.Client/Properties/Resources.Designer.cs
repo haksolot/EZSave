@@ -629,5 +629,13 @@ namespace EZSave.Client.Properties
         return ResourceManager.GetString("Validate", resourceCulture);
       }
     }
-  }
+
+        public static string FileSizeThreshold
+        {
+            get
+            {
+                return ResourceManager.GetString("FileSizeThreshold", resourceCulture);
+            }
+        }
+    }
 }

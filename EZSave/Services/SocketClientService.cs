@@ -39,6 +39,7 @@ namespace EZSave.Core.Services
 
                     // Décodage de la réponse
                     string response = Encoding.UTF8.GetString(buffer, 0, receivedBytes);
+                    client.Dispose();
                     return response;
                 }
             }

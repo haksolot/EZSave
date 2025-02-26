@@ -1,5 +1,6 @@
 ﻿using EZSave.Client.ViewModels;
 using System.Windows;
+using FontAwesome.WPF;
 
 namespace EZSave.Client
 {

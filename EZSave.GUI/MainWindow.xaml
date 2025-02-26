@@ -7,6 +7,7 @@
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
     xmlns:local="clr-namespace:EZSave.GUI"
     xmlns:converters="clr-namespace:System.Windows.Controls;assembly=PresentationFramework"
+    xmlns:fa1="http://schemas.fontawesome.io/icons/"
 
     Title="EZSave"
     Width="800"
@@ -24,6 +25,15 @@
             <Setter Property="FontWeight" Value="Bold" />
             <Setter Property="FontFamily" Value="Times New Roman" />
             <Setter Property="Background" Value="LightGray" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border CornerRadius="10" Padding="8"  Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
     </Window.Resources>
 
@@ -47,13 +57,49 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <Button Content="🇫🇷" Command="{Binding LanguageViewModel.ChangeLanguageCommand}" CommandParameter="fr-FR" Grid.Column="0"/>
-            <Button Content="en" Command="{Binding LanguageViewModel.ChangeLanguageCommand}" CommandParameter="en-US" Grid.Column="1"/>
-            <Button Content="{Binding LanguageViewModel.ButtonAdd}" Command="{Binding OpenJobWindowCommand}" Grid.Column="2"/>
-            <Button Content="{Binding LanguageViewModel.ButtonConfig}" Command="{Binding OpenConfigCommand}" Grid.Column="4"/>
-            <Button Content="{Binding LanguageViewModel.ButtonPlay}" Command="{Binding ExecuteJobSelectionCommand}" CommandParameter="{Binding List}" Grid.Column="5"/>
-            <Button Content="{Binding LanguageViewModel.ButtonPause}" Command="{Binding PauseCommand}" CommandParameter="{Binding List}" Grid.Column="6"/>
-            <Button Content="{Binding LanguageViewModel.ButtonStop}"  Command="{Binding StopCommand}" CommandParameter="{Binding List}" Grid.Column="7"/>
+            <Button Command="{Binding LanguageViewModel.ChangeLanguageCommand}" CommandParameter="fr-FR" Grid.Column="0">
+                <StackPanel Orientation="Horizontal">
+                    <fa1:FontAwesome Icon="Euro" FontSize="10" Foreground="Black" Margin="0,0,8,0"/>
+                    <TextBlock Text="🇫🇷"/>
+                </StackPanel>
+            </Button>
+            <Button Command="{Binding LanguageViewModel.ChangeLanguageCommand}" CommandParameter="en-US" Grid.Column="1">
+                <StackPanel Orientation="Horizontal">
+                    <fa1:FontAwesome Icon="Gbp" FontSize="10" Foreground="Black" Margin="0,0,8,0"/>
+                    <TextBlock Text="en"/>
+                </StackPanel>
+            </Button>
+            <Button Command="{Binding OpenJobWindowCommand}" Grid.Column="2">
+                <StackPanel Orientation="Horizontal">
+                    <fa1:FontAwesome Icon="Plus" FontSize="10" Foreground="Black" Margin="0,0,8,0"/>
+                    <TextBlock Text="{Binding LanguageViewModel.ButtonAdd}"/>
+                </StackPanel>
+            </Button>
+            <Button Command="{Binding OpenConfigCommand}" Grid.Column="4">
+                <StackPanel Orientation="Horizontal">
+                    <fa1:FontAwesome Icon="Gear" FontSize="10" Foreground="Black" Margin="0,0,8,0"/>
+                    <TextBlock Text="{Binding LanguageViewModel.ButtonConfig}"/>
+                </StackPanel>
+            </Button>
+            <Button Command="{Binding ExecuteJobSelectionCommand}" CommandParameter="{Binding List}" Grid.Column="5">
+                <StackPanel Orientation="Horizontal">
+                    <fa1:FontAwesome Icon="Play" FontSize="10" Foreground="Black" Margin="0,0,8,0"/>
+                    <TextBlock Text="{Binding LanguageViewModel.ButtonPlay}"/>
+                </StackPanel>
+            </Button>
+
+            <Button Command="{Binding PauseCommand}" CommandParameter="{Binding List}" Grid.Column="6">
+                <StackPanel Orientation="Horizontal">
+                    <fa1:FontAwesome Icon="Pause" FontSize="10" Foreground="Black" Margin="0,0,8,0"/>
+                    <TextBlock Text="{Binding LanguageViewModel.ButtonPause}"/>
+                </StackPanel>
+            </Button>
+            <Button Command="{Binding StopCommand}" CommandParameter="{Binding List}" Grid.Column="7">
+                <StackPanel Orientation="Horizontal">
+                    <fa1:FontAwesome Icon="Stop" FontSize="10" Foreground="Black" Margin="0,0,8,0"/>
+                    <TextBlock Text="{Binding LanguageViewModel.ButtonStop}"/>
+                </StackPanel>
+            </Button>
         </Grid>
 
         <Grid Grid.Row="1">
@@ -80,11 +126,25 @@
                 </DataGrid.Columns>
             </DataGrid>
 
-            <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                <Button Content="☑" Command="{Binding AddAllToListCommand}"/>
-                <Button Content="☒" Command="{Binding RemoveAllToListCommand}" />
-                <Button Content="▶︎" Command="{Binding AddToListCommand}" />
-                <Button Content="◀︎" Command="{Binding RemoveToListCommand}" />
+            <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="20,0,20,0">
+                <Button Command="{Binding AddAllToListCommand}" 
+        Background="Transparent" BorderThickness="0" Padding="0" Margin="0">
+                    <fa1:FontAwesome Icon="CheckCircle" FontSize="25"/>
+                </Button>
+                <Button Command="{Binding RemoveAllToListCommand}" 
+Background="Transparent" BorderThickness="0" Padding="0" Margin="0">
+                    <fa1:FontAwesome Icon="TimesCircle" FontSize="25" />
+                </Button>
+                <Button Command="{Binding AddToListCommand}" 
+Background="Transparent" BorderThickness="0" Padding="0" Margin="0">
+                    <fa1:FontAwesome Icon="ChevronCircleRight" FontSize="25"/>
+                </Button>
+                <Button Command="{Binding RemoveToListCommand}" 
+Background="Transparent" BorderThickness="0" Padding="0" Margin="0">
+                    <fa1:FontAwesome Icon="ChevronCircleLeft" FontSize="25" />
+                </Button>
+
+
             </StackPanel>
 
             <GroupBox
