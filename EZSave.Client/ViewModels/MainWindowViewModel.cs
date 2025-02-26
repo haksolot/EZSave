@@ -54,12 +54,12 @@ namespace EZSave.Client.ViewModels
             set => SetProperty(ref _message, value);
         }
 
-        private int progression;
-        public int Progression
-        {
-            get => progression;
-            set => SetProperty(ref progression, value);
-        }
+        //private int progression;
+        //public int Progression
+        //{
+        //    get => progression;
+        //    set => SetProperty(ref progression, value);
+        //}
 
 
         List<Thread> threads = new List<Thread>();

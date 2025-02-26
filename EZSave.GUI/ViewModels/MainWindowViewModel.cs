@@ -153,7 +153,7 @@ namespace EZSave.GUI.ViewModels
             configService.LoadConfigFile(configFileModel);
             managerService.Read(managerModel, configFileModel);
 
-            _socketServer = new SocketServerService(RefreshJobs, UpdateJobProgress, 6969, managerModel, configFileModel);
+            _socketServer = new SocketServerService(RefreshJobs, UpdateJobProgress, Progressions, 6969, managerModel, configFileModel);
             _serverThread = new Thread(_socketServer.Start) { IsBackground = true };
             _serverThread.Start();
         }
