@@ -201,7 +201,7 @@ namespace EZSave.Core.Services
                 float cipheringTime = 0f;
                 if (Path.GetExtension(file) == ".crypto")
                 {
-                    var crypto = new Cipher(file, "key");
+                    var crypto = new Cipher(file, configFileModel.Key);
                     cipheringTime = crypto.TransformFile(file);
                 }
 

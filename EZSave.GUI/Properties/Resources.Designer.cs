@@ -160,6 +160,15 @@ namespace EZSave.GUI.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à CryptoKey.
+        /// </summary>
+        public static string CryptoKey {
+            get {
+                return ResourceManager.GetString("CryptoKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Enter the job to delete : .
         /// </summary>
         public static string EnterDeletedJob {

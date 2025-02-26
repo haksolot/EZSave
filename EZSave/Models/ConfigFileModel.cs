@@ -9,7 +9,7 @@ namespace EZSave.Core.Models
         public string? LogType { get; set; } = "xml";
         public string? StatusFileDestination { get; set; } = "Status";
         public Dictionary<string, JobModel>? Jobs { get; set; } = new();
-
+        public string Key { get; set; } = "Key";
         public long FileSizeThreshold { get; set; } = 1024 * 1024; 
     }
 }
