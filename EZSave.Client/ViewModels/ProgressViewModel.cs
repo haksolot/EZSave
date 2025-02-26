@@ -31,34 +31,14 @@ namespace EZSave.Client.ViewModels
                     Debug.WriteLine($"[DEBUG] Mise à jour de la progression dans {JobName} : {value}%");
                     progression = value;
                     OnPropertyChanged();
-                    CanExecuteButton = (progression == 100);
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        CanExecuteButton = (progression == 100);
-                    });
                 }
             }
         }
-
-        private bool canExecuteButton;
-
-        public bool CanExecuteButton
-        {
-            get => canExecuteButton;
-            set
-            {
-                canExecuteButton = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public ICommand OkCommand { get; }
 
         public ProgressViewModel(string jobName, MainWindowViewModel mainWindowViewModel)
         {
             JobName = jobName;
             MainWindowViewModel = mainWindowViewModel;
-            OkCommand = new RelayCommand(TerminerAction);
 
             if (MainWindowViewModel.Progressions.ContainsKey(JobName))
             {
@@ -80,11 +60,6 @@ namespace EZSave.Client.ViewModels
             });
         }
 
-
-        private void TerminerAction()
-        {
-            System.Windows.MessageBox.Show($"Le job '{JobName}' st terminé !");
-        }
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
