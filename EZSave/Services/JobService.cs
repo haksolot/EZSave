@@ -6,10 +6,14 @@ namespace EZSave.Core.Services
 {
     public class JobService
     {
-        long fileSizeThreshold = JobModel.FileSizeThreshold;
+        private long fileSizeThreshold;
+        private long currentProcessingSize = 0;
+        private readonly object lockObject = new();
 
-
-
+        public JobService(ConfigService configService, ConfigFileModel configFileModel)
+        {
+            fileSizeThreshold = configFileModel.FileSizeThreshold;
+        }
 
         public bool Start(JobModel job, StatusService statusService, LogService logService, ConfigFileModel configFileModel, string name, ManualResetEvent pauseEvent, CancellationToken cancellationToken, Dictionary<string, (Thread Thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> jobStates, IProgress<int> progression)
 
@@ -21,33 +25,42 @@ namespace EZSave.Core.Services
 
             Debug.WriteLine($"Lancement du job {name}");
 
+            lock (lockObject)
+            {
+                long jobSize = Directory.GetFiles(job.Source, "*", SearchOption.AllDirectories)
+                    .Sum(f => new FileInfo(f).Length);
+
+                while (currentProcessingSize + jobSize > fileSizeThreshold)
+                {
+                    Debug.WriteLine($"Job {name} en attente car la limite de taille ({fileSizeThreshold} octets) est atteinte.");
+                    Monitor.Wait(lockObject);
+                }
+                currentProcessingSize += jobSize;
+            }
+
             while (ProcessesService.CheckProcess("CalculatorApp"))
             {
                 if (jobStates.TryGetValue(name, out var jobState) && jobState.Status != "Paused")
                 {
                     Debug.WriteLine($"{name} mis en pause à cause de CalculatorApp");
                     jobStates[name] = (jobState.Thread, jobState.Cts, jobState.PauseEvent, "Paused");
-                   
-                    jobState.PauseEvent.Reset(); 
-                }
 
+                    jobState.PauseEvent.Reset();
+                }
             }
 
             if (jobStates.TryGetValue(name, out var resumedJob) && resumedJob.Status == "Paused")
             {
                 Debug.WriteLine($"CalculatorApp fermé, reprise du job {name}");
                 jobStates[name] = (resumedJob.Thread, resumedJob.Cts, resumedJob.PauseEvent, "Running");
-               
+
                 resumedJob.PauseEvent.Set();
             }
 
-
             if (job.Type == "full")
             {
-
                 return FullBackup(job, logService, statusService, configFileModel, pauseEvent, cancellationToken, jobStates, progression);
             }
-
             else if (job.Type == "diff")
             {
                 return DifferentialBackup(job, logService, statusService, configFileModel, pauseEvent, cancellationToken, jobStates, progression);
@@ -57,7 +70,6 @@ namespace EZSave.Core.Services
                 return false;
             }
         }
-
 
         public bool HasPendingPriorityFiles(JobModel job)
         {
@@ -86,7 +98,6 @@ namespace EZSave.Core.Services
             }
         }
 
-
         private bool FullBackup(JobModel job, LogService logService, StatusService statusService, ConfigFileModel configFileModel, ManualResetEvent pauseEvent, CancellationToken cancellationToken, Dictionary<string, (Thread Thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> jobStates, IProgress<int> progression)
 
         {
@@ -99,12 +110,8 @@ namespace EZSave.Core.Services
                 Thread.Sleep(5000);
             }
 
-
             return CopyFiles(job, filesToCopy, logService, statusService, configFileModel, pauseEvent, cancellationToken, jobStates, progression);
         }
-
-
-     
 
         private bool DifferentialBackup(JobModel job, LogService logService, StatusService statusService, ConfigFileModel configFileModel, ManualResetEvent pauseEvent, CancellationToken cancellationToken, Dictionary<string, (Thread Thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> jobStates, IProgress<int> progression)
 
@@ -129,12 +136,8 @@ namespace EZSave.Core.Services
                 Thread.Sleep(5000);
             }
 
-
             return CopyFiles(job, filesToCopy, logService, statusService, configFileModel, pauseEvent, cancellationToken, jobStates, progression);
         }
-
-
-
 
         private bool CopyFiles(JobModel job, string[] filesToCopy, LogService logService, StatusService statusService, ConfigFileModel configFileModel, ManualResetEvent pauseEvent, CancellationToken cancellationToken, Dictionary<string, (Thread Thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> jobStates, IProgress<int> progression)
 
@@ -168,7 +171,6 @@ namespace EZSave.Core.Services
                         jobStates[job.Name] = (jobState.Thread, jobState.Cts, jobState.PauseEvent, "PausedByProcess");
                         jobState.PauseEvent.Reset();
                     }
-  
                 }
 
                 if (jobStates.TryGetValue(job.Name, out var resumedJob) && resumedJob.Status == "PausedByProcess")
@@ -181,7 +183,7 @@ namespace EZSave.Core.Services
                 if (cancellationToken.IsCancellationRequested) return false;
                 pauseEvent.WaitOne();
                 cancellationToken.ThrowIfCancellationRequested();
-                Thread.Sleep(4000); // Thread.Sleep pour mieux voir le pause et stop
+                Thread.Sleep(4000);
 
                 string relativePath = file.Substring(job.Source.Length).TrimStart(Path.DirectorySeparatorChar);
                 statusModel.TargetFilePath = Path.Combine(job.Destination, relativePath);
@@ -211,7 +213,7 @@ namespace EZSave.Core.Services
                 statusModel.FilesLeftToCopy--;
                 if (statusModel.TotalFilesSize != 0)
                 {
-                    decimal progression_temp = (((decimal)statusModel.TotalFilesSize - statusModel.FilesSizeLeftToCopy) / statusModel.TotalFilesSize)*100;
+                    decimal progression_temp = (((decimal)statusModel.TotalFilesSize - statusModel.FilesSizeLeftToCopy) / statusModel.TotalFilesSize) * 100;
                     statusModel.Progression = (int)Math.Floor(progression_temp);
                     progression.Report(statusModel.Progression);
                 }
@@ -229,8 +231,6 @@ namespace EZSave.Core.Services
                 float transferTime = (float)(endTime - startTime).TotalSeconds;
                 currentFileSize = new FileInfo(statusModel.TargetFilePath).Length;
                 copiedSize += currentFileSize;
-
-              
 
                 logService.Write(new LogModel
                 {
@@ -254,9 +254,16 @@ namespace EZSave.Core.Services
 
             statusModel.State = "End";
             statusService.SaveStatus(statusModel, configFileModel);
+            lock (lockObject)
+            {
+                long jobSize = Directory.GetFiles(job.Source, "*", SearchOption.AllDirectories)
+                    .Sum(f => new FileInfo(f).Length);
+                currentProcessingSize -= jobSize;
+                Monitor.PulseAll(lockObject);
+            }
+
             return true;
         }
-
 
         private string[] SortPriorityFilesFirst(string[] files)
         {
@@ -267,6 +274,5 @@ namespace EZSave.Core.Services
 
             return priorityFiles.Concat(nonPriorityFiles).ToArray();
         }
-
     }
 }

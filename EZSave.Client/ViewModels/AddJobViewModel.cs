@@ -63,7 +63,7 @@ namespace EZSave.Client.ViewModels
             configFileModel = config;
             managerModel = manager;
             configService = new ConfigService();
-            managerService = new ManagerService();
+            managerService = new ManagerService(configService, configFileModel);
             AddJobCommand = new RelayCommand(AddJob);
             _clientService = _socket;
         }

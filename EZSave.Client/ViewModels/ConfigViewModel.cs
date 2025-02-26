@@ -27,7 +27,7 @@ namespace EZSave.Client.ViewModels
             _configService = new ConfigService();
             _managerModel = managerModel;
             _configFileModel = config;
-            _managerService = new ManagerService();
+            _managerService = new ManagerService(_configService, _configFileModel);
             SaveConfigCommand = new RelayCommand(SaveConfig);
             EditJobCommand = new RelayCommand(EditJob);
             DeleteJobCommand = new RelayCommand(DeleteJob);

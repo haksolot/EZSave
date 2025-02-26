@@ -134,7 +134,7 @@ namespace EZSave.Client.ViewModels
             configFileModel = new ConfigFileModel();
             managerModel = new ManagerModel();
             configService = new ConfigService();
-            managerService = new ManagerService();
+            managerService = new ManagerService(configService, configFileModel);
             configService.SetConfigDestination("conf.json", configFileModel);
             configService.LoadConfigFile(configFileModel);
             managerService.Read(managerModel, configFileModel);
