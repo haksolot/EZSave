@@ -55,6 +55,7 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
             <Button Command="{Binding LanguageViewModel.ChangeLanguageCommand}" CommandParameter="fr-FR" Grid.Column="0">
@@ -98,6 +99,13 @@
                 <StackPanel Orientation="Horizontal">
                     <fa1:FontAwesome Icon="Stop" FontSize="10" Foreground="Black" Margin="0,0,8,0"/>
                     <TextBlock Text="{Binding LanguageViewModel.ButtonStop}"/>
+                </StackPanel>
+            </Button>
+
+            <Button Command="{Binding LaunchServerCommand}" Grid.Column="8">
+                <StackPanel Orientation="Horizontal">
+                    <fa1:FontAwesome Icon="Server" FontSize="10" Foreground="Black" Margin="0,0,8,0"/>
+                    <TextBlock Text="{Binding LanguageViewModel.LaunchServer}"/>
                 </StackPanel>
             </Button>
         </Grid>

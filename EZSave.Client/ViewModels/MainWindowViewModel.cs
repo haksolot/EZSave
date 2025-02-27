@@ -61,7 +61,7 @@ namespace EZSave.Client.ViewModels
             set => SetProperty(ref progression, value);
         }
 
-        private string IPinput;
+        private string IPinput = "127.0.0.1";
         public string IPInput
         {
             get => IPinput;

@@ -225,6 +225,9 @@
   <data name="LanguageOption2" xml:space="preserve">
     <value>English</value>
   </data>
+  <data name="LaunchServer" xml:space="preserve">
+    <value>Launch server</value>
+  </data>
   <data name="ListJobsPossibleDelete" xml:space="preserve">
     <value>Jobs that can be deleted : </value>
   </data>

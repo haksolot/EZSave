@@ -222,6 +222,9 @@
   <data name="LanguageOption2" xml:space="preserve">
     <value>Anglais</value>
   </data>
+  <data name="LaunchServer" xml:space="preserve">
+    <value>Lancer le serveur</value>
+  </data>
   <data name="ListJobsPossibleDelete" xml:space="preserve">
     <value>Jobs pouvant être supprimés : </value>
   </data>

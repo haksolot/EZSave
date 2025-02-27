@@ -385,6 +385,15 @@ namespace EZSave.GUI.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Launch server.
+        /// </summary>
+        public static string LaunchServer {
+            get {
+                return ResourceManager.GetString("LaunchServer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Jobs that can be deleted : .
         /// </summary>
         public static string ListJobsPossibleDelete {
