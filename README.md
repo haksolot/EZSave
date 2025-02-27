@@ -1,5 +1,7 @@
 # EZSave
 
+![logo](doc/logo.png)
+
 **EZSave** is a file backup application that allows users to perform **full** and **differential** backups automatically.  
 
 ## V1 - TUI
