@@ -91,6 +91,8 @@
                     </GridView>
                 </ListView.View>
             </ListView>
+            <TextBlock Text="{Binding StatusMessage}" Margin="10" FontWeight="Bold" Foreground="Green" TextAlignment="Center"/>
+
         </StackPanel>
 
 
@@ -125,7 +127,6 @@
                     </StackPanel>
                 </Button>
 
-                <TextBlock Text="{Binding StatusMessage}" Margin="10" FontWeight="Bold" Foreground="Green" TextAlignment="Center"/>
             </StackPanel>
         </StackPanel>
     </Grid>
