@@ -35,6 +35,7 @@ namespace EZSave.Core.Services
             _refresh = refresh;
             _updateJobProgress = updateProgress;
             _progressions = progressions;
+            _managerService = new ManagerService(_configService, _configFileModel);
         }
 
         public void Start()
