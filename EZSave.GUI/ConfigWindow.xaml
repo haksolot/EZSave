@@ -6,7 +6,7 @@
 
          xmlns:local="clr-namespace:EZSave.GUI"
 
-        Title="Configuration" Height="900" Width="500">
+        Title="Configuration" Height="450" Width="1000">
      
     <Window.Resources>
         <Style TargetType="Button">
@@ -47,7 +47,13 @@
         </Style>
     </Window.Resources>
     <Grid>
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="400">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="2*" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Column="0" HorizontalAlignment="Center" Width="250" Margin="8,8,8,8">
             <TextBlock Text="{x:Static properties:Resources.ConfigFilePathChanging}" Margin="5"/>
             <TextBox Text="{Binding ConfFileDestination}" Margin="5"/>
 
@@ -73,8 +79,10 @@
                     <TextBlock Text="{x:Static properties:Resources.RefreshJobs}"/>
                 </StackPanel>
             </Button>
+        </StackPanel>
 
-            <TextBlock Text="{x:Static properties:Resources.JobEdition}" Margin="10" FontWeight="Bold"/>
+        <StackPanel Grid.Column="1" HorizontalAlignment="Center" Margin="8,8,8,8">
+            <TextBlock Text="{x:Static properties:Resources.JobEdition}" FontWeight="Bold"/>
             <ListView ItemsSource="{Binding Jobs}" SelectedItem="{Binding SelectedJob}" Margin="10" Height="150">
                 <ListView.View>
                     <GridView>
@@ -85,8 +93,11 @@
                     </GridView>
                 </ListView.View>
             </ListView>
+        </StackPanel>
 
-            <TextBlock Text="{x:Static properties:Resources.EnterSource}" Margin="5"/>
+
+        <StackPanel Grid.Column="2" HorizontalAlignment="Center" Width="250" Margin="8,8,8,8">
+        <TextBlock Text="{x:Static properties:Resources.EnterSource}" Margin="5"/>
             <TextBox Text="{Binding SelectedJobSource}" Margin="5"/>
 
             <TextBlock Text="{x:Static properties:Resources.EnterDestination}" Margin="5"/>
@@ -100,9 +111,8 @@
 
             <TextBlock Margin="5" Text="CryptoKey" />
             <TextBox Margin="5" Text="{Binding CryptoKey}" />
-            
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
 
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
                 <Button Command="{Binding EditJobCommand}" Padding="10" Margin="5">
                     <StackPanel Orientation="Horizontal">
                         <fa1:FontAwesome Icon="Pencil" FontSize="10" Foreground="Black" Margin="0,0,8,0"/>
@@ -121,4 +131,6 @@
             </StackPanel>
         </StackPanel>
     </Grid>
+
+
 </Window>

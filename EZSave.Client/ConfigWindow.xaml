@@ -4,8 +4,8 @@
                 xmlns:properties="clr-namespace:EZSave.Client.Properties"
          xmlns:local="clr-namespace:EZSave.Client"
                 xmlns:fa1="http://schemas.fontawesome.io/icons/"
+        Title="Configuration" Height="450" Width="1000">
 
-        Title="Configuration" Height="900" Width="500">
     <Window.Resources>
         <Style TargetType="Button">
             <Setter Property="Padding" Value="12,4,12,4" />
@@ -34,9 +34,9 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="TextBox">
                         <Border CornerRadius="10"
-                 Background="{TemplateBinding Background}"
-                 BorderBrush="{TemplateBinding BorderBrush}"
-                 BorderThickness="{TemplateBinding BorderThickness}">
+                     Background="{TemplateBinding Background}"
+                     BorderBrush="{TemplateBinding BorderBrush}"
+                     BorderThickness="{TemplateBinding BorderThickness}">
                             <ScrollViewer Margin="5" x:Name="PART_ContentHost"/>
                         </Border>
                     </ControlTemplate>
@@ -45,7 +45,13 @@
         </Style>
     </Window.Resources>
     <Grid>
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="400">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="2*" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Column="0" HorizontalAlignment="Center" Width="250" Margin="8,8,8,8">
             <TextBlock Text="{x:Static properties:Resources.ConfigFilePathChanging}" Margin="5"/>
             <TextBox Text="{Binding ConfFileDestination}" Margin="5"/>
 
@@ -71,8 +77,10 @@
                     <TextBlock Text="{x:Static properties:Resources.RefreshJobs}"/>
                 </StackPanel>
             </Button>
+        </StackPanel>
 
-            <TextBlock Text="{x:Static properties:Resources.JobEdition}" Margin="10" FontWeight="Bold"/>
+        <StackPanel Grid.Column="1" HorizontalAlignment="Center" Margin="8,8,8,8">
+            <TextBlock Text="{x:Static properties:Resources.JobEdition}" FontWeight="Bold"/>
             <ListView ItemsSource="{Binding Jobs}" SelectedItem="{Binding SelectedJob}" Margin="10" Height="150">
                 <ListView.View>
                     <GridView>
@@ -83,7 +91,10 @@
                     </GridView>
                 </ListView.View>
             </ListView>
+        </StackPanel>
 
+
+        <StackPanel Grid.Column="2" HorizontalAlignment="Center" Width="250" Margin="8,8,8,8">
             <TextBlock Text="{x:Static properties:Resources.EnterSource}" Margin="5"/>
             <TextBox Text="{Binding SelectedJobSource}" Margin="5"/>
 
@@ -96,9 +107,10 @@
             <TextBlock Text="{x:Static properties:Resources.FileSizeThreshold}" Margin="5"/>
             <TextBox Text="{Binding FileSizeThreshold, UpdateSourceTrigger=PropertyChanged}" Width="200"/>
 
+            <TextBlock Margin="5" Text="CryptoKey" />
+            <TextBox Margin="5" Text="{Binding CryptoKey}" />
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
-
                 <Button Command="{Binding EditJobCommand}" Padding="10" Margin="5">
                     <StackPanel Orientation="Horizontal">
                         <fa1:FontAwesome Icon="Pencil" FontSize="10" Foreground="Black" Margin="0,0,8,0"/>
@@ -117,4 +129,6 @@
             </StackPanel>
         </StackPanel>
     </Grid>
+
+
 </Window>
