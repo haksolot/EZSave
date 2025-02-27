@@ -1,4 +1,4 @@
-﻿using EZSave.Core.Models;
+﻿ using EZSave.Core.Models;
 using EZSave.Core.Services;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -51,6 +51,11 @@ namespace EZSave.GUI.ViewModels
         {
             get => _configFileModel.LogType;
             set { _configFileModel.LogType = value; OnPropertyChanged(); }
+        }
+        public string CryptoKey
+        {
+            get => _configFileModel.Key;
+            set { _configFileModel.Key = value; OnPropertyChanged(); }
         }
 
         public string StatusFileDestination
@@ -120,9 +125,6 @@ namespace EZSave.GUI.ViewModels
                 }
             }
         }
-
-        public List<string> JobTypes { get; } = new() { "full", "diff" };
-        public List<string> LogTypes { get; } = new() { "xml", "json" };
 
         private string _statusMessage;
 

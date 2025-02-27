@@ -7,6 +7,7 @@
          xmlns:local="clr-namespace:EZSave.GUI"
 
         Title="Configuration" Height="900" Width="500">
+     
     <Window.Resources>
         <Style TargetType="Button">
             <Setter Property="Padding" Value="12,4,12,4" />
@@ -46,17 +47,17 @@
         </Style>
     </Window.Resources>
     <Grid>
-		<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="400">
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="400">
             <TextBlock Text="{x:Static properties:Resources.ConfigFilePathChanging}" Margin="5"/>
-			<TextBox Text="{Binding ConfFileDestination}" Margin="5"/>
+            <TextBox Text="{Binding ConfFileDestination}" Margin="5"/>
 
-			<TextBlock Text="{x:Static properties:Resources.LogPathChanging}" Margin="5"/>
-			<TextBox Text="{Binding LogFileDestination}" Margin="5"/>
+            <TextBlock Text="{x:Static properties:Resources.LogPathChanging}" Margin="5"/>
+            <TextBox Text="{Binding LogFileDestination}" Margin="5"/>
 
-			<TextBlock Text="{x:Static properties:Resources.LogTypeChanging}" Margin="5"/>
-			<ComboBox ItemsSource="{Binding LogTypes}" SelectedItem="{Binding LogType}" Margin="5"/>
+            <TextBlock Text="{x:Static properties:Resources.LogTypeChanging}" Margin="5"/>
+            <ComboBox ItemsSource="{Binding LogTypes}" SelectedItem="{Binding LogType}" Margin="5"/>
 
-			<TextBlock Text="{x:Static properties:Resources.StatusFilePathChanging}" Margin="5"/>
+            <TextBlock Text="{x:Static properties:Resources.StatusFilePathChanging}" Margin="5"/>
             <TextBox Text="{Binding StatusFileDestination}" Margin="5"/>
 
             <Button Command="{Binding SaveConfigCommand}" Margin="5">
@@ -74,30 +75,32 @@
             </Button>
 
             <TextBlock Text="{x:Static properties:Resources.JobEdition}" Margin="10" FontWeight="Bold"/>
-			<ListView ItemsSource="{Binding Jobs}" SelectedItem="{Binding SelectedJob}" Margin="10" Height="150">
-				<ListView.View>
-					<GridView>
-						<GridViewColumn Header="Job" DisplayMemberBinding="{Binding Name}" Width="80"/>
-						<GridViewColumn Header="Source" DisplayMemberBinding="{Binding Source}" Width="100"/>
-						<GridViewColumn Header="Destination" DisplayMemberBinding="{Binding Destination}" Width="100"/>
-						<GridViewColumn Header="Type" DisplayMemberBinding="{Binding Type}" Width="100"/>
-					</GridView>
-				</ListView.View>
-			</ListView>
+            <ListView ItemsSource="{Binding Jobs}" SelectedItem="{Binding SelectedJob}" Margin="10" Height="150">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Job" DisplayMemberBinding="{Binding Name}" Width="80"/>
+                        <GridViewColumn Header="Source" DisplayMemberBinding="{Binding Source}" Width="100"/>
+                        <GridViewColumn Header="Destination" DisplayMemberBinding="{Binding Destination}" Width="100"/>
+                        <GridViewColumn Header="Type" DisplayMemberBinding="{Binding Type}" Width="100"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
 
-			<TextBlock Text="{x:Static properties:Resources.EnterSource}" Margin="5"/>
-			<TextBox Text="{Binding SelectedJobSource}" Margin="5"/>
+            <TextBlock Text="{x:Static properties:Resources.EnterSource}" Margin="5"/>
+            <TextBox Text="{Binding SelectedJobSource}" Margin="5"/>
 
-			<TextBlock Text="{x:Static properties:Resources.EnterDestination}" Margin="5"/>
-			<TextBox Text="{Binding SelectedJobDestination}" Margin="5"/>
+            <TextBlock Text="{x:Static properties:Resources.EnterDestination}" Margin="5"/>
+            <TextBox Text="{Binding SelectedJobDestination}" Margin="5"/>
 
-			<TextBlock Text="{x:Static properties:Resources.EnterType}" Margin="5"/>
-			<ComboBox ItemsSource="{Binding JobTypes}" SelectedItem="{Binding SelectedJobType}" Margin="5"/>
+            <TextBlock Text="{x:Static properties:Resources.EnterType}" Margin="5"/>
+            <ComboBox ItemsSource="{Binding JobTypes}" SelectedItem="{Binding SelectedJobType}" Margin="5"/>
 
             <TextBlock Text="{x:Static properties:Resources.FileSizeThreshold}" Margin="5"/>
             <TextBox Text="{Binding FileSizeThreshold, UpdateSourceTrigger=PropertyChanged}" Width="200"/>
 
-
+            <TextBlock Margin="5" Text="CryptoKey" />
+            <TextBox Margin="5" Text="{Binding CryptoKey}" />
+            
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
 
                 <Button Command="{Binding EditJobCommand}" Padding="10" Margin="5">
@@ -116,6 +119,6 @@
 
                 <TextBlock Text="{Binding StatusMessage}" Margin="10" FontWeight="Bold" Foreground="Green" TextAlignment="Center"/>
             </StackPanel>
-		</StackPanel>
-	</Grid>
+        </StackPanel>
+    </Grid>
 </Window>
