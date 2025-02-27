@@ -90,5 +90,10 @@ namespace EZSave.Client.ViewModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        public void closingProgressWindow()
+        {
+            _updateProgressIsRunning = false;
+        }
     }
 }
