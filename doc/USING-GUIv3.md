@@ -52,6 +52,7 @@ At the top:
 - "Lancer" button: Execute selected jobs or Resume all paused jobs or Resume a paused job
 - "Pause" button: Pause all running jobs or Pause a running job
 - "Arrêter" button: Stop all running/paused jobs or Stop a running/paused job
+- "Lancer le serveur" button: Launch server
 
 At the bottom left:
 
@@ -72,7 +73,7 @@ At the bottom center:
 
 - Click the "Ajouter" button
 - Enter the name of the job, the source, destination and backup type
-- Click the "Validate" button
+- Click the "Valider" button
 - Close the window
   => The job is added to the left tab
   
@@ -84,7 +85,7 @@ The job selection feature allows you to execute a specific group of jobs instead
   - Select the job in the left tab that you want to add to the selection
   - Click the ▶︎ button or ☑ button
   - (The job is added to the right tab)
-  - Click the "Play" button
+  - Click the "Lancer" button
   - Check logs and status of the jobs (4. Find logs, status updates and conf files)
     => All selected jobs are executed if the inputs are correct
     
@@ -97,8 +98,8 @@ To remove a job from the selection, click the ◀︎ button or ☒ button to rem
 
 ### 5. Stopping multiple jobs or a unique job
 
-- If you want to stop ALL running/paused jobs, click the "Stop" button
-- If you want to stop A unique running/paused job, select the job in the right tab and click the "Stop" button
+- If you want to stop ALL running/paused jobs, click the "Arrêter" button
+- If you want to stop A unique running/paused job, select the job in the right tab and click the "Arrêter" button
 
 ### 6. Modifying a job
 
@@ -115,7 +116,7 @@ To remove a job from the selection, click the ◀︎ button or ☒ button to rem
 - Click the "Supprimer" button
    => The job has been deleted from the left tab
 
-### 8. Modifying configuration (top part of window)
+### 8. Modifying configuration (right part of window)
 
 - Click the "Mode Configuration" button
 - Modify the desired fields (configuration file path, log file path, log types, status file path, file size threshold)
@@ -123,6 +124,15 @@ To remove a job from the selection, click the ◀︎ button or ☒ button to rem
    => The configuration changes have been saved 
 
 ### 9. Using Remote console
+
+**Server side:**
+- Click the "Lancer le serveur" button
+=> Server launched
+
+**Client side:**
+- Enter the server IP Adress
+- Click the right button
+=> Connection to the server
 
 ### 10. Changing the language
 
