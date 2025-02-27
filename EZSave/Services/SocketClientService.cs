@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Diagnostics;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
@@ -42,12 +43,15 @@ namespace EZSave.Core.Services
 
                     // Décodage de la réponse
                     string response = Encoding.UTF8.GetString(buffer, 0, receivedBytes);
+                    client.Dispose();
                     return response;
                 }
             }
             catch (Exception ex)
             {
-                return $"Error: {ex.Message}";
+                Debug.WriteLine("Client not connected");
+                return "Error";
+                //return $"Error: {ex.Message}";
             }
         }
         public void StartProgressUpdate(int intervalMs = 5000)

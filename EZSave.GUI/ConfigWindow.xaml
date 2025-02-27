@@ -2,56 +2,135 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                 xmlns:properties="clr-namespace:EZSave.GUI.Properties"
+                xmlns:fa1="http://schemas.fontawesome.io/icons/"
+
          xmlns:local="clr-namespace:EZSave.GUI"
 
-        Title="Configuration" Height="900" Width="500">
-	<Grid>
-		<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="400">
+        Title="Configuration" Height="450" Width="1000">
+     
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Padding" Value="12,4,12,4" />
+            <Setter Property="Margin" Value="8" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="FontFamily" Value="Times New Roman" />
+            <Setter Property="Background" Value="LightGray" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border CornerRadius="10" Padding="8"  Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Padding" Value="4" />
+            <Setter Property="Margin" Value="8" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="FontFamily" Value="Arial" />
+            <Setter Property="BorderBrush" Value="Gray"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border CornerRadius="10"
+                     Background="{TemplateBinding Background}"
+                     BorderBrush="{TemplateBinding BorderBrush}"
+                     BorderThickness="{TemplateBinding BorderThickness}">
+                            <ScrollViewer Margin="5" x:Name="PART_ContentHost"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="3*" />
+            <ColumnDefinition Width="2*" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Column="0" HorizontalAlignment="Center" Width="250" Margin="8,8,8,8">
             <TextBlock Text="{x:Static properties:Resources.ConfigFilePathChanging}" Margin="5"/>
-			<TextBox Text="{Binding ConfFileDestination}" Margin="5"/>
+            <TextBox Text="{Binding ConfFileDestination}" Margin="5"/>
 
-			<TextBlock Text="{x:Static properties:Resources.LogPathChanging}" Margin="5"/>
-			<TextBox Text="{Binding LogFileDestination}" Margin="5"/>
+            <TextBlock Text="{x:Static properties:Resources.LogPathChanging}" Margin="5"/>
+            <TextBox Text="{Binding LogFileDestination}" Margin="5"/>
 
-			<TextBlock Text="{x:Static properties:Resources.LogTypeChanging}" Margin="5"/>
-			<ComboBox ItemsSource="{Binding LogTypes}" SelectedItem="{Binding LogType}" Margin="5"/>
+            <TextBlock Text="{x:Static properties:Resources.LogTypeChanging}" Margin="5"/>
+            <ComboBox ItemsSource="{Binding LogTypes}" SelectedItem="{Binding LogType}" Margin="5"/>
 
-			<TextBlock Text="{x:Static properties:Resources.StatusFilePathChanging}" Margin="5"/>
-			<TextBox Text="{Binding StatusFileDestination}" Margin="5"/>
+            <TextBlock Text="{x:Static properties:Resources.StatusFilePathChanging}" Margin="5"/>
+            <TextBox Text="{Binding StatusFileDestination}" Margin="5"/>
 
-            <Button Content="{x:Static properties:Resources.Save}" Command="{Binding SaveConfigCommand}" Margin="5"/>
-            <Button Content="{x:Static properties:Resources.RefreshJobs}" Command="{Binding RefreshJobsCommand}" Margin="5"/>
+            <Button Command="{Binding SaveConfigCommand}" Margin="5">
+                <StackPanel Orientation="Horizontal">
+                    <fa1:FontAwesome Icon="FloppyOutline" FontSize="10" Foreground="Black" Margin="0,0,8,0"/>
+                    <TextBlock Text="{x:Static properties:Resources.Save}"/>
+                </StackPanel>
+            </Button>
 
-			<TextBlock Text="{x:Static properties:Resources.JobEdition}" Margin="10" FontWeight="Bold"/>
-			<ListView ItemsSource="{Binding Jobs}" SelectedItem="{Binding SelectedJob}" Margin="10" Height="150">
-				<ListView.View>
-					<GridView>
-						<GridViewColumn Header="Job" DisplayMemberBinding="{Binding Name}" Width="80"/>
-						<GridViewColumn Header="Source" DisplayMemberBinding="{Binding Source}" Width="100"/>
-						<GridViewColumn Header="Destination" DisplayMemberBinding="{Binding Destination}" Width="100"/>
-						<GridViewColumn Header="Type" DisplayMemberBinding="{Binding Type}" Width="100"/>
-					</GridView>
-				</ListView.View>
-			</ListView>
+            <Button Command="{Binding RefreshJobsCommand}" Margin="5">
+                <StackPanel Orientation="Horizontal">
+                    <fa1:FontAwesome Icon="Refresh" FontSize="10" Foreground="Black" Margin="0,0,8,0"/>
+                    <TextBlock Text="{x:Static properties:Resources.RefreshJobs}"/>
+                </StackPanel>
+            </Button>
+        </StackPanel>
 
-			<TextBlock Text="{x:Static properties:Resources.EnterSource}" Margin="5"/>
-			<TextBox Text="{Binding SelectedJobSource}" Margin="5"/>
+        <StackPanel Grid.Column="1" HorizontalAlignment="Center" Margin="8,8,8,8">
+            <TextBlock Text="{x:Static properties:Resources.JobEdition}" FontWeight="Bold"/>
+            <ListView ItemsSource="{Binding Jobs}" SelectedItem="{Binding SelectedJob}" Margin="10" Height="150">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Job" DisplayMemberBinding="{Binding Name}" Width="80"/>
+                        <GridViewColumn Header="Source" DisplayMemberBinding="{Binding Source}" Width="100"/>
+                        <GridViewColumn Header="Destination" DisplayMemberBinding="{Binding Destination}" Width="100"/>
+                        <GridViewColumn Header="Type" DisplayMemberBinding="{Binding Type}" Width="100"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </StackPanel>
 
-			<TextBlock Text="{x:Static properties:Resources.EnterDestination}" Margin="5"/>
-			<TextBox Text="{Binding SelectedJobDestination}" Margin="5"/>
 
-			<TextBlock Text="{x:Static properties:Resources.EnterType}" Margin="5"/>
-			<ComboBox ItemsSource="{Binding JobTypes}" SelectedItem="{Binding SelectedJobType}" Margin="5"/>
+        <StackPanel Grid.Column="2" HorizontalAlignment="Center" Width="250" Margin="8,8,8,8">
+        <TextBlock Text="{x:Static properties:Resources.EnterSource}" Margin="5"/>
+            <TextBox Text="{Binding SelectedJobSource}" Margin="5"/>
+
+            <TextBlock Text="{x:Static properties:Resources.EnterDestination}" Margin="5"/>
+            <TextBox Text="{Binding SelectedJobDestination}" Margin="5"/>
+
+            <TextBlock Text="{x:Static properties:Resources.EnterType}" Margin="5"/>
+            <ComboBox ItemsSource="{Binding JobTypes}" SelectedItem="{Binding SelectedJobType}" Margin="5"/>
 
             <TextBlock Text="{x:Static properties:Resources.FileSizeThreshold}" Margin="5"/>
             <TextBox Text="{Binding FileSizeThreshold, UpdateSourceTrigger=PropertyChanged}" Width="200"/>
 
+            <TextBlock Margin="5" Text="CryptoKey" />
+            <TextBox Margin="5" Text="{Binding CryptoKey}" />
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="5">
-				<Button Content="{x:Static properties:Resources.ConfigOption2}" Command="{Binding EditJobCommand}" Padding="10" Margin="5"/>
-				<Button Content="{x:Static properties:Resources.ConfigOption3}" Command="{Binding DeleteJobCommand}" Padding="10" Margin="5"/>
+                <Button Command="{Binding EditJobCommand}" Padding="10" Margin="5">
+                    <StackPanel Orientation="Horizontal">
+                        <fa1:FontAwesome Icon="Pencil" FontSize="10" Foreground="Black" Margin="0,0,8,0"/>
+                        <TextBlock Text="{x:Static properties:Resources.ConfigOption2}"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Command="{Binding DeleteJobCommand}" Padding="10" Margin="5">
+                    <StackPanel Orientation="Horizontal">
+                        <fa1:FontAwesome Icon="TrashOutline" FontSize="10" Foreground="Black" Margin="0,0,8,0"/>
+                        <TextBlock Text="{x:Static properties:Resources.ConfigOption3}"/>
+                    </StackPanel>
+                </Button>
+
                 <TextBlock Text="{Binding StatusMessage}" Margin="10" FontWeight="Bold" Foreground="Green" TextAlignment="Center"/>
             </StackPanel>
-		</StackPanel>
-	</Grid>
+        </StackPanel>
+    </Grid>
+
+
 </Window>

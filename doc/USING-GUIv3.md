@@ -1,6 +1,9 @@
 # EZSave App
 ## Version 3 - GUI (Graphical User Interface)
 
+**EZSave** App is an advanced backup solution that allows you to **perform full and differential backups**. With its intuitive WPF interface, it provides complete control over file management, logs, and configurations.  
+EZSave enables you to **create, execute, pause, and stop backup tasks** easily while offering **secure encryption and a remote console**.
+
 ## Features  
 
 - Full file backup
@@ -14,7 +17,7 @@
 - Pause, Resume and Stop backups
 - Priority files
 - Remote Console
-- Real time progession 
+- Real time progession bars
 
 You can also have access to unit tests !
 
@@ -32,10 +35,8 @@ git clone https://github.com/haksolot/EZSave
 cd EZSave
 ```
 
-### 3. Execute EZSave.GUI
-
-### 4. Find logs, status updates and conf files
-Logs, status information and conf file are stored in the project's temporary files : *EZSave\EZSave.GUI\bin\Debug\net8.0*
+### 3. Find logs, status updates and conf files
+Logs, status information and conf file are stored in the project's temporary files : *EZSave\EZSave.GUI\bin\Debug\net8.0-windows*
 
 ## Using the app  
 
@@ -48,9 +49,9 @@ At the top:
 - "Ajouter" button: Add a job
 - "Exécuter tout" button: Execute all jobs
 - "Mode configuration" button: Enter configuration mode
-- "Play" button: Execute selected jobs
-- "Pause" button: Pause selected jobs
-- "Stop" button: Stop selected jobs
+- "Lancer" button: Execute selected jobs or Resume all paused jobs or Resume a paused job
+- "Pause" button: Pause all running jobs or Pause a running job
+- "Arrêter" button: Stop all running/paused jobs or Stop a running/paused job
 
 At the bottom left:
 
@@ -87,17 +88,17 @@ The job selection feature allows you to execute a specific group of jobs instead
   - Check logs and status of the jobs (4. Find logs, status updates and conf files)
     => All selected jobs are executed if the inputs are correct
     
-To remove a job from the selection, click the ◀︎ button or ☒ to remove all jobs from the selection
+To remove a job from the selection, click the ◀︎ button or ☒ button to remove all jobs from the selection
 
-### 4. Pause a selected job
+### 4. Pausing multiple jobs or a unique job
 
-- Click on a "runned" job 
-- Click on the "Pause" button
+- If you want to pause ALL running jobs, click the "Pause" button
+- If you want to pause A unique running job, select the job in the right tab and click the "Pause" button
 
-### 5. Stop a selected job
+### 5. Stopping multiple jobs or a unique job
 
-- CLick on a "runned" job
-- Click on the "Stop" button
+- If you want to stop ALL running/paused jobs, click the "Stop" button
+- If you want to stop A unique running/paused job, select the job in the right tab and click the "Stop" button
 
 ### 6. Modifying a job
 
@@ -117,11 +118,13 @@ To remove a job from the selection, click the ◀︎ button or ☒ to remove all
 ### 8. Modifying configuration (top part of window)
 
 - Click the "Mode Configuration" button
-- Modify the desired fields (configuration file path, log file path, log types, status file path)
+- Modify the desired fields (configuration file path, log file path, log types, status file path, file size threshold)
 - Click the "Sauvegarder" button
    => The configuration changes have been saved 
 
-### 9. Changing the language
+### 9. Using Remote console
+
+### 10. Changing the language
 
 - To switch to French, click the "FR" button
 - To switch to English, click the "EN" button

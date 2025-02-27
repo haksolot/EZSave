@@ -55,6 +55,11 @@ namespace EZSave.Client.ViewModels
             get => _configFileModel.LogType;
             set { _configFileModel.LogType = value; OnPropertyChanged(); }
         }
+        public string CryptoKey
+        {
+            get => _configFileModel.Key;
+            set { _configFileModel.Key = value; OnPropertyChanged(); }
+        }
 
         public string StatusFileDestination
         {
@@ -133,6 +138,17 @@ namespace EZSave.Client.ViewModels
         {
             get => _statusMessage;
             set { _statusMessage = value; OnPropertyChanged(); }
+        }
+
+        public long FileSizeThreshold
+        {
+            get => _configFileModel.FileSizeThreshold;
+            set
+            {
+                _configFileModel.FileSizeThreshold = value;
+                JobModel.FileSizeThreshold = value;
+                OnPropertyChanged();
+            }
         }
 
         private void SetStatusMessage(string message)

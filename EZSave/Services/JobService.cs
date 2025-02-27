@@ -201,11 +201,12 @@ namespace EZSave.Core.Services
                 float cipheringTime = 0f;
                 if (Path.GetExtension(file) == ".crypto")
                 {
-                    var crypto = new Cipher(file, "key");
+                    var crypto = new Cipher(file, configFileModel.Key);
                     cipheringTime = crypto.TransformFile(file);
                 }
 
                 File.Copy(file, statusModel.TargetFilePath, true);
+                Task.Delay(500, cancellationToken).Wait(); // Permet l'annulation propre et évite le blocage complet
 
                 statusModel.FilesSizeLeftToCopy -= fileSize;
                 statusModel.FilesLeftToCopy--;

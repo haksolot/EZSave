@@ -1,4 +1,4 @@
-﻿using EZSave.Core.Models;
+﻿ using EZSave.Core.Models;
 using EZSave.Core.Services;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -20,6 +20,8 @@ namespace EZSave.GUI.ViewModels
         public ICommand DeleteJobCommand { get; }
         public ICommand RefreshJobsCommand { get; }
 
+        public List<String> JobTypes { get; } = new List<String> { "full", "diff" };
+        public List<String> LogTypes { get; } = new List<String> { "json", "xml" };
         public ConfigViewModel(ConfigFileModel config, ManagerModel managerModel)
         {
             _configService = new ConfigService();
@@ -51,6 +53,11 @@ namespace EZSave.GUI.ViewModels
         {
             get => _configFileModel.LogType;
             set { _configFileModel.LogType = value; OnPropertyChanged(); }
+        }
+        public string CryptoKey
+        {
+            get => _configFileModel.Key;
+            set { _configFileModel.Key = value; OnPropertyChanged(); }
         }
 
         public string StatusFileDestination
@@ -121,15 +128,23 @@ namespace EZSave.GUI.ViewModels
             }
         }
 
-        public List<string> JobTypes { get; } = new() { "full", "diff" };
-        public List<string> LogTypes { get; } = new() { "xml", "json" };
-
         private string _statusMessage;
 
         public string StatusMessage
         {
             get => _statusMessage;
             set { _statusMessage = value; OnPropertyChanged(); }
+        }
+
+        public long FileSizeThreshold
+        {
+            get => _configFileModel.FileSizeThreshold;
+            set
+            {
+                _configFileModel.FileSizeThreshold = value;
+                JobModel.FileSizeThreshold = value;
+                OnPropertyChanged();
+            }
         }
 
         private void SetStatusMessage(string message)
@@ -185,16 +200,7 @@ namespace EZSave.GUI.ViewModels
             RefreshJobs();
             SetStatusMessage("Configuration sauvegardée !");
         }
-        public long FileSizeThreshold
-        {
-            get => _configFileModel.FileSizeThreshold;
-            set
-            {
-                _configFileModel.FileSizeThreshold = value;
-                JobModel.FileSizeThreshold = value; 
-                OnPropertyChanged();
-            }
-        }
+        
 
 
         public event PropertyChangedEventHandler? PropertyChanged;

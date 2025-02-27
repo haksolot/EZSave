@@ -160,6 +160,15 @@ namespace EZSave.GUI.Properties {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à CryptoKey.
+        /// </summary>
+        public static string CryptoKey {
+            get {
+                return ResourceManager.GetString("CryptoKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Enter the job to delete : .
         /// </summary>
         public static string EnterDeletedJob {
@@ -372,6 +381,15 @@ namespace EZSave.GUI.Properties {
         public static string LanguageOption2 {
             get {
                 return ResourceManager.GetString("LanguageOption2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Launch server.
+        /// </summary>
+        public static string LaunchServer {
+            get {
+                return ResourceManager.GetString("LaunchServer", resourceCulture);
             }
         }
         

@@ -43,5 +43,6 @@ namespace EZSave.GUI.ViewModels
     public string JobExecuted => Resources.JobsExecutedSuccess;
     public string JobNotExecuted => Resources.JobsExecutedFail;
     public string JobBeingExecuted => Resources.TitleListBox;
-  }
+        public string LaunchServer => Resources.LaunchServer;
+    }
 }

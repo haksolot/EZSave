@@ -78,18 +78,21 @@ namespace EZSave.Client.ViewModels
             var jsonJob = JsonSerializer.Serialize(job);
             managerService.Add(job, managerModel);
             //bool result = configService.SaveJob(job, configFileModel);
-            string result = _clientService.SendCommand("addjob", jsonJob);
-            if (result == "Success")
+            if(_clientService != null)
             {
-                Message = Properties.Resources.JobAdded;
-            }
-            else if (result == "Error")
-            {
-                Message = Properties.Resources.JobNotAdded;
-            }
-            else
-            {
-                Message = "Protocol problem";
+                string result = _clientService.SendCommand("addjob", jsonJob);
+                if (result == "Success")
+                {
+                    Message = Properties.Resources.JobAdded;
+                }
+                else if (result == "Error")
+                {
+                    Message = Properties.Resources.JobNotAdded;
+                }
+                else
+                {
+                    Message = "Protocol problem";
+                }
             }
         }
 
