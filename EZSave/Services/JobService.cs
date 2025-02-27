@@ -206,6 +206,7 @@ namespace EZSave.Core.Services
                 }
 
                 File.Copy(file, statusModel.TargetFilePath, true);
+                Task.Delay(500, cancellationToken).Wait(); // Permet l'annulation propre et évite le blocage complet
 
                 statusModel.FilesSizeLeftToCopy -= fileSize;
                 statusModel.FilesLeftToCopy--;
