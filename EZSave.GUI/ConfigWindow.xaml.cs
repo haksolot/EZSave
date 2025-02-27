@@ -1,17 +1,19 @@
-﻿using System.Windows;
+﻿using EZSave.Core.Models;
+using EZSave.Core.Services;
 using EZSave.GUI.ViewModels;
-using EZSave.Core.Models;
+using System.Windows;
 
 namespace EZSave.GUI.Views
 {
     public partial class ConfigWindow : Window
     {
-        public ConfigWindow(ManagerModel manager, ConfigFileModel config)
+        private readonly ConfigViewModel _viewModel;
+
+        public ConfigWindow(ManagerModel managerModel, ConfigFileModel configFileModel, ManagerService managerService)
         {
             InitializeComponent();
-            DataContext = new ConfigViewModel(config, manager);
-
-            //DataContext = viewModel;
+            _viewModel = new ConfigViewModel(configFileModel, managerModel, managerService);
+            DataContext = _viewModel;
         }
     }
 }

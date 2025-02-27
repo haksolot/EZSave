@@ -33,6 +33,7 @@ namespace EZSave.GUI.ViewModels
 
         private SocketServerService _socketServer;
         private Thread _serverThread;
+
         public JobModel ElementSelectionne
         {
             get => _elementSelectionne;
@@ -93,8 +94,9 @@ namespace EZSave.GUI.ViewModels
             set => SetProperty(ref progressions, value);
         }
 
-        //nouvel methode 
+
         private Dictionary<string, ProgressViewModel> progressWindows = new();
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public ICommand LaunchServerCommand { get; set; }
@@ -153,7 +155,7 @@ namespace EZSave.GUI.ViewModels
         }
         private void OpenConfigWindow()
         {
-            var configWindow = new ConfigWindow(managerModel, configFileModel);
+            var configWindow = new ConfigWindow(managerModel, configFileModel, managerService);
             configWindow.ShowDialog();
             RefreshJobs();
         }
@@ -163,10 +165,17 @@ namespace EZSave.GUI.ViewModels
             configFileModel = new ConfigFileModel();
             managerModel = new ManagerModel();
             configService = new ConfigService();
-            managerService = new ManagerService();
+            managerService = new ManagerService(configService, configFileModel);
             configService.SetConfigDestination("conf.json", configFileModel);
             configService.LoadConfigFile(configFileModel);
             managerService.Read(managerModel, configFileModel);
+//<<<<<<< HEAD
+//=======
+
+//            _socketServer = new SocketServerService(RefreshJobs, UpdateJobProgress, 6969, managerModel, configFileModel, JobStates);
+//            _serverThread = new Thread(_socketServer.Start) { IsBackground = true };
+//            _serverThread.Start();
+//>>>>>>> Config
         }
 
         public void RefreshJobs()
@@ -190,32 +199,29 @@ namespace EZSave.GUI.ViewModels
 
         private void OpenAddJobWindow()
         {
-            var window = new AddJobWindow(managerModel, configFileModel);
+            var window = new AddJobWindow(managerModel, configFileModel, managerService);
             window.ShowDialog();
             RefreshJobs();
         }
 
         private void OpenProgressJobWindow(string jobName)
         {
-            //var window = new ProgressionJobWindow(jobName, this);
-            //window.Show();
 
             var window = new ProgressionJobWindow(jobName, this);
             var progressViewModel = new ProgressViewModel(jobName, this);
 
             window.DataContext = progressViewModel;
-            
+
             window.Title = jobName;
             window.Show();
 
             progressWindows[jobName] = progressViewModel;
         }
 
-
         private void ExecuteJobSelection(ObservableCollection<string> selectedNames)
         {
             Debug.WriteLine($"element selectionné {ElementSelectionneList}");
-            
+
             foreach (var jobName in selectedNames)
             {
                 if (!IsProgressJobWindowOpen(jobName))
@@ -224,18 +230,17 @@ namespace EZSave.GUI.ViewModels
                 }
                 var progress = new Progress<int>(value => UpdateJobProgress(jobName, value));
             }
-                
+
             bool result = managerService.ExecuteSelected(
-                JobStates, 
-                selectedNames, 
-                managerModel, 
-                configFileModel, 
-                ElementSelectionneList, 
+                JobStates,
+                selectedNames,
+                managerModel,
+                configFileModel,
+                ElementSelectionneList,
                 UpdateJobProgress);
 
             if (result)
             {
-               
                 Message = Properties.Resources.JobsExecutedSuccess;
             }
             else

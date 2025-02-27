@@ -20,14 +20,19 @@ namespace EZSave.GUI.ViewModels
         public ICommand DeleteJobCommand { get; }
         public ICommand RefreshJobsCommand { get; }
 
+//<<<<<<< HEAD
         public List<String> JobTypes { get; } = new List<String> { "full", "diff" };
         public List<String> LogTypes { get; } = new List<String> { "json", "xml" };
-        public ConfigViewModel(ConfigFileModel config, ManagerModel managerModel)
+        //public ConfigViewModel(ConfigFileModel config, ManagerModel managerModel)
+//=======
+        public ConfigViewModel(ConfigFileModel config, ManagerModel managerModel, ManagerService managerService)
+//>>>>>>> Config
         {
             _configService = new ConfigService();
             _managerModel = managerModel;
             _configFileModel = config;
-            _managerService = new ManagerService();
+            _managerService = managerService;
+
             SaveConfigCommand = new RelayCommand(SaveConfig);
             EditJobCommand = new RelayCommand(EditJob);
             DeleteJobCommand = new RelayCommand(DeleteJob);
@@ -189,8 +194,6 @@ namespace EZSave.GUI.ViewModels
                 _configService.SaveConfigFile(_configFileModel);
                 RefreshJobs();
                 SetStatusMessage("Job supprimé avec succès !");
-
-                //DelFromSelectedList(SelectedJob.Name, BaseViewModel.MainWindowViewModel.List);
             }
         }
 
@@ -200,8 +203,21 @@ namespace EZSave.GUI.ViewModels
             RefreshJobs();
             SetStatusMessage("Configuration sauvegardée !");
         }
+//<<<<<<< HEAD
         
+//=======
 
+//        public long FileSizeThreshold
+//        {
+//            get => _configFileModel.FileSizeThreshold;
+//            set
+//            {
+//                _configFileModel.FileSizeThreshold = value;
+//                JobModel.FileSizeThreshold = value;
+//                OnPropertyChanged();
+//            }
+//        }
+//>>>>>>> Config
 
         public event PropertyChangedEventHandler? PropertyChanged;
 

@@ -19,7 +19,7 @@ namespace EZSave.Core.Services
     {
         private readonly int _port;
         private ManagerModel _managerModel;
-        private ManagerService _managerService = new ManagerService();
+        private ManagerService _managerService;
         private ConfigFileModel _configFileModel;
         private ConfigService _configService = new ConfigService();
         private Dictionary<string, (Thread thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> jobStates;

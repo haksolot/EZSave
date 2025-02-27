@@ -133,6 +133,13 @@ namespace EZSave.Client.ViewModels
 
         private void OpenConfigWindow()
         {
+            if(_socketClient != null)
+            {
+                var result = _socketClient.SendCommand("getconf");
+                ConfigFileModel newConfFile = JsonSerializer.Deserialize<ConfigFileModel>(result);
+                configFileModel = newConfFile;
+            }
+
             var configWindow = new ConfigWindow(managerModel, configFileModel, _socketClient);
             configWindow.ShowDialog();
             RefreshJobs();
@@ -143,7 +150,7 @@ namespace EZSave.Client.ViewModels
             configFileModel = new ConfigFileModel();
             managerModel = new ManagerModel();
             configService = new ConfigService();
-            managerService = new ManagerService();
+            managerService = new ManagerService(configService, configFileModel);
             configService.SetConfigDestination("conf.json", configFileModel);
             configService.LoadConfigFile(configFileModel);
             managerService.Read(managerModel, configFileModel); 
