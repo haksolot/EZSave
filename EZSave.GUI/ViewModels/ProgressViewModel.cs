@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using EZSave.Core;
+using EZSave.Core.Services;
 
 namespace EZSave.GUI.ViewModels
 {
@@ -17,6 +20,7 @@ namespace EZSave.GUI.ViewModels
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
+        private SocketClientService _socket;
         public string JobName { get; set; }
 
         private int progression;

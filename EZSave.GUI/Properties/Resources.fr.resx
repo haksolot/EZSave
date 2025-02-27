@@ -175,7 +175,7 @@
     <value>Exécuter </value>
   </data>
   <data name="FileSizeThreshold" xml:space="preserve">
-    <value>SeuilTailleFichier</value>
+    <value>Seuil de taille de fichier</value>
   </data>
   <data name="InvalidChoiceTitle" xml:space="preserve">
     <value>Choix invalide. Veuillez réessayer.</value>
@@ -221,6 +221,9 @@
   </data>
   <data name="LanguageOption2" xml:space="preserve">
     <value>Anglais</value>
+  </data>
+  <data name="LaunchServer" xml:space="preserve">
+    <value>Lancer le serveur</value>
   </data>
   <data name="ListJobsPossibleDelete" xml:space="preserve">
     <value>Jobs pouvant être supprimés : </value>

@@ -20,6 +20,8 @@ namespace EZSave.GUI.ViewModels
         public ICommand DeleteJobCommand { get; }
         public ICommand RefreshJobsCommand { get; }
 
+        public List<String> JobTypes { get; } = new List<String> { "full", "diff" };
+        public List<String> LogTypes { get; } = new List<String> { "json", "xml" };
         public ConfigViewModel(ConfigFileModel config, ManagerModel managerModel)
         {
             _configService = new ConfigService();
@@ -134,6 +136,17 @@ namespace EZSave.GUI.ViewModels
             set { _statusMessage = value; OnPropertyChanged(); }
         }
 
+        public long FileSizeThreshold
+        {
+            get => _configFileModel.FileSizeThreshold;
+            set
+            {
+                _configFileModel.FileSizeThreshold = value;
+                JobModel.FileSizeThreshold = value;
+                OnPropertyChanged();
+            }
+        }
+
         private void SetStatusMessage(string message)
         {
             StatusMessage = message;
@@ -187,16 +200,7 @@ namespace EZSave.GUI.ViewModels
             RefreshJobs();
             SetStatusMessage("Configuration sauvegardée !");
         }
-        public long FileSizeThreshold
-        {
-            get => _configFileModel.FileSizeThreshold;
-            set
-            {
-                _configFileModel.FileSizeThreshold = value;
-                JobModel.FileSizeThreshold = value; 
-                OnPropertyChanged();
-            }
-        }
+        
 
 
         public event PropertyChangedEventHandler? PropertyChanged;

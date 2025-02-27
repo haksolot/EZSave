@@ -29,9 +29,11 @@ namespace EZSave.Client.ViewModels
 
         private JobModel _elementSelectionne;
 
-        private SocketClientService _socketClient = new SocketClientService();
+        private SocketClientService _socketClient;
         private Thread _serverThread;
 
+        private Thread? _updateProgressThread;
+        private bool _updateProgressIsRunning;
         public JobModel ElementSelectionne
         {
             get => _elementSelectionne;
@@ -61,6 +63,12 @@ namespace EZSave.Client.ViewModels
             set => SetProperty(ref progression, value);
         }
 
+        private string IPinput = "127.0.0.1";
+        public string IPInput
+        {
+            get => IPinput;
+            set => SetProperty(ref IPinput, value);
+        }
 
         List<Thread> threads = new List<Thread>();
         Dictionary<string, (Thread thread, CancellationTokenSource Cts, ManualResetEvent PauseEvent, string Status)> JobStates = new();
@@ -89,6 +97,7 @@ namespace EZSave.Client.ViewModels
         public ICommand ExecuteJobSelectionCommand { get; set; }
         public ICommand PauseCommand { get; set; }
         public ICommand StopCommand { get; set; }
+        public ICommand ConnectionServerCommand { get; set; }
 
         //public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -112,7 +121,7 @@ namespace EZSave.Client.ViewModels
             AddAllToListCommand = new RelayCommand(AddAllToList);
             PauseCommand = new RelayCommand(Pause);
             StopCommand = new RelayCommand(Stop);
-            //UpdateProgressionCommand = new RelayCommand(UpdateProgression);
+            ConnectionServerCommand = new RelayCommand(ConnectionServer);
             ExecuteJobSelectionCommand = new RelayCommand<ObservableCollection<string>>(ExecuteJobSelection);
         }
 
@@ -137,8 +146,12 @@ namespace EZSave.Client.ViewModels
             managerService = new ManagerService();
             configService.SetConfigDestination("conf.json", configFileModel);
             configService.LoadConfigFile(configFileModel);
-            managerService.Read(managerModel, configFileModel);
+            managerService.Read(managerModel, configFileModel); 
+        }
 
+        private void ConnectionServer()
+        {
+            _socketClient = new SocketClientService(IPInput);
             var result = _socketClient.SendCommand("getjoblist");
             managerModel.Jobs = JsonSerializer.Deserialize<ObservableCollection<JobModel>>(result);
             RefreshJobs();
@@ -178,7 +191,7 @@ namespace EZSave.Client.ViewModels
             //window.Show();
 
             var window = new ProgressionJobWindow(jobName, this);
-            var progressViewModel = new ProgressViewModel(jobName, this);
+            var progressViewModel = new ProgressViewModel(jobName, this, _socketClient);
 
             window.DataContext = progressViewModel;
 
@@ -191,14 +204,14 @@ namespace EZSave.Client.ViewModels
         private void ExecuteJobSelection(ObservableCollection<string> selectedNames)
         {
             Debug.WriteLine($"element selectionné {ElementSelectionneList}");
-            //foreach (var jobName in selectedNames)
-            //{
-            //    if (!IsProgressJobWindowOpen(jobName))
-            //    {
-            //        OpenProgressJobWindow(jobName);
-            //    }
-            //    var progress = new Progress<int>(value => UpdateJobProgress(jobName, value));
-            //}
+            foreach (var jobName in selectedNames)
+            {
+                if (!IsProgressJobWindowOpen(jobName))
+                {
+                    OpenProgressJobWindow(jobName);
+                }
+                var progress = new Progress<int>(value => UpdateJobProgress(jobName, value));
+            }
             //bool result = managerService.ExecuteSelected(JobStates, selectedNames, managerModel, configFileModel, ElementSelectionneList);
             var playJobData = new PlayJobModel();
             playJobData.Name = ElementSelectionneList;

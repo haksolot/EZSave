@@ -5,9 +5,27 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EZSave.GUI"
         xmlns:properties="clr-namespace:EZSave.GUI.Properties"
-        Title="{x:Static properties:Resources.ConfigOption1}" Height="290" Width="400" MinHeight="290" MaxHeight="290" MinWidth="400" MaxWidth="400">
+        xmlns:fa1="http://schemas.fontawesome.io/icons/"
+
+        Title="{x:Static properties:Resources.ConfigOption1}" MinHeight="330" MaxHeight="330" MinWidth="400" MaxWidth="400">
 
     <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Padding" Value="12,4,12,4" />
+            <Setter Property="Margin" Value="8" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="FontFamily" Value="Times New Roman" />
+            <Setter Property="Background" Value="LightGray" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border CornerRadius="10" Padding="8"  Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
         <Style TargetType="TextBox">
             <Setter Property="Padding" Value="4" />
             <Setter Property="Margin" Value="8" />
@@ -15,6 +33,18 @@
             <Setter Property="FontFamily" Value="Arial" />
             <Setter Property="BorderBrush" Value="Gray"/>
             <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border CornerRadius="10"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}">
+                            <ScrollViewer Margin="5" x:Name="PART_ContentHost"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
     </Window.Resources>
 
@@ -49,8 +79,14 @@
                   SelectedItem="{Binding Type, Mode=TwoWay}"
                   Grid.Row="3" Grid.Column="2" Margin="8,8,8,8" Width="150" Grid.ColumnSpan="2"/>
 
-        <Button Content="{x:Static properties:Resources.Validate}" Command="{Binding AddJobCommand}" Grid.Row="4" Margin="8,16,0,8" HorizontalAlignment="Left" Width="115" Grid.ColumnSpan="2" Grid.Column="2"/>
 
+        <Button Command="{Binding AddJobCommand}"  Grid.Row="4" Margin="8,16,0,8" HorizontalAlignment="Left" Width="115" Grid.ColumnSpan="2" Grid.Column="2">
+            <StackPanel Orientation="Horizontal">
+                <fa1:FontAwesome Icon="check" FontSize="10" Foreground="Black" Margin="0,0,8,0"/>
+                <TextBlock Text="{x:Static properties:Resources.Validate}"/>
+            </StackPanel>
+        </Button>
+        
         <TextBlock Text="{Binding Message}" Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="4" FontWeight="Bold" Margin="8,8,8,0" HorizontalAlignment="Center"/>
 
     </Grid>

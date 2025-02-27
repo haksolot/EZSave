@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Diagnostics;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
@@ -10,6 +11,9 @@ namespace EZSave.Core.Services
     {
         private readonly string _serverIp;
         private readonly int _port;
+        private Dictionary<string, int> _lastProgress = new();
+        private Thread? _updateThread;
+        private bool _isRunning;
 
         public SocketClientService(string serverIp = "127.0.0.1", int port = 6969)
         {
@@ -39,13 +43,45 @@ namespace EZSave.Core.Services
 
                     // Décodage de la réponse
                     string response = Encoding.UTF8.GetString(buffer, 0, receivedBytes);
+                    client.Dispose();
                     return response;
                 }
             }
             catch (Exception ex)
             {
-                return $"Error: {ex.Message}";
+                Debug.WriteLine("Client not connected");
+                return "Error";
+                //return $"Error: {ex.Message}";
             }
         }
+        public void StartProgressUpdate(int intervalMs = 5000)
+        {
+            if (_isRunning) return;
+            _isRunning = true;
+
+            _updateThread = new Thread(() =>
+            {
+                while (_isRunning)
+                {
+                    var result = SendCommand("getprogress");
+                    var jsonResult = JsonSerializer.Deserialize<Dictionary<string, int>>(result);
+                    _lastProgress = jsonResult;
+                    Thread.Sleep(intervalMs);
+                }
+            })
+            {
+                IsBackground = true
+            };
+
+            _updateThread.Start();
+        }
+
+        public void StopProgressUpdate()
+        {
+            _isRunning = false;
+            _updateThread?.Join();
+        }
+
+        public Dictionary<string, int> GetLastProgress() => _lastProgress;
     }
 }

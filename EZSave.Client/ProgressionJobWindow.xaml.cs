@@ -23,6 +23,15 @@ namespace EZSave.Client
         public ProgressionJobWindow(string jobName, MainWindowViewModel MainViewModel)
         {
             InitializeComponent();
+            this.Closing += ProgressWindowClosing;
+        }
+
+        private void ProgressWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (DataContext is ProgressViewModel vm)
+            {
+                vm.closingProgressWindow();
+            }
         }
     }
 }

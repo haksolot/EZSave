@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Input;
+using EZSave.Core.Services;
 
 namespace EZSave.Client.ViewModels
 {
@@ -17,7 +12,12 @@ namespace EZSave.Client.ViewModels
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
+        private SocketClientService _socket;
+        private Thread? _updateProgressThread;
+        private bool _updateProgressIsRunning;
         public string JobName { get; set; }
+
+        public Dictionary<string, int> Progressions { get; set; }
 
         private int progression;
 
@@ -35,15 +35,17 @@ namespace EZSave.Client.ViewModels
             }
         }
 
-        public ProgressViewModel(string jobName, MainWindowViewModel mainWindowViewModel)
+        public ProgressViewModel(string jobName, MainWindowViewModel mainWindowViewModel, SocketClientService socket = null)
         {
-            JobName = jobName;
-            MainWindowViewModel = mainWindowViewModel;
+            _socket = socket;
 
-            if (MainWindowViewModel.Progressions.ContainsKey(JobName))
-            {
-                Progression = MainWindowViewModel.Progressions[JobName];
-            }
+            JobName = jobName;
+            //MainWindowViewModel = mainWindowViewModel;
+
+            //if (MainWindowViewModel.Progressions.ContainsKey(JobName))
+            //{
+            //    Progression = MainWindowViewModel.Progressions[JobName];
+            //}
             //MainWindowViewModel.PropertyChanged += (sender, args) =>
             //{
             //    if (args.PropertyName == "Progression")
@@ -51,19 +53,47 @@ namespace EZSave.Client.ViewModels
             //        Progression = MainWindowViewModel.Progression;
             //    }
             //};
+            _socket.StartProgressUpdate();
+            _updateProgressIsRunning = true;
+            _updateProgressThread = new Thread(() =>
+            {
+                while (_updateProgressIsRunning)
+                {
+                    Progressions = _socket.GetLastProgress();
+                    foreach (var progression in Progressions)
+                    {
+                        Debug.WriteLine("Coté client :" + progression.ToString());
+                    }
+                    Thread.Sleep(500);
+                    try
+                    {
+                        Progression = Progressions[JobName];
+                    }
+                    catch { Progression = 0; }
+                }
+            })
+            { IsBackground = true };
+            _updateProgressThread.Start();
         }
+
         public void UpdateProgress(int value)
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                Progression = value;
+                //Progressions[JobName] = value;
+                Progression = Progressions[JobName];
+                Debug.WriteLine("Thingd :" + Progression);
             });
         }
-
 
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public void closingProgressWindow()
+        {
+            _updateProgressIsRunning = false;
         }
     }
 }

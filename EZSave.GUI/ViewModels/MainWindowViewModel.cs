@@ -97,6 +97,7 @@ namespace EZSave.GUI.ViewModels
         private Dictionary<string, ProgressViewModel> progressWindows = new();
         public event PropertyChangedEventHandler? PropertyChanged;
 
+        public ICommand LaunchServerCommand { get; set; }
         public ICommand UpdateProgressionCommand { get; }
         public ICommand AddToListCommand { get; }
         public ICommand RemoveToListCommand { get; }
@@ -121,6 +122,7 @@ namespace EZSave.GUI.ViewModels
 
             OpenConfigCommand = new RelayCommand(OpenConfigWindow);
 
+            LaunchServerCommand = new RelayCommand(LaunchServer);
             AddToListCommand = new RelayCommand(AddToList);
             RemoveToListCommand = new RelayCommand(DelFromList);
             RemoveAllToListCommand = new RelayCommand(DelAllFromList);
@@ -136,6 +138,19 @@ namespace EZSave.GUI.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
 
+        private void LaunchServer()
+        {
+            if(_socketServer != null)
+            {
+                
+            }
+            else
+            {
+                _socketServer = new SocketServerService(RefreshJobs, UpdateJobProgress, Progressions, 6969, managerModel, configFileModel, JobStates);
+                _serverThread = new Thread(_socketServer.Start) { IsBackground = true };
+                _serverThread.Start();
+            }
+        }
         private void OpenConfigWindow()
         {
             var configWindow = new ConfigWindow(managerModel, configFileModel);
@@ -152,10 +167,6 @@ namespace EZSave.GUI.ViewModels
             configService.SetConfigDestination("conf.json", configFileModel);
             configService.LoadConfigFile(configFileModel);
             managerService.Read(managerModel, configFileModel);
-
-            _socketServer = new SocketServerService(RefreshJobs, UpdateJobProgress, 6969, managerModel, configFileModel);
-            _serverThread = new Thread(_socketServer.Start) { IsBackground = true };
-            _serverThread.Start();
         }
 
         public void RefreshJobs()
@@ -317,11 +328,6 @@ namespace EZSave.GUI.ViewModels
                     progressWindows[jobName].UpdateProgress(value);
                 }
             });
-            //foreach (var kvp in progressions)
-            //{
-            //    Debug.WriteLine($"[DEBUG] {kvp.Key}: {kvp.Value}%");
-
-            //}
         }
 
         private bool IsProgressJobWindowOpen(string jobName)
