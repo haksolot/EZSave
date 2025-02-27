@@ -10,6 +10,9 @@
 
 📖 See the documentation for V2 usage in [USING-GUI](doc/USING-GUI.md)
 
+## V3 - GUI/Remote
+
+📖 See the documentation for V3 usage in [USING-GUI](doc/USING-GUIv3.md)
 ---
 
 ### Contributors :
