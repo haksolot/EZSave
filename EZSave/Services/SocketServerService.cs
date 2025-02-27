@@ -170,6 +170,7 @@ namespace EZSave.Core.Services
                         var listeSelected = playJobData.selected;
                         var job2playName = playJobData.Name;
                         _managerService.ExecuteSelected(jobStates, listeSelected, _managerModel, _configFileModel, job2playName, _updateJobProgress);
+                        //_managerService.ExecuteSelected(jobStates, listeSelected, _managerModel, _configFileModel, job2playName, _progressions);
                         client.Send(Encoding.UTF8.GetBytes("Success"));
                         break;
                     }
@@ -200,6 +201,11 @@ namespace EZSave.Core.Services
                 case "getprogress":
                     try
                     {
+                        foreach(var item in _progressions)
+                        {
+                            Debug.WriteLine("Server:" + item.Value);
+
+                        }
                         string progress2send = JsonSerializer.Serialize(_progressions);
                         client.Send(Encoding.UTF8.GetBytes(progress2send));
                         break;
