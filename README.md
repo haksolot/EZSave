@@ -1,6 +1,8 @@
 # EZSave
 
-![logo](doc/logo.png)
+<p align ="center">
+  <img src="doc/logo.png" alt="logo">
+</p>
 
 **EZSave** is a file backup application that allows users to perform **full** and **differential** backups automatically.  
 
