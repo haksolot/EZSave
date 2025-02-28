@@ -21,7 +21,7 @@
 ---
 
 ### Contributors :
-- *Sean L.*
-- *Estelle L.*
-- *Fabien C.*
-- *Matteo B.* 
+- *Sean L.* (**Haksolot**)
+- *Estelle L.* (**Estelle64**)
+- *Fabien C.* (**GahikoVON**)
+- *Matteo B.* (**BiscuitIntrusif**)
